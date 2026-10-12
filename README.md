@@ -2,7 +2,18 @@
 
 A single-player sci-fi card game in the style of Hearthstone: a 41-battle campaign across six sectors that teaches one mechanic at a time and builds to a final boss. Plain HTML, CSS and JavaScript with no build step.
 
-## Run it
+## Play
+
+**https://blairot.github.io/starfall-protocol/**
+
+Install it as an app (full screen, works offline):
+- **iPhone / iPad (Safari):** Share → Add to Home Screen.
+- **Android (Chrome):** ⋮ menu → Install app (or Add to Home screen).
+- **Desktop (Chrome / Edge):** the install icon at the right of the address bar.
+
+Saves are kept on the device. To move a campaign between devices (or from the claude.ai version), use Settings → Save Data → Copy backup code, then Restore from code on the other device.
+
+## Run it locally
 
 Serve the folder with any static server and open `index.html`:
 
