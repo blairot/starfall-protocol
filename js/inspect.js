@@ -88,6 +88,7 @@ function openInspect(id, opts) {
 
 // Which card does this element show? Hand, collection, deck rows, chips, pack reveals and units.
 function cardAt(target) {
+  if (!target || !target.closest) return null;
   const u = target.closest('[data-uid]');
   if (u && UI.s && App.screen === 'battle') { const c = getChar(UI.s, parseUid(u.dataset.uid)); if (c && !isHero(c)) return { id: c.id, uid: c.uid }; }
   const t = target.closest('[data-card]');

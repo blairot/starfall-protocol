@@ -43,7 +43,7 @@ const FX = {
   frame(t) {
     this.raf = 0;
     const c = this.ctx; if (!c) return;
-    c.clearRect(0, 0, 1280, 760);
+    c.clearRect(0, 0, this.cv.width, this.cv.height);
     c.globalCompositeOperation = 'lighter';
     // bolts
     for (const bo of this.bolts.slice()) {

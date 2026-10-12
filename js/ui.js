@@ -65,7 +65,16 @@ function cardTipHTML(id, extra) {
     <div class="tip-side">${extra || ''}${kws}${d.flavor ? `<div class="flavor">${esc(d.flavor)}</div>` : ''}<div class="tip-hint">Right-click: inspect and lore</div></div>`;
 }
 
+// Touch screens: no hover, so no tooltips; hand cards lift on the first tap and play on the second.
+const TOUCH = { on: !!(window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches) };
+document.addEventListener('pointerdown', e => {
+  const was = TOUCH.on; TOUCH.on = e.pointerType === 'touch' || e.pointerType === 'pen';
+  document.body.classList.toggle('touch', TOUCH.on);
+  if (TOUCH.on) Tip.hide();
+  if (was !== TOUCH.on && App.screen === 'battle' && UI.s) renderBattle();
+}, { passive: true, capture: true });
 document.addEventListener('mousemove', e => {
+  if (TOUCH.on) return;
   const t = e.target.closest && e.target.closest('[data-tip],[data-card],[data-uid]');
   Tip.target = t;
   if (!t || (UI.dragging)) { Tip.hide(); return; }
@@ -185,7 +194,7 @@ const UI = { s: null, enc: null, mode: null, busy: false, log: [], names: {}, pl
 
 function startBattle(enc, resumeState) {
   closeModal();
-  UI.enc = enc; UI.mode = null; UI.busy = false; UI.lethalCue = false; UI.log = []; UI.names = {}; UI.playerTurns = 0; UI.tally = {}; UI.seen = new Map(); UI.seenCards = new Map();
+  UI.enc = enc; UI.mode = null; UI.busy = false; UI.lethalCue = false; UI.peek = null; UI.advOpen = false; UI.log = []; UI.names = {}; UI.playerTurns = 0; UI.tally = {}; UI.seen = new Map(); UI.seenCards = new Map();
   document.body.style.setProperty('--sec-h', SECTORS[enc.sector].hue);
   try { $('#battle').style.setProperty('--bd', `url(${Scene.backdrop(enc.sector, SECTORS[enc.sector].hue)})`); } catch (e) { /* backdrop is decoration */ }
   showScreen('battle');
@@ -227,12 +236,23 @@ async function launchPlay() {
   else { renderBattle(); await banner('ENEMY TURN', 'enemy'); await playEvents(); enemyTurn(); }
 }
 
+// Widescreen stage (1280x760) for desktops, tablets and phones on their side.
+// Phones held upright get a 600-wide portrait stage that stretches to fill the height.
 function fitStage() {
   const st = $('#stage'); if (!st) return;
-  const W = 1280, H = 760;
-  const sc = Math.min(window.innerWidth / W, window.innerHeight / H);
-  UI.scale = sc;
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const portrait = vh > vw * 1.05;
+  const W = portrait ? 600 : 1280;
+  const H = portrait ? Math.max(960, Math.min(1400, Math.round(vh / (vw / W)))) : 760;
+  const sc = Math.min(vw / W, vh / H);
+  const changed = UI.portrait !== portrait || UI.W !== W || UI.H !== H;
+  UI.scale = sc; UI.portrait = portrait; UI.W = W; UI.H = H;
+  st.classList.toggle('portrait', portrait);
+  st.style.width = W + 'px'; st.style.height = H + 'px';
   st.style.transform = `translate(-50%, -50%) scale(${sc})`;
+  const cv = $('#fxc'); if (cv && (cv.width !== W || cv.height !== H)) { cv.width = W; cv.height = H; }
+  if (changed && UI.s && App.screen === 'battle') renderBattle();
+  if (!portrait && vh < 500 && App.screen === 'battle' && !UI.rotateHint) { UI.rotateHint = true; toast('Tip: hold your phone upright for a bigger battle view.', 3200); }
 }
 window.addEventListener('resize', fitStage);
 
@@ -317,6 +337,7 @@ function manaHTML(p) {
   return `<div class="mana-num"><b>${p.mana}</b>/${p.maxMana}</div><div class="pips">${pips}</div>${p.overload ? `<div class="ovl">Overheat: ${p.overload} locked next turn</div>` : ''}${p.locked ? `<div class="ovl">${p.locked} locked this turn</div>` : ''}`;
 }
 
+function myTurnNow(s) { return s.active === 0 && !s.over; }
 function anyMoves(s) {
   if (s.active !== 0 || s.over) return false;
   const p = s.players[0];
@@ -332,14 +353,16 @@ function renderBattle() {
   const tips = UI.enc.tips || [];
   const tip = tips.length ? tips[Math.min(Math.max(0, UI.playerTurns - 1), tips.length - 1)] : '';
   const handN = P.hand.length;
-  const overlap = handN > 7 ? -Math.min(62, Math.ceil((handN * 122 - 880) / (handN - 1))) : 4;
+  const HW = UI.portrait ? 576 : 880, CW = UI.portrait ? 152 : 122, fitN = Math.floor(HW / CW);
+  const overlap = handN > fitN ? -Math.min(UI.portrait ? 84 : 62, Math.ceil((handN * CW - HW) / (handN - 1))) : 4;
+  if (UI.peek != null && (UI.peek >= handN || UI.busy || !myTurnNow(s))) UI.peek = null;
   const myTurn = s.active === 0 && !s.over;
   const hand = P.hand.map((c, i) => {
     const playable = myTurn && !UI.busy && !UI.mode && canPlay(s, 0, i);
     const sel = UI.mode && UI.mode.k === 'play' && UI.mode.hi === i;
     if (!UI.seenCards.has(c.uid)) UI.seenCards.set(c.uid, performance.now());
     const fresh = performance.now() - UI.seenCards.get(c.uid) < 500;
-    return `<div class="hand-slot${fresh ? ' drawn' : ''}" data-key="c${c.uid}" style="margin-left:${i ? overlap : 0}px;--i:${i};--n:${handN}">${cardHTML(c.id, { cost: costOf(s, 0, c), cls: (playable ? 'playable' : '') + (sel ? ' selected' : ''), attrs: `data-hand="${i}"` })}</div>`;
+    return `<div class="hand-slot${fresh ? ' drawn' : ''}${UI.peek === i ? ' peek' : ''}" data-key="c${c.uid}" style="margin-left:${i ? overlap : 0}px;--i:${i};--n:${handN}">${cardHTML(c.id, { cost: costOf(s, 0, c), cls: (playable ? 'playable' : '') + (sel ? ' selected' : ''), attrs: `data-hand="${i}"` })}</div>`;
   }).join('');
   const seeCosts = stationLv(App.save, 'observatory') >= 3;
   const ehand = E.hand.map(c => `<i class="cback">${seeCosts ? `<em>${costOf(s, 1, c)}</em>` : ''}</i>`).join('');
@@ -349,8 +372,8 @@ function renderBattle() {
   const endCls = myTurn && !UI.busy ? (anyMoves(s) ? 'live' : 'live done') : 'wait';
   morphInto($('#stage-ui'), `
     <aside class="b-left">
-      <div class="mission-plate"><div class="mp-sec">Sector ${String(UI.enc.sector + 1).padStart(2, '0')} · ${esc(SECTORS[UI.enc.sector].name)}</div><div class="mp-name">${esc(UI.enc.name)}</div><div class="mp-tag"><span class="pill ${UI.enc.boss || UI.enc.final ? 'boss' : UI.enc.elite ? 'elite' : ''}">${kind}</span><span class="pill">Turn ${Math.max(1, Math.ceil(s.turnNo / 2))}</span></div></div>
-      ${tip && Settings.get('tips') ? `<div class="advisor"><div class="adv-h">Tactical Advisor</div><div class="adv-t">${tip}</div></div>` : ''}
+      <div class="mission-plate"><div class="mp-sec">Sector ${String(UI.enc.sector + 1).padStart(2, '0')} · ${esc(SECTORS[UI.enc.sector].name)}</div><div class="mp-name">${esc(UI.enc.name)}</div><div class="mp-tag"><span class="pill ${UI.enc.boss || UI.enc.final ? 'boss' : UI.enc.elite ? 'elite' : ''}">${kind}</span><span class="pill">Turn ${Math.max(1, Math.ceil(s.turnNo / 2))}</span>${tip && Settings.get('tips') ? `<button class="pill adv-btn ${UI.advOpen ? 'on' : ''}" data-adv="1">Advisor</button>` : ''}</div></div>
+      ${tip && Settings.get('tips') ? `<div class="advisor ${UI.advOpen ? 'open' : ''}"><div class="adv-h">Tactical Advisor</div><div class="adv-t">${tip}</div></div>` : ''}
       <div class="b-log" ${Settings.get('log') ? '' : 'hidden'}><div class="log-h">Combat feed</div><ol>${UI.log.slice(-14).map(l => `<li class="${/^(You|Your)\b/.test(l) ? 'mine' : ''}">${l}</li>`).join('')}</ol></div>
     </aside>
     <main class="field">
@@ -361,16 +384,16 @@ function renderBattle() {
       <div class="board player">${P.board.map(m => minionHTML(s, m, 0)).join('')}</div>
       <div class="hero-row player">${heroRowHTML(s, 0)}</div>
       <div class="hand" style="--overlap:${overlap}px">${hand}</div>
-      <div class="inspect-hint">Right-click any card to inspect</div>
+      <div class="inspect-hint">${UI.peek != null ? 'Tap the card again to play it' : TOUCH.on ? 'Press and hold any card to inspect' : 'Right-click any card to inspect'}</div>
     </main>
     <aside class="b-right">
       <div class="side-stat enemy"><div class="ss-h">Enemy intel</div><div><span class="lbl">Energy</span><b>${E.mana}/${E.maxMana}</b></div><div class="e-crystals">${crystals}</div><div><span class="lbl">Hand</span><b>${E.hand.length}</b></div><div><span class="lbl">Deck</span><b>${E.deck.length}</b></div></div>
-      <button id="endturn" class="${endCls}" ${myTurn && !UI.busy ? '' : 'disabled'}>${myTurn ? 'END TURN' : 'ENEMY TURN'}<small>${myTurn ? (anyMoves(s) ? 'Hotkey E' : 'No moves left') : 'Stand by'}</small></button>
+      <button id="endturn" class="${endCls}" ${myTurn && !UI.busy ? '' : 'disabled'}>${myTurn ? 'END TURN' : 'ENEMY TURN'}<small>${myTurn ? (anyMoves(s) ? (TOUCH.on ? 'Moves left' : 'Hotkey E') : 'No moves left') : 'Stand by'}</small></button>
       <div class="mana"><div class="mana-l">Energy</div>${manaHTML(P)}</div>
       <div class="side-stat"><div class="deck-stack"><span class="ds-cards"><i></i><i></i><i></i></span><div><span class="lbl">Your deck</span><br><b>${P.deck.length}</b></div></div>${P.fatigue ? `<div><span class="lbl">Fatigue</span><b>${P.fatigue}</b></div>` : ''}</div>
       <button id="bmenu" class="btn ghost small">Menu</button>
     </aside>
-    <svg id="arrow" class="arrow" width="1280" height="760" viewBox="0 0 1280 760"><defs><marker id="ah" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="currentColor"/></marker></defs><line id="arrow-line" x1="0" y1="0" x2="0" y2="0" marker-end="url(#ah)"/></svg>`);
+    <svg id="arrow" class="arrow" width="${UI.W || 1280}" height="${UI.H || 760}" viewBox="0 0 ${UI.W || 1280} ${UI.H || 760}"><defs><marker id="ah" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="currentColor"/></marker></defs><line id="arrow-line" x1="0" y1="0" x2="0" y2="0" marker-end="url(#ah)"/></svg>`);
   if (Tip.target && !Tip.target.isConnected) Tip.hide();
   updateArrow();
 }
@@ -419,6 +442,10 @@ function setupBattleInput() {
     UI.mouse = { x: e.clientX, y: e.clientY };
     const s = UI.s; if (!s) return;
     if (e.target.closest('#bmenu')) { battleMenu(); return; }
+    if (e.target.closest('[data-adv]')) { UI.advOpen = !UI.advOpen; renderBattle(); return; }
+    if (UI.advOpen && e.target.closest('.advisor')) { UI.advOpen = false; renderBattle(); return; }
+    const peekHit = e.target.closest('[data-hand]');
+    if (UI.peek != null && (!peekHit || +peekHit.dataset.hand !== UI.peek)) { UI.peek = null; renderBattle(); if (!peekHit) return; }
     if (UI.busy || s.over || s.active !== 0 || s.choice) return;
     if (e.target.closest('#endturn')) { cancelMode(); requestEndTurn(); return; }
     const handEl = e.target.closest('[data-hand]');
@@ -448,6 +475,8 @@ function cancelMode() { if (UI.mode) { UI.mode = null; renderBattle(); } }
 
 function clickHand(i) {
   const s = UI.s;
+  if (TOUCH.on && UI.peek !== i) { UI.peek = i; SFX.click(); renderBattle(); return; }   // first tap: lift and read
+  UI.peek = null;
   if (!canPlay(s, 0, i)) { toast(whyCantPlay(s, 0, i)); return; }
   const c = s.players[0].hand[i];
   const ts = cardTargets(s, 0, c);
@@ -845,7 +874,7 @@ function renderMap() {
   // nodes
   const nodes = encs.map(e => {
     const ok = encUnlocked(save, e), cl = !!save.cleared[e.id], [x, y] = pos[e.id], isNext = next && next.id === e.id;
-    const cls = ['mnode', e.boss ? 'boss' : '', e.elite ? 'elite' : '', cl ? 'cleared' : '', ok && !cl ? 'open' : '', !ok ? 'locked' : '', isNext ? 'next' : ''].join(' ');
+    const cls = ['mnode', x < 22 ? 'al' : x > 78 ? 'ar' : '', e.boss ? 'boss' : '', e.elite ? 'elite' : '', cl ? 'cleared' : '', ok && !cl ? 'open' : '', !ok ? 'locked' : '', isNext ? 'next' : ''].join(' ');
     const face = e.boss ? `<span class="mn-art" style='background-image:${portraitPlate(e.enemy.name, ENEMY_FACTION[e.sector], ENEMY_ART[e.enemy.name])}'></span>` : '';
     const glyph = cl ? ico('check') : !ok ? ico('lock') : e.elite ? ico('elite') : e.boss ? '' : e.id.split('-')[1];
     return `<button class="${cls}" style="left:${x}%;top:${y}%" ${ok ? `data-enc="${e.id}"` : 'disabled'} aria-label="${esc(ok || cl ? e.name : 'Locked mission')}">
@@ -891,6 +920,8 @@ function renderMap() {
       </section>
       <aside class="ops">${nextCard}${stn}${contracts}${cmdr}</aside>
     </div></div>`);
+  const gStrip = $('#map .g-strip'), onSec = gStrip && gStrip.querySelector('.gs.on');
+  if (onSec && gStrip.scrollWidth > gStrip.clientWidth) gStrip.scrollLeft = onSec.offsetLeft - gStrip.offsetLeft - 12;
   $('#map').onclick = e => {
     const b = e.target.closest('[data-enc]'); if (b) { SFX.init(); SFX.click(); openBriefing(ENC[b.dataset.enc]); return; }
     const s = e.target.closest('[data-sec]'); if (s) { SFX.click(); MapUI.sector = +s.dataset.sec; renderMap(); return; }
@@ -1000,7 +1031,7 @@ function renderHangar() {
     ${cmdBar(save, 'hangar')}
     <div class="sub-head"><div><div class="sh-tag">Fleet logistics</div><h1>Hangar</h1></div><span class="muted">Build your deck and choose your commander power.</span><button class="btn primary" id="h-done">Done</button></div>
     <div class="mode-bar">${economyOpen(save) ? `<div class="seg"><button class="${craft ? '' : 'on'}" data-mode="deck">Build deck</button><button class="${craft ? 'on' : ''}" data-mode="craft">Craft cards</button></div>` : ''}
-      <span class="muted small">${craft ? 'Every card from the sets you have reached. Click one to craft it with Scrap, or scrap spare copies.' : 'Click a card to add it. Click a deck entry to remove it. Up to 2 copies (1 Legendary).'}</span></div>
+      <span class="muted small">${craft ? 'Every card from the sets you have reached. Click one to craft it with Scrap, or scrap spare copies.' : (TOUCH.on ? 'Tap a card to add it. Tap a deck entry to remove it. Press and hold any card to read it.' : 'Click a card to add it. Click a deck entry to remove it. Right-click any card to read it.') + ' Up to 2 copies (1 Legendary).'}</span></div>
     <div class="hangar-body">
       <section class="coll">
         <div class="filters">${tabs.map(([k, l]) => `<button class="chipbtn ${Hangar.filter === k ? 'on' : ''}" data-f="${k}">${l}</button>`).join('')}
@@ -1008,6 +1039,7 @@ function renderHangar() {
           <input id="h-q" type="search" placeholder="Search cards" value="${esc(Hangar.q)}" aria-label="Search cards"></div>
         <div class="coll-grid">${grid}</div>
       </section>
+      <button class="deck-fab" id="h-jump" aria-label="Show your deck">Deck <b>${save.deck.length}/${size}</b></button>
       <aside class="deckpanel">
         <div class="dp-head"><h3>Deck</h3><div class="dp-count ${save.deck.length === size ? 'ok' : 'bad'}"><b>${save.deck.length}</b>/${size}</div></div>
         <div class="curve">${curve.map((n, i) => `<div class="bar"><i style="height:${(n / cmax) * 100}%"></i><span>${i >= 7 ? '7+' : i}</span><em>${n || ''}</em></div>`).join('')}</div>
@@ -1040,6 +1072,7 @@ function renderHangar() {
     if (f) { Hangar.filter = f.dataset.f; renderHangar(); return; }
     if (c) { Hangar.cost = +c.dataset.c; renderHangar(); return; }
     if (pw) { save.power = pw.dataset.pw; persist(); renderHangar(); return; }
+    if (t.closest('#h-jump')) { $('.deckpanel').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' }); return; }
     if (t.id === 'h-auto') { autoFillDeck(save, size); persist(); renderHangar(); toast('Deck filled with your strongest available cards.'); }
     if (t.id === 'h-clear') { save.deck = []; persist(); renderHangar(); }
     if (t.id === 'h-done') {
@@ -1060,7 +1093,7 @@ function loadoutsHTML(save) {
     : `<button class="lo empty" data-lo-save="${i}"><b>Empty slot</b><span>Save current deck</span></button>`).join('');
   const sd = sig && save.signature ? D(save.signature) : null;
   return `<h3>Loadouts</h3><div class="loadouts">${slots}</div>
-    ${sig ? `<h3>Signature card</h3>${sd ? `<div class="sig-slot"><span class="dr-icon" style='background-image:${artPlate(save.signature)}'></span><span><b>${esc(sd.name)}</b><br><span class="muted small">${save.deck.includes(save.signature) ? 'Always in your opening hand' + (stationLv(save, 'armory') >= 3 ? ', 1 cheaper' : '') + '.' : 'Not in this deck, so it has no effect.'}</span></span></div>` : '<p class="muted small">Right-click a card in your deck and choose "Make signature card".</p>'}` : ''}`;
+    ${sig ? `<h3>Signature card</h3>${sd ? `<div class="sig-slot"><span class="dr-icon" style='background-image:${artPlate(save.signature)}'></span><span><b>${esc(sd.name)}</b><br><span class="muted small">${save.deck.includes(save.signature) ? 'Always in your opening hand' + (stationLv(save, 'armory') >= 3 ? ', 1 cheaper' : '') + '.' : 'Not in this deck, so it has no effect.'}</span></span></div>` : `<p class="muted small">${TOUCH.on ? 'Press and hold' : 'Right-click'} a card in your deck and choose "Make signature card".</p>`}` : ''}`;
 }
 
 // ============================================================================
