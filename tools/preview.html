@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Starfall dev preview</title>
+<!-- Dev-only harness: loads the game and stages a screen from the URL hash for screenshots.
+     #battle #map #hangar #shop #title #cards #packopen. Not part of the published game. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;1,400&family=Saira+Semi+Condensed:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<canvas id="stars" aria-hidden="true"></canvas>
+<section id="title" class="screen"></section>
+<section id="map" class="screen" hidden></section>
+<section id="hangar" class="screen" hidden></section>
+<section id="shop" class="screen" hidden></section>
+<section id="station" class="screen" hidden></section>
+<section id="battle" class="screen" hidden><div id="stage"><div id="stage-ui"></div><canvas id="fxc" width="1280" height="760"></canvas><div id="fx"></div></div></section>
+<div id="modal" class="modal" hidden></div>
+<div id="tooltip" hidden></div>
+<div id="toasts" aria-live="polite"></div>
+<script src="../js/engine.js"></script>
+<script src="../js/audio.js"></script>
+<script src="../js/cards.js"></script>
+<script src="../js/ai.js"></script>
+<script src="../js/campaign.js"></script>
+<script src="../js/economy.js"></script>
+<script src="../js/station.js"></script>
+<script src="../js/lore.js"></script>
+<script src="../js/art.js"></script>
+<script src="../js/illustrations.js"></script>
+<script src="../js/icons.js"></script>
+<script src="../js/ui.js"></script>
+<script src="../js/shop.js"></script>
+<script src="../js/inspect.js"></script>
+<script src="../js/scene.js"></script>
+<script>
+// Minimal stand-ins for main.js so nothing touches real saves.
+const Store = { db: null, write() {}, clear() {} };
+function persist() {}
+function migrate(s) { return s; }
+FX.attach(); setupBattleInput(); if (!location.search.includes('noscene')) Scene.start();
+const sv = newSave('Commander Reyes', 'officer');
+CARD_LIST.filter(d => !d.token).forEach(d => sv.coll[d.id] = maxCopies(d));
+sv.codex = Object.keys(KEYWORDS); sv.powers = ['pulse', 'repair', 'drone']; sv.power = 'pulse';
+ENCOUNTERS.forEach(e => { if (e.sector < 3) sv.cleared[e.id] = true; });
+Object.keys(sv.seenSector).length || [0, 1, 2, 3].forEach(i => sv.seenSector[i] = true);
+sv.credits = 340; sv.scrap = 520; sv.packs = { 2: 1, 3: 2 };
+ensureStation(sv); sv.station.alloy = 140; Object.assign(sv.station.mods, { reactor: 2, medbay: 2, observatory: 3, armory: 2, archive: 1, comms: 1 }); sv.signature = 'okonkwo';
+autoFillDeck(sv, 30); refillContracts(sv); App.save = sv;
+const view = location.hash.slice(1) || 'battle';
+if (location.search.includes('still')) { const st = document.createElement('style'); st.textContent = '*,*::before,*::after{animation-duration:0s!important;animation-delay:0s!important;transition:none!important}'; document.head.appendChild(st); }
+if (view === 'title') openTitle();
+if (view === 'map') openMap();
+if (view === 'brief') { openMap(); openBriefing(ENC['4-1']); }
+if (view === 'settings') { openMap(); SetUI.tab = 'gameplay'; showSettings(); }
+if (view === 'hangar') openHangar(openMap);
+if (view === 'shop') openShop(openMap);
+if (view === 'station') openStation(openMap);
+if (view === 'archive') { openMap(); openArchive('universe'); }
+if (view === 'records') { openMap(); openArchive('records'); }
+if (view === 'inspect') { openHangar(openMap); openInspect('okonkwo'); }
+if (view === 'binspect') setTimeout(() => { const m = UI.s.players[1].board[0]; openInspect(m.id, { uid: m.uid }); }, 300);
+if (view === 'packopen') { openShop(openMap); openPackFlow(3); setTimeout(() => { document.getElementById('po-pack').click(); setTimeout(() => document.querySelector('[data-a="all"]').click(), 900); }, 300); }
+if (view.startsWith('sheet')) {
+  // #sheet=id1,id2,... renders raw art plates in a 3-column grid with labels
+  showScreen('map');
+  const arg = view.split('=')[1] || ''; const ids = arg === 'all' ? CARD_LIST.map(d => d.id) : arg.split(',').filter(Boolean);
+  const cols = arg === 'all' ? 8 : 3;
+  document.getElementById('map').innerHTML = `<div style="display:grid;grid-template-columns:repeat(${cols},1fr);gap:6px;padding:6px">${ids.map(id => `<figure style="margin:0;font:12px monospace;color:#8a97a6"><div style='aspect-ratio:16/10;background:${artPlate(id)} center/cover'></div>${id}</figure>`).join('')}</div>`;
+}
+if (view === 'cards') {
+  showScreen('map');
+  const ids = ['marine', 'okonkwo', 'dreadnought', 'railgun', 'vex', 'plasma_cutlass', 'hive_reaper', 'ixis', 'calculus', 'war_walker', 'nyra', 'psionic_null'];
+  document.getElementById('map').innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:22px;padding:24px;justify-content:center">${ids.map(id => cardHTML(id, { cls: 'big' })).join('')}</div>`;
+}
+if (view === 'battle' || view === 'binspect') {
+  startBattle(ENC['3-6']); closeModal();
+  const s = UI.s; s.events = []; beginPlay(s); s.active = 0; s.players[0].mana = s.players[0].maxMana = 7;
+  ['aegis_sentinel', 'shield_trooper', 'phase_stalker', 'marine', 'gatling_drone'].forEach(id => { const m = summon(s, 0, id); m.sick = false; });
+  s.players[0].board[4].sick = true;
+  ['hive_reaper', 'chitin_guard', 'larva', 'psi_adept', 'broodmother'].forEach(id => summon(s, 1, id));
+  freeze(s, s.players[1].board[0]); equip(s, 0, 'plasma_cutlass');
+  s.players[0].traps.push({ id: 'sniper_mine', uid: 999 }); s.players[1].traps.push({ id: 'psionic_null', uid: 998 });
+  silence(s, s.players[1].board[3]);
+  s.players[0].hand = ['railgun', 'okonkwo', 'venom_stinger', 'fortify', 'hive_reaper', 'marine'].map(id => mkCard(s, id));
+  s.events = []; UI.busy = false; UI.log = ['You played <b>Aegis Sentinel</b>', 'Ixis, Brood Queen used <b>Spawn Brood</b>', 'Hive Reaper attacked <b>Marine</b>', '<b>Marine</b> was destroyed']; renderBattle();
+}
+
+// ?probe: after 4s record animation state for headless checks
+if (location.search.includes('probe')) setTimeout(() => {
+  const q = s => { const e = document.querySelector(s); return e ? getComputedStyle(e).opacity + '|' + e.getAnimations().map(a => a.playState + ':' + Math.round(a.currentTime || 0)).join(',') : 'none'; };
+  document.body.setAttribute('data-probe', JSON.stringify({ tm: q('.tm'), logo: q('.lg-1'), now: Math.round(performance.now()), tl: Math.round(document.timeline.currentTime || 0), scene: typeof Scene !== 'undefined' && Scene.stats ? Scene.stats() : null }));
+}, 4000);
+</script>
+</body>
+</html>

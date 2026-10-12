@@ -1,0 +1,17 @@
+# screenshots and scratch output from the preview harness
+*.png
+shots/
+publish/
+edge-profile*/
+edge-tmp-*/
+
+# editor and OS clutter
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+.vscode/
+.idea/
+
+# OneDrive conflict copies
+*-DESKTOP-*.*
