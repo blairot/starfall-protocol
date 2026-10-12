@@ -1,5 +1,6 @@
 # screenshots and scratch output from the preview harness
 *.png
+!icons/*.png
 shots/
 publish/
 edge-profile*/
@@ -15,3 +16,6 @@ desktop.ini
 
 # OneDrive conflict copies
 *-DESKTOP-*.*
+
+# local Claude Code config
+.claude/

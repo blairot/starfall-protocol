@@ -71,7 +71,7 @@ document.addEventListener('pointerdown', e => {
   const was = TOUCH.on; TOUCH.on = e.pointerType === 'touch' || e.pointerType === 'pen';
   document.body.classList.toggle('touch', TOUCH.on);
   if (TOUCH.on) Tip.hide();
-  if (was !== TOUCH.on && App.screen === 'battle' && UI.s) renderBattle();
+  if (was !== TOUCH.on && App.screen === 'battle' && UI.s) { fitStage(); renderBattle(); }
 }, { passive: true, capture: true });
 document.addEventListener('mousemove', e => {
   if (TOUCH.on) return;
@@ -236,15 +236,27 @@ async function launchPlay() {
   else { renderBattle(); await banner('ENEMY TURN', 'enemy'); await playEvents(); enemyTurn(); }
 }
 
+// Notch and home-bar insets (non-zero in the installed full-screen app on phones).
+function safeInsets() {
+  let p = document.getElementById('safe-probe');
+  if (!p) { p = document.createElement('div'); p.id = 'safe-probe'; p.style.cssText = 'position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)'; document.body.appendChild(p); }
+  const cs = getComputedStyle(p);
+  return { top: parseFloat(cs.paddingTop) || 0, bottom: parseFloat(cs.paddingBottom) || 0 };
+}
+
 // Widescreen stage (1280x760) for desktops, tablets and phones on their side.
 // Phones held upright get a 600-wide portrait stage that stretches to fill the height.
 function fitStage() {
   const st = $('#stage'); if (!st) return;
-  const vw = window.innerWidth, vh = window.innerHeight;
-  const portrait = vh > vw * 1.05;
+  const vw = window.innerWidth, vh0 = window.innerHeight;
+  const portrait = vh0 > vw * 1.05;
+  const inset = safeInsets(), framedTouch = window.top !== window.self && TOUCH.on;
+  const topPad = Math.max(inset.top, portrait && framedTouch ? 62 : 0), botPad = inset.bottom;
+  const vh = vh0 - topPad - botPad;
   const W = portrait ? 600 : 1280;
   const H = portrait ? Math.max(960, Math.min(1400, Math.round(vh / (vw / W)))) : 760;
   const sc = Math.min(vw / W, vh / H);
+  st.style.top = (topPad + vh / 2) + 'px';
   const changed = UI.portrait !== portrait || UI.W !== W || UI.H !== H;
   UI.scale = sc; UI.portrait = portrait; UI.W = W; UI.H = H;
   st.classList.toggle('portrait', portrait);

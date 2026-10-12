@@ -80,6 +80,10 @@ function start(data) {
   if (data && data.battle && data.enc && ENC[data.enc] && App.save) startBattle(ENC[data.enc], data.battle);
   else openTitle();
   setTimeout(prewarmAllArt, 1200);
+  // Installed web app (GitHub Pages): cache the game for offline play. Not inside claude.ai.
+  if ('serviceWorker' in navigator && location.protocol === 'https:' && window.top === window.self && !window.claude) {
+    navigator.serviceWorker.register('sw.js').catch(() => { /* offline play is optional */ });
+  }
   // Account storage answers later; prefer whichever save is newer.
   Store.connect().then(remote => {
     remote = migrate(remote);
