@@ -62,6 +62,10 @@ function migrate(save) {
   if (save.scrap == null) save.scrap = 0;
   save.packs = save.packs || {}; save.pity = save.pity || {}; save.contracts = (save.contracts || []).filter(c => CONTRACTS[c.id]);
   ensureStation(save);
+  // campaigns from before cutscenes existed: unlock the ones already earned for replay in the Archive
+  save.seenCine = save.seenCine || [];
+  if (Object.keys(save.cleared).length && !save.seenCine.includes('opening')) save.seenCine.push('opening');
+  Object.entries(CINE_AFTER).forEach(([enc, cid]) => { if (save.cleared[enc] && !save.seenCine.includes(cid)) save.seenCine.push(cid); });
   refillContracts(save);
   save.deck = (save.deck || []).filter(id => CARDS[id]);
   Object.keys(save.coll).forEach(id => { if (!CARDS[id]) delete save.coll[id]; });
