@@ -1135,3 +1135,108 @@ body.touch .inspect-hint { color: var(--t-3); }
   .cmd-bar { top: env(safe-area-inset-top, 0px); }
   .title-hero { padding-top: calc(40px + env(safe-area-inset-top, 0px)); }
 }
+
+/* ================================================================ 18. CINEMATICS
+   Letterboxed full-screen shots; slow camera moves over the game's own art. */
+#cinema { position: fixed; inset: 0; z-index: 2000; background: #000; overflow: hidden; animation: veilIn .6s ease-out; }
+#cinema.out { opacity: 0; transition: opacity .6s; }
+.cin-stage { position: absolute; inset: 0; }
+.cin-shot { position: absolute; inset: 0; opacity: 0; transition: opacity .8s ease; overflow: hidden; }
+.cin-shot.on { opacity: 1; }
+.cin-shot.off { opacity: 0; }
+.cin-bars { position: absolute; inset: 0; pointer-events: none; z-index: 5;
+  background: linear-gradient(#000, #000) top / 100% max(6vh, calc(env(safe-area-inset-top, 0px) + 24px)) no-repeat, linear-gradient(#000, #000) bottom / 100% 6vh no-repeat,
+    radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0, 0, 0, .65) 100%); }
+.cin-bars::after { content: ""; position: absolute; inset: 0; background: var(--scan); opacity: .7; }
+
+/* camera moves: duration comes from the shot length */
+.cin-bg { position: absolute; inset: -6%; background: #000 center / cover no-repeat; will-change: transform; animation: var(--cam) var(--dur) linear forwards; }
+.cin-bg.dim { filter: brightness(.45) saturate(.8); }
+.cam-push { --cam: camPush; } .cam-pull { --cam: camPull; } .cam-pan-left { --cam: camPanL; } .cam-pan-right { --cam: camPanR; } .cam-drift { --cam: camDrift; }
+@keyframes camPush { from { transform: scale(1.02); } to { transform: scale(1.16); } }
+@keyframes camPull { from { transform: scale(1.18); } to { transform: scale(1.03); } }
+@keyframes camPanL { from { transform: scale(1.12) translateX(3.5%); } to { transform: scale(1.12) translateX(-3.5%); } }
+@keyframes camPanR { from { transform: scale(1.12) translateX(-3.5%); } to { transform: scale(1.12) translateX(3.5%); } }
+@keyframes camDrift { from { transform: scale(1.08) translate(-1%, .5%); } to { transform: scale(1.12) translate(1%, -.5%); } }
+.cin-card { inset: -4%; background-size: cover; filter: saturate(1.05) contrast(1.05); }
+.cin-cardname { position: absolute; left: 6vw; top: calc(8vh + env(safe-area-inset-top, 0px)); z-index: 3; font: 600 12px var(--f-label); letter-spacing: .3em; text-transform: uppercase; color: rgba(220, 230, 240, .7); }
+
+/* titles */
+.cin-titlecard, .cin-over { position: absolute; inset: 0; z-index: 3; display: grid; place-content: center; justify-items: center; text-align: center; gap: 14px; padding: 0 6vw; }
+.cin-over { place-content: end start; justify-items: start; text-align: left; padding: 0 6vw 22vh; }
+.cin-kick { font: 600 clamp(11px, 1.6vw, 15px) var(--f-label); letter-spacing: .4em; text-transform: uppercase; color: var(--amber); text-shadow: 0 0 18px rgba(242, 169, 59, .6); animation: riseIn 1.4s .2s both; }
+.cin-big { font: 700 clamp(34px, 7vw, 92px)/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: #f2f6fa; text-shadow: 0 0 40px hsl(var(--sec-h) 80% 60% / .5); animation: logoIn 1.8s .4s var(--ease-out) both; text-wrap: balance; }
+
+/* ships */
+.cin-ships { position: absolute; inset: 0; z-index: 2; }
+.cin-ship { position: absolute; width: clamp(160px, 28vw, 420px); top: 46%; left: 50%; overflow: visible; filter: drop-shadow(0 0 12px var(--glow)); animation: var(--act) var(--dur) cubic-bezier(.4, 0, .6, 1) forwards; }
+.cin-ship .eng { animation: engine .18s ease-in-out infinite alternate; transform-origin: 0 30px; }
+@keyframes engine { to { opacity: .7; transform: scaleX(1.25); } }
+.act-depart { --act: shipDepart; } .act-arrive { --act: shipArrive; } .act-pass { --act: shipPass; } .act-warp { --act: shipWarp; } .act-battle { --act: shipBattle; } .act-wreck { --act: shipWreck; }
+@keyframes shipDepart { from { transform: translate(-60%, -50%) scale(1); } to { transform: translate(160%, -90%) scale(.25); } }
+@keyframes shipArrive { from { transform: translate(-260%, -20%) scale(.2); } to { transform: translate(-50%, -50%) scale(1); } }
+@keyframes shipPass { from { transform: translate(-190%, -40%) scale(.85); } to { transform: translate(110%, -60%) scale(.95); } }
+@keyframes shipWarp { 0% { transform: translate(-50%, -50%) scale(1); } 70% { transform: translate(-40%, -50%) scale(1); } 85% { transform: translate(40%, -50%) scaleX(3) scaleY(.6); opacity: 1; filter: drop-shadow(0 0 30px #fff) brightness(3); } 100% { transform: translate(400%, -50%) scaleX(6) scaleY(.2); opacity: 0; } }
+@keyframes shipBattle { from { transform: translate(-90%, -40%) scale(.8); } to { transform: translate(-50%, -55%) scale(.9); } }
+@keyframes shipWreck { from { transform: translate(-50%, -50%) rotate(-4deg); } to { transform: translate(-40%, -40%) rotate(14deg); filter: drop-shadow(0 0 4px var(--glow)) brightness(.6); } }
+.cin-ship.two { top: 30%; width: clamp(90px, 15vw, 220px); animation-delay: -1.5s; opacity: .75; }
+.cin-ship.three { top: 64%; width: clamp(70px, 11vw, 170px); animation-delay: -3s; opacity: .55; }
+.cin-ship.act-battle.b { top: 62%; width: clamp(110px, 18vw, 260px); animation-delay: -1s; }
+.cin-ship.act-battle.c { top: 38%; left: auto; right: 4%; transform: scaleX(-1); animation-name: foeHold; }
+@keyframes foeHold { from { transform: scaleX(-1) translateX(-30%); } to { transform: scaleX(-1) translateX(-10%); } }
+.cin-tracers { position: absolute; inset: 0; background: repeating-linear-gradient(-8deg, transparent 0 46px, rgba(255, 200, 120, .55) 46px 48px, transparent 48px 140px); -webkit-mask-image: linear-gradient(90deg, transparent 20%, #000 40%, #000 70%, transparent 85%); mask-image: linear-gradient(90deg, transparent 20%, #000 40%, #000 70%, transparent 85%); animation: tracer .35s steps(3) infinite; opacity: .6; }
+@keyframes tracer { to { background-position: 140px 0; } }
+
+/* comms */
+.cin-comm { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); z-index: 3; width: min(820px, 90vw); display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 26px; align-items: center; animation: powerOn .6s var(--ease-out); }
+.cc-portrait { position: relative; aspect-ratio: 1; background: #000 center / cover; clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+  box-shadow: inset 0 0 0 2px hsl(var(--sec-h) 70% 65% / .7); filter: contrast(1.1); }
+.cc-scan { position: absolute; inset: 0; background: var(--scan), linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, .5)); animation: flicker 4s infinite; }
+.cc-h { font: 600 12px var(--f-label); letter-spacing: .3em; text-transform: uppercase; color: var(--red); display: flex; gap: 8px; align-items: center; }
+.cc-h::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--red); box-shadow: 0 0 8px var(--red); animation: lampPulse 1s steps(2) infinite; }
+.cc-name { margin: 8px 0 14px; font: 700 clamp(26px, 4vw, 44px)/1 var(--f-display); letter-spacing: .1em; text-transform: uppercase; }
+.cc-wave { display: flex; gap: 3px; align-items: center; height: 60px; }
+.cc-wave i { flex: 1; height: 8%; background: currentColor; opacity: .8; transition: height .2s; }
+.cin-shot.talking .cc-wave i { animation: wave .5s ease-in-out infinite alternate; animation-delay: var(--d); height: 70%; }
+.cin-comm { color: var(--cyan); }
+.cin-comm.fx-radio { color: var(--amber); } .cin-comm.fx-alien { color: #a6f07a; } .cin-comm.fx-synth { color: #5fe8ff; } .cin-comm.fx-psi { color: #c9a2ff; } .cin-comm.fx-choir { color: #ff8ad8; }
+.cin-comm.fx-radio .cc-portrait, .cin-comm.fx-alien .cc-portrait { filter: contrast(1.2) saturate(.7); }
+.cin-comm.fx-choir .cc-portrait { filter: hue-rotate(-30deg) contrast(1.2); }
+@media (max-width: 640px) { .cin-comm { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; gap: 12px; top: 40%; } .cc-portrait { width: min(56vw, 240px); } .cc-wave { width: 70vw; height: 40px; } .cc-h { justify-content: center; } }
+
+/* logs */
+.cin-log { position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%); z-index: 3; width: min(760px, 88vw); padding: 26px 30px; background: var(--scan), rgba(2, 6, 10, .88); box-shadow: inset 0 0 0 1px rgba(79, 210, 236, .35), 0 0 60px rgba(0, 0, 0, .8);
+  clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px); animation: powerOn .5s var(--ease-out); }
+.cl-h { font: 600 12px var(--f-label); letter-spacing: .26em; color: var(--cyan); text-transform: uppercase; margin-bottom: 14px; }
+.cl-body { min-height: 6em; font: 500 clamp(16px, 2vw, 21px)/1.55 var(--f-label); color: #dce8f2; white-space: pre-line; }
+.cl-body::after { content: "▌"; color: var(--cyan); animation: lampPulse .9s steps(2) infinite; }
+
+/* impact + warp */
+.cin-flash { position: absolute; inset: 0; z-index: 3; background: radial-gradient(circle at 50% 48%, #fff, hsl(var(--sec-h) 90% 70%) 25%, transparent 70%); animation: flashOut 2.2s ease-out forwards; mix-blend-mode: screen; }
+@keyframes flashOut { 0% { opacity: 0; } 8% { opacity: 1; } 100% { opacity: 0; } }
+.cin-ring { position: absolute; left: 50%; top: 48%; width: 40px; height: 40px; z-index: 3; border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 0 3px #fff, 0 0 40px 10px hsl(var(--sec-h) 90% 65%); animation: ringOut 1.8s ease-out forwards; }
+.cin-ring.r2 { animation-delay: .25s; opacity: 0; }
+@keyframes ringOut { 0% { opacity: 1; width: 40px; height: 40px; } 100% { opacity: 0; width: 180vmax; height: 180vmax; } }
+.cin-warp { position: absolute; inset: -50%; z-index: 2; background: repeating-conic-gradient(from 0deg at 50% 50%, transparent 0 2.2deg, rgba(200, 230, 255, .5) 2.3deg 2.5deg, transparent 2.6deg 5deg);
+  -webkit-mask-image: radial-gradient(circle, transparent 6%, #000 22%, #000 60%, transparent 75%); mask-image: radial-gradient(circle, transparent 6%, #000 22%, #000 60%, transparent 75%); animation: warpIn var(--dur) ease-in forwards; }
+@keyframes warpIn { from { transform: scale(.4) rotate(0); opacity: 0; } 20% { opacity: 1; } to { transform: scale(2.4) rotate(20deg); opacity: 1; } }
+
+/* subtitles + skip */
+.cin-sub { position: absolute; left: 50%; bottom: calc(9vh + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 10px); z-index: 6; width: min(900px, 92vw); text-align: center; opacity: 0; transition: opacity .3s, transform .3s; pointer-events: none; }
+.cin-sub.show { opacity: 1; transform: translate(-50%, 0); }
+.cin-sub b { display: block; margin-bottom: 6px; font: 600 12px var(--f-label); letter-spacing: .3em; text-transform: uppercase; }
+.cin-sub span { display: inline; font: 500 clamp(18px, 2.4vw, 26px)/1.45 var(--f-body); color: #fff; text-shadow: 0 2px 4px #000, 0 0 18px #000; background: rgba(0, 0, 0, .35); box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: 2px 8px; }
+.cin-skip { position: absolute; right: 18px; top: calc(14px + env(safe-area-inset-top, 0px)); z-index: 7; border: 0; cursor: pointer; padding: 9px 16px; color: rgba(230, 238, 246, .8); background: rgba(0, 0, 0, .45); box-shadow: inset 0 0 0 1px rgba(230, 238, 246, .25);
+  font: 600 12px var(--f-label); letter-spacing: .22em; text-transform: uppercase; clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px); }
+.cin-skip:hover { color: #fff; box-shadow: inset 0 0 0 1px var(--amber); }
+@media (prefers-reduced-motion: reduce) { .cin-bg, .cin-ship, .cin-warp { animation: none !important; } }
+
+/* archive: mission logs */
+.cine-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+.cine-item { position: relative; display: grid; align-content: end; gap: 4px; min-height: 130px; padding: 14px; text-align: left; border: 0; cursor: pointer; color: #fff; background: #000 center / cover;
+  box-shadow: inset 0 0 0 1px var(--edge-2); clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); isolation: isolate; }
+.cine-item::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, transparent 20%, rgba(0, 0, 0, .85)); }
+.cine-item:hover { box-shadow: inset 0 0 0 1px var(--amber); }
+.cine-item small { font: 600 10.5px var(--f-label); letter-spacing: .22em; text-transform: uppercase; color: var(--amber); }
+.cine-item b { font: 700 19px var(--f-display); letter-spacing: .08em; text-transform: uppercase; }
+.cine-item.locked { cursor: default; background: var(--hull-1); opacity: .5; }

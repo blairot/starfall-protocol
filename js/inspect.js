@@ -133,6 +133,7 @@ function archiveSections(save) {
     ['h', 'Dossiers'],
     ...Object.keys(lore.factions || {}).map(k => ['faction:' + k, lore.factions[k].name]),
     ['characters', 'People'], ['cards', 'Card dossiers'],
+    ['cinematics', 'Mission logs', `${((save && save.seenCine) || []).length}/${Object.keys(typeof CINEMATICS !== 'undefined' ? CINEMATICS : {}).length}`],
     ['h', 'Anchorage'],
     ['records', 'Recovered records', `${recs.filter(r => r.unlock <= lim).length}/${recs.length}`],
     ['h', 'Field manual'],
@@ -168,6 +169,13 @@ function archivePage(sec, save) {
       ? `<div class="arch-rec"><h4>${esc(r.title)}</h4><p>${esc(r.body)}</p></div>`
       : `<div class="arch-rec locked"><h4>Corrupted record</h4><p class="muted">${r.unlock > stationLv(save, 'archive') * 4 ? `Needs Archive Mk ${Math.ceil(r.unlock / 4)}.` : 'Push deeper into the campaign to recover this record.'}</p></div>`).join('');
   }
+  if (sec === 'cinematics') {
+    const seen = (save && save.seenCine) || [];
+    const items = Object.entries(typeof CINEMATICS !== 'undefined' ? CINEMATICS : {}).map(([id, c]) => seen.includes(id)
+      ? `<button class="cine-item" data-cine="${id}" style="background-image:url(${Scene.backdrop(c.sector, SECTORS[c.sector].hue)})"><small>${esc(c.kicker || '')}</small><b>${esc(c.title)}</b></button>`
+      : `<div class="cine-item locked"><small>Classified</small><b>Not yet recorded</b></div>`).join('');
+    return `<div class="m-eyebrow">Archive // Mission logs</div><h2>Mission logs</h2><p class="muted">Replay the story so far. New logs are recorded as you clear each sector.</p><div class="cine-list">${items}</div>`;
+  }
   if (sec === 'manual') {
     const list = Object.keys(KEYWORDS).map(k => save && save.codex.includes(k)
       ? `<div class="cx"><b>${esc(KEYWORDS[k].name)}</b><span>${esc(KEYWORDS[k].text)}</span></div>`
@@ -201,6 +209,7 @@ function openArchive(sec, back) {
   m.onclick = e => {
     const s = e.target.closest('[data-sec]'); if (s) { SFX.click(); openArchive(s.dataset.sec); return; }
     const o = e.target.closest('[data-open]'); if (o) { openInspect(o.dataset.open); return; }
+    const cv = e.target.closest('[data-cine]'); if (cv) { closeModal(); Cinema.play(cv.dataset.cine, () => openArchive('cinematics')); return; }
     if (e.target.closest('[data-a="close"]')) { closeModal(); const b = Arch.back; Arch.back = null; if (b) b(); }
   };
 }

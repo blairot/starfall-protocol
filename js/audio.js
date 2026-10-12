@@ -8,7 +8,7 @@
 const SETTINGS_KEY = 'starfall_protocol_settings_v1';
 const Settings = {
   defaults: {
-    master: 80, music: 55, sfx: 75, muted: false,
+    master: 80, music: 55, sfx: 75, voice: 90, subs: true, muted: false,
     speed: 'normal',        // normal | fast | instant
     particles: true, shake: true, hoverZoom: true,
     tips: true, log: true, confirmEnd: false, autoEnd: false,

@@ -801,14 +801,21 @@ function endBattle() {
     ${economyOpen(save) ? `<div class="wallet-line"><span>${ico('credits')} <b>${save.credits}</b> Credits</span><span>${ico('scrap')} <b>${save.scrap}</b> Scrap</span><span>${ico('alloy')} <b>${ensureStation(save).alloy}</b> Alloy</span>${unopened ? `<span>${ico('pack')} <b>${unopened}</b> unopened pack${unopened > 1 ? 's' : ''}</span>` : ''}</div>` : ''}
     ${bits.join('')}
     <div class="m-actions">${unopened ? `<button class="btn" data-a="open">Open packs (${unopened})</button>` : ''}<button class="btn" data-a="hangar">Hangar</button>${upgradesAvailable(save) ? `<button class="btn" data-a="station">Anchorage (${upgradesAvailable(save)} ready)</button>` : ''}<button class="btn primary" data-a="go">${enc.final ? 'Continue' : 'Star Map'}</button></div>`, 'wide');
+  const cine = firstClear && CINE_AFTER[enc.id];
   m.onclick = e => {
     const a = e.target.dataset.a; if (!a) return; closeModal();
-    if (enc.final) return showEnding();
-    if (a === 'open') openShop(openMap, true);
-    else if (a === 'hangar') openHangar(openMap);
-    else if (a === 'station') openStation(openMap);
-    else openMap();
+    if (cine) return Cinema.play(cine, () => afterVictory(a, enc));
+    afterVictory(a, enc);
   };
+}
+
+// Where the victory screen's buttons lead (after any cutscene).
+function afterVictory(a, enc) {
+  if (enc.final) return showEnding();
+  if (a === 'open') openShop(openMap, true);
+  else if (a === 'hangar') openHangar(openMap);
+  else if (a === 'station') openStation(openMap);
+  else openMap();
 }
 
 function integrateGrants(save, ids, size) {
@@ -1136,7 +1143,7 @@ function showSettings(back) {
   const slider = (k, label) => `<div class="set-row"><div><b>${label}</b></div><div class="slider"><input type="range" min="0" max="100" step="5" id="set-${k}" data-sl="${k}" value="${Settings.get(k)}" aria-label="${esc(label)}"><output>${Settings.get(k)}</output></div></div>`;
   const seg = (k, label, opts, hint) => `<div class="set-row"><div><b>${label}</b>${hint ? `<span>${hint}</span>` : ''}</div><div class="seg">${opts.map(([v, l]) => `<button class="${Settings.get(k) === v ? 'on' : ''}" data-seg="${k}" data-v="${v}">${l}</button>`).join('')}</div></div>`;
   let body = '';
-  if (tab === 'audio') body = slider('master', 'Master volume') + slider('music', 'Music') + slider('sfx', 'Sound effects') + sw('muted', 'Mute all audio', 'Silences music and effects.')
+  if (tab === 'audio') body = slider('master', 'Master volume') + slider('music', 'Music') + slider('sfx', 'Sound effects') + slider('voice', 'Voices') + sw('subs', 'Subtitles', 'Show spoken lines in cutscenes.') + sw('muted', 'Mute all audio', 'Silences music, effects and voices.')
     + '<p class="muted small">The soundtrack is generated live and shifts between menu, battle and boss moods.</p>';
   if (tab === 'gameplay') body = (save ? `<div class="set-row col"><div><b>Difficulty</b><span>Change any time. Affects enemy Health and how well they play.</span></div><div class="diff-row">${Object.entries(DIFFICULTY).map(([k, d]) => `<button class="diff ${save.diff === k ? 'on' : ''}" data-d="${k}"><b>${d.name}</b><span>${d.text}</span></button>`).join('')}</div></div>` : '')
     + seg('speed', 'Animation speed', [['normal', 'Normal'], ['fast', 'Fast'], ['instant', 'Instant']], 'Also speeds up the enemy turn.')
@@ -1228,6 +1235,6 @@ function newCampaignDialog() {
     const d = e.target.closest('[data-d]'); if (d) { diff = d.dataset.d; $$('.diff', m).forEach(b => b.classList.toggle('on', b === d)); return; }
     const a = e.target.dataset.a;
     if (a === 'back') closeModal();
-    if (a === 'go') { App.save = newSave($('#nc-name').value.trim() || 'Commander', diff); persist(); closeModal(); openMap(); }
+    if (a === 'go') { App.save = newSave($('#nc-name').value.trim() || 'Commander', diff); persist(); closeModal(); Cinema.play('opening', openMap); }
   };
 }
