@@ -35,6 +35,15 @@ function minionValue(s, m) {
 
 function heroValue(h) { return h + Math.max(0, 12 - h) * 0.7 + Math.max(0, 6 - h) * 1.5; }
 
+// How much health I'd have left if the opponent swung everything at me next turn.
+function lethalMargin(s, me) {
+  const P = s.players[me], O = s.players[1 - me];
+  let danger = O.weapon ? O.weapon.atk : 0;
+  for (const m of O.board) if (alive(m) && !m.frozen) danger += atkOf(s, m) * (m.kw.twin ? 2 : 1);
+  const myGuard = P.board.filter(m => alive(m) && m.kw.guardian).reduce((a, m) => a + m.hp, 0);
+  return P.hp + P.armor - (danger - myGuard * 0.5);
+}
+
 function evaluate(s, me) {
   const P = s.players[me], O = s.players[1 - me];
   if (P.hp <= 0) return -1e7;
@@ -48,11 +57,7 @@ function evaluate(s, me) {
   if (O.weapon) v -= O.weapon.atk * O.weapon.dur * 0.5;
   v -= P.overload * 0.6;
   v += P.traps.length * 1.5;
-  // Danger: can the opponent kill me next turn?
-  let danger = O.weapon ? O.weapon.atk : 0;
-  for (const m of O.board) if (alive(m) && !m.frozen) danger += atkOf(s, m) * (m.kw.twin ? 2 : 1);
-  const myGuard = P.board.filter(m => alive(m) && m.kw.guardian).reduce((a, m) => a + m.hp, 0);
-  const margin = P.hp + P.armor - (danger - myGuard * 0.5);
+  const margin = lethalMargin(s, me);
   if (margin <= 0) v -= 45 + Math.min(20, -margin * 2);   // dead next turn unless something changes
   else if (margin <= 4) v -= (5 - margin) * 3;            // uncomfortably close
   return v;
@@ -147,8 +152,9 @@ function aiChoose(s, pi, level) {
   }
   scored.forEach(x => { if (x.v < 1e6) x.v += (Math.random() - 0.5) * noise; });
   scored.sort((x, y) => y.v - x.v);
-  // rookies don't coordinate; everyone else considers ganging up on a threat
-  if (level >= 1 && !s.sim) {
+  // Ganging up on a threat: veterans always consider it; pilots (tutorial level) only
+  // when they're about to die; rookies never.
+  if ((level >= 2 || (level === 1 && lethalMargin(s, pi) <= 0)) && !s.sim) {
     const ff = focusFire(s, pi);
     if (ff && ff.v > Math.max(base, scored[0].v) + 0.5) {
       AI_PLAN = { pi, turn: s.turnNo, steps: ff.steps.slice(1) };

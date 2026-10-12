@@ -54,7 +54,7 @@ const ENCOUNTERS = [
     grant: { shield_trooper: 2, barricade: 2 } },
 
   { id: '1-3', sector: 0, name: 'Hold the Line', teaches: ['guardian'],
-    enemy: { name: 'Sim Fortress', hp: 18, ai: 1, deck: dk('barricade:2 shield_trooper:3 marine:2 cadet:2 bulwark_mech:1 heavy_trooper:2 medic_bot:2 field_engineer:1') },
+    enemy: { name: 'Sim Fortress', hp: 18, ai: 1, deck: dk('barricade:2 shield_trooper:3 marine:2 cadet:3 scout_drone:1 bulwark_mech:1 heavy_trooper:2 field_engineer:1') },
     first: 0, noMulligan: true,
     story: 'HALCYON: "Fortification drill. The enemy deploys Guardian units. You must break through them before you can reach the commander behind."',
     tips: [

@@ -4,7 +4,7 @@
 // Network first, so a new build shows up as soon as you're online; the cache
 // is the fallback when you're not. Bump VERSION to drop old caches.
 // ============================================================================
-const VERSION = 'starfall-v3';
+const VERSION = 'starfall-v4';
 const SHELL = [
   './', 'index.html', 'manifest.webmanifest', 'css/style.css',
   'js/engine.js', 'js/audio.js', 'js/cards.js', 'js/ai.js', 'js/campaign.js', 'js/economy.js', 'js/station.js', 'js/lore.js',

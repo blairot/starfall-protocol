@@ -205,7 +205,8 @@ function startBattle(enc, resumeState) {
     if (UI.s.active === 1 && !UI.s.over) enemyTurn();
     return;
   }
-  const s = newGame(buildBattle(App.save, enc));
+  const easy = UI.easyRetry === enc.id; UI.easyRetry = null; UI.easyRun = easy;
+  const s = newGame(buildBattle(easy ? Object.assign({}, App.save, { diff: 'cadet' }) : App.save, enc));
   UI.s = s;
   aiMulligan(s, 1);
   renderBattle();
@@ -738,17 +739,20 @@ function endBattle() {
   Tip.hide();
   const won = s.winner === 0;
   const tally = Object.assign({}, UI.tally);
+  // consecutive losses on the same mission, for the easier-retry offer
+  save.streak = won ? null : { id: enc.id, n: save.streak && save.streak.id === enc.id ? save.streak.n + 1 : 1 };
   if (!won) {
     save.stats.losses++;
+    const offerEasy = save.streak.n >= 2 && save.diff !== 'cadet';
     const done = applyContracts(save, tally);
     persist(); SFX.lose(); if (Music.stinger) Music.stinger('defeat');
     const m = modal(`<div class="m-eyebrow danger">Defeat</div><h2>${esc(enc.name)}</h2>
       <p>Your flagship withdraws to repair. Adjust your deck in the Hangar and try again.</p>
       ${done.length ? `<div class="rewards">${contractLines(done)}</div>` : ''}
       ${(enc.tips || []).length ? `<div class="advisor inline"><div class="adv-h">Advisor</div><div class="adv-t">${pick(enc.tips)}</div></div>` : ''}
-      ${save.diff !== 'cadet' && save.stats.losses >= 3 ? '<p class="muted">Struggling? You can switch to Cadet difficulty in Settings at any time.</p>' : ''}
-      <div class="m-actions"><button class="btn" data-a="map">Back to Star Map</button><button class="btn" data-a="hangar">Hangar</button><button class="btn primary" data-a="retry">Retry</button></div>`);
-    m.onclick = e => { const a = e.target.dataset.a; if (!a) return; UI.s = null; if (a === 'retry') startBattle(enc); else if (a === 'hangar') { closeModal(); openHangar(() => openBriefing(enc)); } else { closeModal(); openMap(); } };
+      ${offerEasy ? `<p class="muted">That's ${save.streak.n} losses in a row here. <b>Retry on Cadet</b> runs this one battle with weaker enemies and doesn't change your difficulty setting.</p>` : save.diff !== 'cadet' && save.stats.losses >= 3 ? '<p class="muted">Struggling? You can switch to Cadet difficulty in Settings at any time.</p>' : ''}
+      <div class="m-actions"><button class="btn" data-a="map">Back to Star Map</button><button class="btn" data-a="hangar">Hangar</button>${offerEasy ? '<button class="btn" data-a="easy">Retry on Cadet</button>' : ''}<button class="btn primary" data-a="retry">Retry</button></div>`);
+    m.onclick = e => { const a = e.target.dataset.a; if (!a) return; UI.s = null; if (a === 'easy') { UI.easyRetry = enc.id; startBattle(enc); } else if (a === 'retry') startBattle(enc); else if (a === 'hangar') { closeModal(); openHangar(() => openBriefing(enc)); } else { closeModal(); openMap(); } };
     return;
   }
   SFX.win(); if (Music.stinger) Music.stinger('victory');
