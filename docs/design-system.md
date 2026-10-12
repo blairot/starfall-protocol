@@ -1,14 +1,16 @@
 # Starfall Protocol: Fleet Tactical Interface (FTI)
 
-The design system for every screen in the game. All tokens live at the top of
+The design system for every screen in the game. Visual reference since October 2026:
+Mass Effect's holographic interfaces (evoke, never copy: no logos or recognisable designs). All tokens live at the top of
 `css/style.css`. Anything new must be built from these parts. If a new part
 is needed, add it here first.
 
 ## 1. Principles
 
-1. **Hardware, not software.** Every surface is a piece of ship equipment: a
-   gunmetal frame around a recessed, slightly lit glass screen. Never a flat
-   rectangle with a 1px border. If it looks like a web form, it is wrong.
+1. **Glass and light.** Every surface is a hologram projected from ship
+   equipment: translucent navy glass with a faint hex texture, a lit top
+   edge and bright corner brackets. Never a flat rectangle with a 1px
+   border. If it looks like a web form, it is wrong.
 2. **Light carries meaning.** Colour comes from light sources (lamps, screens,
    glows), never from large flat fills. Each colour has one job (see §2).
    Glow is reserved for things that are live or interactive.
@@ -29,7 +31,8 @@ is needed, add it here first.
 | `--void` | Page background behind everything |
 | `--hull-0 … --hull-3` | Panel fills, from deepest screen to raised metal |
 | `--metal-hi / --metal-lo` | Bevel highlights and frame gradients |
-| `--edge-1 / --edge-2 / --edge-3` | Frame edges: quiet, normal, active |
+| `--edge-1 / --edge-2 / --edge-3` | Hologram-blue frame edges: quiet, normal, active |
+| `--holo / --holo-hi` | Hologram light: panel headers, selection bars, orbit rings, glows |
 | `--t-1 … --t-4` | Text: primary, secondary, tertiary, disabled |
 | `--amber` | **Command.** Your actions, primary buttons, selection, Attack |
 | `--cyan` | **Systems.** Energy, information, neutral highlights |
@@ -49,9 +52,10 @@ elements as `--h`.
 
 | Face | Token | Use |
 | --- | --- | --- |
-| Saira Semi Condensed 600/700 | `--f-display` | Titles, names, buttons, big numbers. Uppercase, tracked `.06–.16em` |
-| Chakra Petch 500/600 | `--f-label` | Labels, eyebrows, stats, tabs, readouts. Uppercase, tracked `.14–.28em`, `tabular-nums` |
-| Barlow Semi Condensed 400/500 | `--f-body` | Prose, rules text, lore, tips. Sentence case |
+| Michroma | `--f-hero` | Big titles only: logo, screen and dialog headings, cutscene titles, banners. Wide, so keep sizes modest and tracking `.05–.1em` |
+| Titillium Web 600/700 | `--f-display`, `--f-label` | Buttons, nav, names, labels, tabs, readouts. Uppercase, tracked `.14–.3em` |
+| Titillium Web 400 | `--f-body` | Prose, rules text, lore, tips. Sentence case |
+| Saira Semi Condensed 600/700 | `--f-card` | Printed on cards, units and commanders: names and stat numbers |
 
 Scale (px): 11 · 12 · 13 · 15 · 17 · 20 · 26 · 34 · 48 · clamp() for the logo.
 Body copy is 15–17px with 1.5 line height. Never set prose in uppercase.
@@ -60,10 +64,17 @@ Body copy is 15–17px with 1.5 line height. Never set prose in uppercase.
 
 * Chamfer sizes: `--cut-xs 5px` (chips), `--cut-s 8px` (buttons),
   `--cut-m 14px` (panels), `--cut-l 22px` (dialogs, hero panels).
-* **Frame recipe** (`.frame` and the panel list in style.css): metal edge
-  via inset shadow plus two diagonal corner strokes, a hull gradient fill
-  with fine noise, a 1px top bevel highlight, and an optional accent tab
-  (`--tab`) on the top edge.
+* **Frame recipe** (`.frame` and the panel list in style.css): translucent
+  sector-tinted glass with a faint hex texture and grain, a thin hologram
+  edge, a lit top line, two diagonal corner strokes on the cut corners, bright
+  L-shaped corner brackets on the other two (`--brk`), and an optional accent
+  tab (`--tab`) on the top edge.
+* **Selection is light.** Hover and active states are light bars sweeping in
+  from the left (`.tm`), glowing text, and small amber markers. Not boxes
+  changing colour.
+* **Circles for places, hexes for things.** Star systems on the map are
+  ringed circles (orbit ring, spinning dashed ring on the next mission);
+  station modules, commanders and powers stay hexagonal.
 * Elevation is light, not shadow: raised = brighter top bevel; active =
   coloured edge (`--edge-3` or a semantic colour) plus a soft outer glow.
 * Screens inside frames (`.screen-inset`) are darker, with faint scanlines.

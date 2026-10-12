@@ -934,7 +934,7 @@ function renderMap() {
     ${cmdBar(save, 'map')}
     <div class="g-strip">${strip}</div>
     <div class="map-main">
-      <section class="chart" style='--h:${sec.hue};--art:${portraitPlate(sec.name, ENEMY_FACTION[si], SECTOR_ART[si])}' data-key="chart-${si}">
+      <section class="chart" style='--h:${sec.hue};--art:url(${Scene.backdrop(si, sec.hue)})' data-key="chart-${si}">
         <div class="chart-head"><div class="ch-n">Sector ${String(si + 1).padStart(2, '0')} // ${esc(sec.sub)}</div><h2>${esc(sec.name)}</h2><div class="ch-prog"><b>${done}</b>/${encs.length} cleared</div></div>
         <div class="chart-coords">GRID ${String.fromCharCode(65 + si)}-${(si + 1) * 117} · ${encs.length} SIGNALS</div>
         <svg class="lanes" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${lanes}</svg>
