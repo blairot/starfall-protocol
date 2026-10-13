@@ -67,7 +67,7 @@ You are painting the card art and character portraits for **Starfall Protocol**,
 The game folder is \`${path.resolve(ROOT)}\`. All paths below are relative to it.
 
 - **Save every finished image to:** \`art/incoming/\` (already created).
-- **Reference images:** \`art/reference/\`. Each image below lists its reference: the game's current code-drawn art for that card. Use it for **subject, pose, composition, colour palette and lighting direction**. Repaint it as finished concept art; don't copy its flat vector look. The references are rough placeholders drawn by code: match **what** they show, not how crudely they show it. Add the detail, anatomy, materials and environment they lack.
+- **Reference images:** \`art/reference/\`. Each image below lists its reference: the game's current code-drawn art for that card. Use it for **subject, pose, composition, colour palette and lighting direction**. Repaint it as finished concept art; don't copy its flat vector look. The references are rough placeholders drawn by code: match **what** they show, not how crudely they show it. Add the detail, anatomy, materials and environment they lack. **If a reference conflicts with the art direction below (for example a robed figure for a Choir card, or a tiny subject), the art direction wins.**
 - **Progress log:** append one line per image to \`art/incoming/_log.csv\` in the form \`file,status,notes\`. Status is \`done\`, \`skipped\` or \`redo\`, and notes should be short.
 
 ## Art direction
@@ -78,13 +78,17 @@ The game folder is \`${path.resolve(ROOT)}\`. All paths below are relative to it
 - **Mood:** inspired by the look of the Mass Effect games. Grounded, military, hard sci-fi; cool blue-teal shadows against warm highlights; glowing interfaces and emissive details; atmospheric depth. **Do not copy** any Mass Effect characters, armour designs, ships, creatures or logos. Everything here is original.
 - **Lighting:** always a strong key light plus a coloured rim light separating the subject from the background, with atmospheric haze or volumetric light behind. Glows (visors, engines, eyes, energy) have soft bloom. Use lens flare sparingly.
 - **Composition:** one clear subject with a strong silhouette, readable even as a small thumbnail. A depth background (environment or space), never an empty void and never a busy pattern.
+- **Readability at small size (lessons from the pilot).** These images are mostly seen about 100 px wide on a card or a battlefield token, so:
+  - **Make the subject big:** it should fill about **70% of the frame height**, with a medium or medium-close camera, not a wide establishing shot. A soldier runs roughly knee to helmet, or full body only if it still fills the height. A creature or machine fills the centre of the frame.
+  - **Keep the background calm:** darker, lower contrast, with a shallow depth of field so it softly blurs, and far less clutter than the subject. No busy cityscapes or dense cathedral architecture competing with the subject.
+  - **Make the subject the brightest, sharpest, most saturated thing in the frame.** The background supports it and never competes with it.
 - **Faction looks** (the faction is listed on every image):
   - **Colonial Fleet** (human military): white and light-grey armour plates with navy accents and thin blue glowing seams, sealed helmets with glowing visors; ships are sleek grey hulls with blue engines. Palette: navy, steel, white, cyan light.
   - **Belt Raiders** (mercenary pirates): mismatched scavenged armour, orange and yellow paint, hazard stripes, rust, cables, smoke, jury-rigged weapons. Palette: rust orange, amber, oily steel.
   - **The Swarm** (insectile alien hive): chitin plates with a wet glossy sheen, mandibles, many limbs, bioluminescent green glands, organic hive caverns. Palette: olive, brown, bile green glow.
   - **Synthetics** (Forge machines): smooth white and graphite plated bodies, one bright cyan optic, geometric precision, foundry backdrops. Palette: graphite, bone white, cyan.
-  - **Psionic Orders** (mystic warrior-scholars): robed and lightly armoured figures with hoods and masks, wreathed in violet-blue psionic energy that bends the air around them; halos and floating glyph-light. Palette: indigo, violet, silver.
-  - **The Choir** (the final enemy): vast black-glass forms, part machine and part organism, shard-like and cathedral-like, with red and magenta light burning inside. Ominous scale. Palette: obsidian, crimson, magenta.
+  - **Psionic Orders** (mystic warrior-scholars): robed and lightly armoured figures with masks, wreathed in violet-blue psionic energy that bends the air around them; halos and floating glyph-light. Palette: indigo, violet, silver. **Vary the silhouettes:** not every psionic is a hooded robe with orbs. Use armoured duellists, bare-headed seers, figures mid-gesture, kneeling meditators and different headwear, so cards in this faction are easy to tell apart.
+  - **The Choir** (the final enemy): vast black-glass forms, part machine and part organism, shard-like and cathedral-like, with red and magenta light burning inside. Ominous scale. Palette: obsidian, crimson, magenta. **Never draw a Choir subject as a robed, hooded or human-shaped figure.** They are alien constructs: crystalline shards, glass carapaces, organ-like machinery, many-limbed or limbless, faces made of light if any. The only exceptions are the portraits marked as the Choir's rebuilt echo of an earlier character, which keep that character's silhouette.
   - **Independent:** neutral gear and drones; follow the reference's palette.
 
 ## Technical specs
