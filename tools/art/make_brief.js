@@ -64,7 +64,7 @@ You are painting the card art and character portraits for **Starfall Protocol**,
 
 ## Where things are
 
-The game folder is \`C:\\Users\\blair\\OneDrive\\Desktop\\claude\\fire\\starfall\\\`. All paths below are relative to it.
+The game folder is \`${path.resolve(ROOT)}\`. All paths below are relative to it.
 
 - **Save every finished image to:** \`art/incoming/\` (already created).
 - **Reference images:** \`art/reference/\`. Each image below lists its reference: the game's current code-drawn art for that card. Use it for **subject, pose, composition, colour palette and lighting direction**. Repaint it as finished concept art; don't copy its flat vector look. The references are rough placeholders drawn by code: match **what** they show, not how crudely they show it. Add the detail, anatomy, materials and environment they lack.
