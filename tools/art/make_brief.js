@@ -89,6 +89,16 @@ The game folder is \`${path.resolve(ROOT)}\`. All paths below are relative to it
   - **Stance:** charging, kneeling, braced, mid-throw, operating equipment, at ease.
   - **Colour accents:** stripe colour, rank markings, camouflage, scorched or pristine.
 
+  - **Ships and vehicles:** vary the **camera angle** (side profile, three-quarter from above, looking up from below, head-on) and the **setting**:
+    - over a planet's curve;
+    - in battle with tracer fire and explosions;
+    - docking at a station;
+    - leading or breaking from a formation;
+    - in an asteroid field or a nebula;
+    - on the ground for vehicles.
+
+    Show the scale with escorts, a station or a planet behind. **Never reuse the "ship diving toward the camera through a blue nebula" shot.** It's been used enough.
+
   Use the card's name and description to choose. For example, a Cadet is young, in light training armour with the visor up; a Heavy Trooper is a hulking power-armoured gunner. Compare with the faction's images already in \`art/incoming/\` before painting, and change several of these traits so nothing reads as a duplicate.
 - **Faction looks** (the faction is listed on every image):
   - **Colonial Fleet** (human military): white and light-grey armour plates with navy accents and thin blue glowing seams, sealed helmets with glowing visors; ships are sleek grey hulls with blue engines. Palette: navy, steel, white, cyan light.
