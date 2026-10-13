@@ -82,6 +82,14 @@ The game folder is \`${path.resolve(ROOT)}\`. All paths below are relative to it
   - **Make the subject big:** it should fill about **70% of the frame height**, with a medium or medium-close camera, not a wide establishing shot. A soldier runs roughly knee to helmet, or full body only if it still fills the height. A creature or machine fills the centre of the frame.
   - **Keep the background calm:** darker, lower contrast, with a shallow depth of field so it softly blurs, and far less clutter than the subject. No busy cityscapes or dense cathedral architecture competing with the subject.
   - **Make the subject the brightest, sharpest, most saturated thing in the frame.** The background supports it and never competes with it.
+- **Variety within a faction.** Many cards share a faction (the Fleet alone has a dozen soldiers), so two cards must never look like the same character in a different pose. Make each one distinct by **role**:
+  - **Armour weight:** light training kit, standard plates, bulky power armour or an exo-frame.
+  - **Helmet:** sealed visor, visor raised showing a face, open-face with a headset, a sensor dome, a breather mask, or bare-headed.
+  - **Weapon class:** sidearm, carbine, long rifle, heavy cannon, flamer, riot shield, tools or medical kit.
+  - **Stance:** charging, kneeling, braced, mid-throw, operating equipment, at ease.
+  - **Colour accents:** stripe colour, rank markings, camouflage, scorched or pristine.
+
+  Use the card's name and description to choose. For example, a Cadet is young, in light training armour with the visor up; a Heavy Trooper is a hulking power-armoured gunner. Compare with the faction's images already in \`art/incoming/\` before painting, and change several of these traits so nothing reads as a duplicate.
 - **Faction looks** (the faction is listed on every image):
   - **Colonial Fleet** (human military): white and light-grey armour plates with navy accents and thin blue glowing seams, sealed helmets with glowing visors; ships are sleek grey hulls with blue engines. Palette: navy, steel, white, cyan light.
   - **Belt Raiders** (mercenary pirates): mismatched scavenged armour, orange and yellow paint, hazard stripes, rust, cables, smoke, jury-rigged weapons. Palette: rust orange, amber, oily steel.
