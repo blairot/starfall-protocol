@@ -6,7 +6,7 @@ and writes js/vo.js (duration + text hash per line, so the game can tell when a
 line's text changed and its audio is stale).
 
 Usage (from the repo root, with the Kokoro virtualenv's Python):
-    C:\\Users\\blair\\starfall-voice\\venv\\Scripts\\python tools/voice/generate.py [--force] [--only opening,s1]
+    <kokoro-venv>\\Scripts\\python tools/voice/generate.py [--force] [--only opening,s1]
 Needs node and ffmpeg on PATH. Unchanged lines are skipped unless --force.
 """
 import argparse, json, os, subprocess, sys, tempfile
