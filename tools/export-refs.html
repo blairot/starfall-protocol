@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Starfall reference export</title>
+<!-- Dev tool: renders every card and portrait's code-drawn art at 960x600 and
+     POSTs each PNG to tools/art/save_server.py, which writes art/reference/.
+     Run the server, then open http://localhost:8766/tools/export-refs.html -->
+<style>body { background: #05070b; color: #9fb2c4; font: 14px monospace; padding: 16px; } img { width: 160px; margin: 2px; }</style>
+</head>
+<body>
+<p id="status">Rendering…</p>
+<div id="thumbs"></div>
+<script>globalThis.ART_NO_HUD = true; // references go to an image generator: no overlay text</script>
+<script src="../js/engine.js"></script>
+<script src="../js/cards.js"></script>
+<script src="../js/campaign.js"></script>
+<script src="../js/art.js"></script>
+<script src="../js/illustrations.js"></script>
+<script src="../js/icons.js"></script>
+<script>
+const W = 960, H = 600;
+const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+function jobs() {
+  const out = CARD_LIST.map(d => { const [kind, opts] = artFor(d); return { file: d.id + '.png', svg: composeArt(d.id, kind, opts, d.faction) }; });
+  const FAC = ['neutral', 'raider', 'swarm', 'synth', 'psi', 'void'];
+  Object.keys(ENEMY_ART).forEach(name => {
+    const enc = ENCOUNTERS.find(e => e.enemy.name === name), [kind, opts] = ENEMY_ART[name] || ['bust', { cap: 1 }];
+    out.push({ file: 'portrait-' + slug(name) + '.png', svg: composeArt(name, kind, opts || {}, FAC[enc ? enc.sector : 0]) });
+  });
+  const [pk, po] = PLAYER_ART; out.push({ file: 'portrait-commander.png', svg: composeArt('commander', pk, po || {}, 'fleet') });
+  return out;
+}
+function toPng(svg) {
+  return new Promise((res, rej) => {
+    const img = new Image();
+    img.onload = () => { const c = document.createElement('canvas'); c.width = W; c.height = H; c.getContext('2d').drawImage(img, 0, 0, W, H); c.toBlob(res, 'image/png'); };
+    img.onerror = rej;
+    img.src = 'data:image/svg+xml,' + encodeURIComponent(svg);
+  });
+}
+(async () => {
+  const list = jobs(), st = document.getElementById('status'); let ok = 0, fail = [];
+  for (const j of list) {
+    try {
+      const blob = await toPng(j.svg);
+      const r = await fetch('/save/' + j.file, { method: 'POST', body: blob });
+      if (!r.ok) throw new Error(r.status);
+      ok++; if (ok % 12 === 1) { const t = document.createElement('img'); t.src = URL.createObjectURL(blob); document.getElementById('thumbs').appendChild(t); }
+    } catch (e) { fail.push(j.file); }
+    st.textContent = `Saved ${ok} / ${list.length}${fail.length ? ' · failed: ' + fail.join(', ') : ''}`;
+  }
+  document.body.dataset.done = JSON.stringify({ ok, total: list.length, fail });
+})();
+</script>
+</body>
+</html>

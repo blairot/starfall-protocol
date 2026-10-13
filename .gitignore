@@ -19,3 +19,8 @@ desktop.ini
 
 # local Claude Code config
 .claude/
+
+# art pipeline: raw generator output and regenerable references (converted art/cards + art/portraits are committed)
+art/incoming/
+art/reference/
+art/BRIEF.md

@@ -1483,8 +1483,8 @@ ${lensFlare(r, bgKind)}
 <rect width="160" height="100" fill="url(#cg)" opacity=".22" style="mix-blend-mode:soft-light"/>
 <rect width="160" height="100" filter="url(#gr)" opacity=".1"/>
 <rect width="160" height="100" fill="url(#vg)"/>
-<g stroke="${ch(P.light, 10)}" stroke-width=".5" fill="none" opacity=".45"><path d="M6 14V6H14M146 6H154V14M154 86V94H146M14 94H6V86"/></g>
-<text x="152" y="91" text-anchor="end" font-family="ui-monospace,Consolas,monospace" font-size="4.2" letter-spacing=".6" fill="${ch(P.light, 10)}" opacity=".55">${code}</text>
+${globalThis.ART_NO_HUD ? '' : `<g stroke="${ch(P.light, 10)}" stroke-width=".5" fill="none" opacity=".45"><path d="M6 14V6H14M146 6H154V14M154 86V94H146M14 94H6V86"/></g>
+<text x="152" y="91" text-anchor="end" font-family="ui-monospace,Consolas,monospace" font-size="4.2" letter-spacing=".6" fill="${ch(P.light, 10)}" opacity=".55">${code}</text>`}
 </svg>`;
 }
 
@@ -1513,7 +1513,12 @@ function prewarmArt(keysAndMakers) {
 }
 
 // public: art for a card id
+// Painted art (art/cards, art/portraits) replaces the code-drawn plate when present; see tools/art/ingest.py.
+const PAINTED_CARDS = new Set(typeof PAINTED !== 'undefined' ? PAINTED.cards : []);
+const PAINTED_PORTRAITS = typeof PAINTED !== 'undefined' ? PAINTED.portraits : {};
+
 function artPlate(id) {
+  if (PAINTED_CARDS.has(id)) return `url("art/cards/${id}.webp")`;
   if (RASTER[id]) return RASTER[id];
   if (!ART_CACHE[id]) {
     const d = D(id); const [kind, opts] = artFor(d);
@@ -1525,6 +1530,7 @@ function artPlate(id) {
 
 // public: portrait for a commander/boss/sector/pack by explicit art spec
 function portraitPlate(key, faction, spec) {
+  if (PAINTED_PORTRAITS[key]) return `url("art/portraits/${PAINTED_PORTRAITS[key]}.webp")`;
   const k = 'p:' + key + (spec ? ':' + spec[0] : '');
   if (RASTER[k]) return RASTER[k];
   if (!ART_CACHE[k]) {
