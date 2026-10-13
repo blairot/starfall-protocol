@@ -86,6 +86,53 @@ function openInspect(id, opts) {
   el.hidden = false; Tip.hide(); SFX.click && SFX.click();
 }
 
+// ---------------------------------------------------------------- commander dossier
+// Enemy (or player) commander: portrait, health, power, passives, phases and lore.
+// Basic intel is always free; deeper intel (deck lists, hand costs) comes from the Observatory.
+function characterLore(name) {
+  const chars = typeof LORE !== 'undefined' && LORE.characters ? Object.values(LORE.characters) : [];
+  const base = name.replace(/\s*\((corrupted)\)/i, '').replace(/ (Reborn|Ascendant|Omega|Unbound)$/, ''), key = base.split(',')[0];
+  return chars.find(c => c.name === name) || chars.find(c => c.name === base) || chars.find(c => c.name.startsWith(key)) || chars.find(c => c.name.includes(key)) || null;
+}
+
+function openCommander(src) {
+  // src: { pi } for a live battle commander, or { enc } for a mission briefing
+  let name, portrait, hp, maxHp, armor = 0, power = null, passives = [], phases = [], faction = 'fleet', sector = 0, mine = false;
+  if (src.pi != null && UI.s) {
+    const p = UI.s.players[src.pi]; mine = src.pi === 0; sector = UI.enc ? UI.enc.sector : 0;
+    name = p.name; portrait = heroArt(p); hp = p.hp; maxHp = p.maxHp; armor = p.armor;
+    power = p.power && p.power.id; passives = p.passives; phases = p.phases; faction = mine ? 'fleet' : ENEMY_FACTION[sector];
+  } else if (src.enc) {
+    const e = src.enc.enemy; sector = src.enc.sector; faction = ENEMY_FACTION[sector];
+    name = e.name; portrait = portraitPlate(e.name, faction, ENEMY_ART[e.name]);
+    hp = maxHp = Math.round(e.hp * (DIFFICULTY[App.save.diff] || DIFFICULTY.officer).hp); power = e.power; passives = e.passives || []; phases = e.phases || [];
+  } else return;
+  const ch = mine ? (LORE.characters && LORE.characters.commander) : characterLore(name);
+  const f = FACTIONS[faction] || FACTIONS.neutral, h = power && HEROPOWERS[power];
+  const lore = ch ? (ch.body || '').split(/\n\s*\n/).map(t => `<p>${esc(t)}</p>`).join('') : '<p class="muted">No further records on file.</p>';
+  const el = inspectLayer(); Inspect.id = null;
+  el.style.setProperty('--h', f.hue);
+  el.innerHTML = `<div class="m-box" role="dialog" aria-label="${esc(name)}"><div class="m-in">
+    <div class="ins">
+      <div class="ins-stage"><div class="cmdr-portrait" style='background-image:${portrait}'></div></div>
+      <div class="ins-side">
+        <div class="m-eyebrow">${mine ? 'Your commander' : 'Enemy commander'} · ${esc(SECTORS[sector].name)}</div>
+        <h2>${esc(name)}</h2>
+        ${ch && ch.role ? `<div class="ins-meta"><span class="pill">${esc(ch.role)}</span></div>` : ''}
+        <div class="ins-rules"><div class="ins-stats" style="margin-top:0"><span class="s-hp"><b>${hp}</b>/${maxHp} Health</span>${armor ? `<span><b>${armor}</b>Armor</span>` : ''}${phases.length ? `<span class="s-atk"><b>${phases.length}</b>more phase${phases.length > 1 ? 's' : ''}</span>` : ''}</div></div>
+        <div class="ins-kws">
+          ${h ? `<div class="kw"><b>${powerIco(power)} ${esc(h.name)}</b> <span class="pill">${h.cost} Energy</span> ${esc(h.text)} <span class="muted">Commander power, once per turn.</span></div>` : '<div class="kw muted">No commander power.</div>'}
+          ${passives.map(id => PASSIVES[id] ? `<div class="kw"><b>${passiveIco(id)} ${esc(PASSIVES[id].name)}</b> ${esc(PASSIVES[id].text)}</div>` : '').join('')}
+          ${phases.length ? `<div class="kw warn"><b>Rises again</b> When its Health hits zero, this enemy returns in a new form ${phases.length > 1 ? phases.length + ' times' : 'once'}. Each form brings new powers.</div>` : ''}
+        </div>
+        <div class="ins-lore"><h3>Dossier</h3>${lore}</div>
+        <div class="m-actions left"><button class="btn small ghost" data-ia="close">Close</button></div>
+        <div class="ins-hint">${TOUCH.on ? 'Tap outside to close' : 'Esc or click outside to close'}</div>
+      </div>
+    </div></div></div>`;
+  el.hidden = false; Tip.hide();
+}
+
 // Which card does this element show? Hand, collection, deck rows, chips, pack reveals and units.
 function cardAt(target) {
   if (!target || !target.closest) return null;
@@ -98,10 +145,27 @@ function cardAt(target) {
   return null;
 }
 
+// A commander (or its power, passives, traps) under this element, in battle?
+function commanderAt(target) {
+  if (!target || !target.closest || App.screen !== 'battle' || !UI.s) return null;
+  const row = target.closest('.hero-row');
+  if (row && !target.closest('.weapon')) return row.classList.contains('enemy') ? 1 : 0;
+  return null;
+}
+
 document.addEventListener('contextmenu', e => {
   if (App.screen === 'battle' && UI.mode) return;   // right-click cancels targeting in battle
+  const cmd = commanderAt(e.target);
+  if (cmd != null) { e.preventDefault(); openCommander({ pi: cmd }); return; }
   const hit = cardAt(e.target); if (!hit) return;
   e.preventDefault(); openInspect(hit.id, hit);
+});
+// Card name chips (briefing intel, rewards) and enemy portraits in briefings open on a tap or click.
+document.addEventListener('click', e => {
+  const chip = e.target.closest && e.target.closest('.chip[data-card]');
+  if (chip && CARDS[chip.dataset.card]) { openInspect(chip.dataset.card); return; }
+  const foe = e.target.closest && e.target.closest('[data-cmdr]');
+  if (foe && ENC[foe.dataset.cmdr]) openCommander({ enc: ENC[foe.dataset.cmdr] });
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && Inspect.el && !Inspect.el.hidden) { e.stopPropagation(); closeInspect(); } }, true);
 // touch: press and hold
@@ -109,9 +173,9 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && Inspect.el
   let timer = null, fired = false;
   document.addEventListener('pointerdown', e => {
     if (e.pointerType !== 'touch') return;
-    const hit = cardAt(e.target); if (!hit) return;
+    const cmd = commanderAt(e.target), hit = cmd == null && cardAt(e.target); if (cmd == null && !hit) return;
     fired = false; clearTimeout(timer);
-    timer = setTimeout(() => { fired = true; openInspect(hit.id, hit); }, 480);
+    timer = setTimeout(() => { fired = true; cmd != null ? openCommander({ pi: cmd }) : openInspect(hit.id, hit); }, 480);
   }, { passive: true });
   const cancel = () => clearTimeout(timer);
   document.addEventListener('pointerup', cancel, { passive: true });

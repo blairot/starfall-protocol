@@ -72,6 +72,8 @@ function migrate(save) {
   return save;
 }
 
+function maybeReload() { if (App.pendingReload && App.screen !== 'battle' && !(typeof Cinema !== 'undefined' && Cinema.playing())) { App.pendingReload = false; location.reload(); } }
+
 // ---------------------------------------------------------------- boot
 function start(data) {
   Scene.start();
@@ -86,7 +88,11 @@ function start(data) {
   setTimeout(prewarmAllArt, 1200);
   // Installed web app (GitHub Pages): cache the game for offline play. Not inside claude.ai.
   if ('serviceWorker' in navigator && location.protocol === 'https:' && window.top === window.self && !window.claude) {
-    navigator.serviceWorker.register('sw.js').catch(() => { /* offline play is optional */ });
+    navigator.serviceWorker.register('sw.js').then(r => r.update()).catch(() => { /* offline play is optional */ });
+    // A new build took over: reload once, but never in the middle of a battle.
+    const hadController = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange', () => { if (hadController) App.pendingReload = true; maybeReload(); });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden && navigator.serviceWorker.controller) navigator.serviceWorker.getRegistration().then(r => r && r.update()); });
   }
   // Account storage answers later; prefer whichever save is newer.
   Store.connect().then(remote => {

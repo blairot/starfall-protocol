@@ -146,6 +146,7 @@ function showScreen(id) {
   $$('.screen').forEach(s => s.hidden = s.id !== id); App.screen = id; Tip.hide(); window.scrollTo(0, 0);
   const el = $('#' + id); if (el && prevScreen !== id) { el.classList.remove('screen-in'); void el.offsetWidth; el.classList.add('screen-in'); }
   if (typeof closeInspect === 'function') closeInspect();
+  if (typeof maybeReload === 'function' && id !== 'battle') setTimeout(maybeReload, 0);
   if (id === 'title' || id === 'hangar' || id === 'shop') document.body.style.setProperty('--sec-h', id === 'shop' ? 30 : 210);
   if (typeof Scene !== 'undefined') {
     if (id === 'battle') Scene.pause();
@@ -459,6 +460,12 @@ function setupBattleInput() {
     if (UI.advOpen && e.target.closest('.advisor')) { UI.advOpen = false; renderBattle(); return; }
     const peekHit = e.target.closest('[data-hand]');
     if (UI.peek != null && (!peekHit || +peekHit.dataset.hand !== UI.peek)) { UI.peek = null; renderBattle(); if (!peekHit) return; }
+    // touch has no hover: tapping enemy info opens it (any turn, but not while picking a target)
+    if (TOUCH.on && !UI.mode && !s.choice) {
+      if (e.target.closest('.hero-row.enemy') && !e.target.closest('.weapon')) { openCommander({ pi: 1 }); return; }
+      const eu = e.target.closest('.board.enemy [data-uid]');
+      if (eu) { const c = getChar(s, parseUid(eu.dataset.uid)); if (c) { openInspect(c.id, { uid: c.uid }); return; } }
+    }
     if (UI.busy || s.over || s.active !== 0 || s.choice) return;
     if (e.target.closest('#endturn')) { cancelMode(); requestEndTurn(); return; }
     const handEl = e.target.closest('[data-hand]');
@@ -996,7 +1003,7 @@ function openBriefing(enc) {
   const m = modal(`<div class="m-eyebrow">${esc(SECTORS[enc.sector].name)} · ${enc.boss ? 'Boss' : enc.elite ? 'Elite (optional)' : 'Mission ' + enc.id}</div>
     <h2>${esc(enc.name)}</h2>
     <div class="brief">
-      <div class="foe"><div class="foe-art" style='background-image:${portraitPlate(e.name, ENEMY_FACTION[enc.sector], ENEMY_ART[e.name])}'></div><div><div class="foe-name">${esc(e.name)}</div><div class="muted">${hp} Health${e.phases ? ` · ${e.phases.length + 1} phases` : ''}</div>
+      <div class="foe"><button class="foe-art" data-cmdr="${enc.id}" aria-label="${esc(e.name)} dossier" title="Commander dossier" style='background-image:${portraitPlate(e.name, ENEMY_FACTION[enc.sector], ENEMY_ART[e.name])}'></button><div><div class="foe-name">${esc(e.name)}</div><div class="muted">${hp} Health${e.phases ? ` · ${e.phases.length + 1} phases` : ''}</div>
         ${power ? `<div class="foe-line">${powerIco(e.power)} <b>${esc(power.name)}:</b> ${esc(power.text)}</div>` : ''}
         ${(e.passives || []).map(id => `<div class="foe-line">${passiveIco(id)} <b>${esc(PASSIVES[id].name)}:</b> ${esc(PASSIVES[id].text)}</div>`).join('')}
         ${e.startTraps ? `<div class="foe-line">${ico('trap')} <b>Starts with ${e.startTraps.length} Trap${e.startTraps.length > 1 ? 's' : ''} armed.</b></div>` : ''}
@@ -1156,9 +1163,10 @@ function showSettings(back) {
     + sw('hoverZoom', 'Enlarge cards on hover', 'Lift and zoom cards in your hand.')
     + '<div class="set-row"><div><b>Fullscreen</b><span>Play without browser chrome. Esc exits.</span></div><button class="btn small" data-a="fullscreen">Toggle</button></div>'
     + (REDUCED ? '<p class="muted small">Your system asks for reduced motion, so animations are kept short.</p>' : '');
-  if (tab === 'data') body = save ? `<p class="muted small">${Store.db ? 'Progress saves automatically to your account and this browser.' : 'Progress saves automatically in this browser. Copy a backup code to move it to another device.'}</p>
+  const buildLine = typeof BUILD !== 'undefined' ? `<p class="muted small">Build ${BUILD.n} · ${BUILD.date}</p>` : '';
+  if (tab === 'data') body = buildLine + (save ? `<p class="muted small">${Store.db ? 'Progress saves automatically to your account and this browser.' : 'Progress saves automatically in this browser. Copy a backup code to move it to another device.'}</p>
     <div class="m-actions left"><button class="btn" data-a="export">Copy backup code</button><button class="btn" data-a="import">Restore from code</button><button class="btn danger" data-a="reset">Erase campaign</button></div><div id="set-extra"></div>`
-    : '<p class="muted">No campaign yet.</p><div class="m-actions left"><button class="btn" data-a="import">Restore from code</button></div><div id="set-extra"></div>';
+    : '<p class="muted">No campaign yet.</p><div class="m-actions left"><button class="btn" data-a="import">Restore from code</button></div><div id="set-extra"></div>');
   const tabs = [['audio', 'Audio'], ['gameplay', 'Gameplay'], ['display', 'Display'], ['data', 'Save Data']];
   const m = modal(`<h2>Settings</h2><div class="tabs" role="tablist">${tabs.map(([k, l]) => `<button role="tab" aria-selected="${tab === k}" class="${tab === k ? 'on' : ''}" data-tab="${k}">${l}</button>`).join('')}</div>
     <div class="set-body">${body}</div><div class="m-actions"><button class="btn primary" data-a="close">Done</button></div>`, 'settings-modal');
@@ -1212,7 +1220,7 @@ function openTitle() {
       <dl><dt>Origin</dt><dd>Galactic core</dd><dt>Pattern</dt><dd>Harmonic, repeating</dd><dt>Status</dt><dd>${save && save.finished ? 'Silenced' : 'Unresolved'}</dd><dt>Campaign</dt><dd>${save ? `${cleared} / ${ENCOUNTERS.length} missions` : 'Not started'}</dd></dl>
     </aside>
   </div>
-  <div class="title-foot">6 sectors · ${ENCOUNTERS.length} battles · ${CARD_LIST.filter(d => !d.token).length} collectible cards</div>`;
+  <div class="title-foot">6 sectors · ${ENCOUNTERS.length} battles · ${CARD_LIST.filter(d => !d.token).length} collectible cards${typeof BUILD !== 'undefined' ? ` · build ${BUILD.n} (${BUILD.date})` : ''}</div>`;
   $('#title').onclick = e => {
     SFX.init();
     const b = e.target.closest('.tm'); if (b) SFX.click();

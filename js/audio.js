@@ -30,8 +30,16 @@ const SPEED = { normal: 1, fast: 0.55, instant: 0.12 };
 
 // ---------------------------------------------------------------- audio graph
 const AudioBus = {
-  ctx: null, master: null, musicBus: null, sfxBus: null, reverb: null, delay: null,
+  ctx: null, master: null, musicBus: null, sfxBus: null, reverb: null, delay: null, keepAlive: null,
   init() {
+    // iPhone/iPad treat Web Audio as "ambient" sound, which the silent switch mutes.
+    // Ask for media playback (Safari 17+); older iOS needs a playing <audio> element instead.
+    try { if (navigator.audioSession && navigator.audioSession.type !== 'playback') navigator.audioSession.type = 'playback'; } catch (e) { /* not supported */ }
+    const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (ios && !navigator.audioSession) {
+      if (!this.keepAlive) { const a = this.keepAlive = new Audio('audio/silence.mp3'); a.loop = true; a.setAttribute('playsinline', ''); }
+      if (this.keepAlive.paused) this.keepAlive.play().catch(() => { /* needs a tap; retried on the next one */ });
+    }
     if (!this.ctx) {
       try {
         const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
@@ -50,7 +58,7 @@ const AudioBus = {
         this.applyVolumes();
       } catch (e) { this.ctx = null; return; }
     }
-    if (this.ctx.state === 'suspended') this.ctx.resume();
+    if (this.ctx.state !== 'running') this.ctx.resume().catch(() => {});   // suspended, or 'interrupted' on iOS after backgrounding
     Music.ensure();
   },
   impulse(sec, decay) {
