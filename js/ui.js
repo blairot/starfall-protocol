@@ -250,7 +250,11 @@ function safeInsets() {
 // Phones held upright get a 600-wide portrait stage that stretches to fill the height.
 function fitStage() {
   const st = $('#stage'); if (!st) return;
-  const vw = window.innerWidth, vh0 = window.innerHeight;
+  // Size to the battle screen's real box: in iOS home-screen apps innerHeight can
+  // include the home-indicator strip the page doesn't actually get.
+  const box = $('#battle'), bw = box && box.clientWidth, bh = box && box.clientHeight;
+  const vv = window.visualViewport, vw = bw || window.innerWidth;
+  const vh0 = Math.min(bh || window.innerHeight, window.innerHeight, vv ? Math.round(vv.height) : Infinity);
   const portrait = vh0 > vw * 1.05;
   const inset = safeInsets(), framedTouch = window.top !== window.self && TOUCH.on;
   const topPad = Math.max(inset.top, portrait && framedTouch ? 62 : 0), botPad = inset.bottom;
@@ -269,6 +273,7 @@ function fitStage() {
   if (!portrait && vh < 500 && App.screen === 'battle' && !UI.rotateHint) { UI.rotateHint = true; toast('Tip: hold your phone upright for a bigger battle view.', 3200); }
 }
 window.addEventListener('resize', fitStage);
+if (window.visualViewport) window.visualViewport.addEventListener('resize', () => { if (App.screen === 'battle') fitStage(); });
 
 function minionHTML(s, m, side) {
   const d = D(m.id), f = FACTIONS[d.faction] || FACTIONS.neutral, a = atkOf(s, m);
