@@ -69,6 +69,7 @@ function openInspect(id, opts) {
         <div class="ins-rules">${d.text ? fmt(d.text) : '<span class="muted">No special rules. A solid body for the line.</span>'}<div class="ins-stats">${stats.join('')}</div></div>
         ${opts.uid != null ? unitStateHTML(opts.uid) : ''}
         ${kws ? `<div class="ins-kws">${kws}</div>` : ''}
+        ${typeof STRATEGIES !== 'undefined' && (d.strat || []).length ? `<div class="ins-strat">${d.strat.filter(k => STRATEGIES[k]).map(k => `<p><span class="pill">${d.engine ? 'Engine' : 'Strategy'}</span> <b>${esc(STRATEGIES[k].name)}</b>: ${esc(STRATEGIES[k].text)}</p>`).join('')}</div>` : ''}
         <div class="ins-lore">
           <h3>Dossier</h3>
           ${d.flavor ? `<p class="flavor">${esc(d.flavor)}</p>` : ''}

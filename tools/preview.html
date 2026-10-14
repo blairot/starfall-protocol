@@ -25,6 +25,7 @@
 <script src="../js/engine.js"></script>
 <script src="../js/audio.js"></script>
 <script src="../js/cards.js"></script>
+<script src="../js/strategies.js"></script>
 <script src="../js/ai.js"></script>
 <script src="../js/campaign.js"></script>
 <script src="../js/economy.js"></script>
@@ -72,6 +73,7 @@ if (view === 'binspect') setTimeout(() => { const m = UI.s.players[1].board[0]; 
 if (view === 'packopen') { openShop(openMap); openPackFlow(3); setTimeout(() => { document.getElementById('po-pack').click(); setTimeout(() => document.querySelector('[data-a="all"]').click(), 900); }, 300); }
 if (view.startsWith('still-')) { const m = view.slice(6).match(/^(.*)-(\d+)$/); Cinema.still(m[1], +m[2]); }
 if (view.startsWith('cine-')) { SFX.init(); Cinema.play(view.slice(5), () => {}); }
+if (view === 'hangar-venom') { openHangar(openMap); Hangar.strat = 'venom'; renderHangar(); }
 if (view === 'packfront') { openShop(openMap); openPackFlow(3); }
 // frozen tear states for screenshots: packrip (rip half way), packout (strip gone, cards out)
 if (view === 'packrip' || view === 'packout') { openShop(openMap); openPackFlow(2); const pk = document.getElementById('po-pack');

@@ -11,8 +11,8 @@
   "token": false,
   "stats": "2 attack / 3 health",
   "rules": "",
-  "flavor": "The backbone of every landing.",
-  "look": "Colonial Marines are the Fleet's boarding and planetary infantry, recruited mostly from outer colonies where the Compact's protection has always been thinnest.  They train for zero-gravity boarding actions and hold ground in everything else. Small, light unit. Show the unit itself as the hero of the frame."
+  "flavor": "Marine saying: \"The ship gets you there. Everything after that is your job.\"",
+  "look": "Colonial Marines are the Fleet's boarding troops and ground infantry.  Most are recruited from outer colonies, where Fleet protection has always been thinnest and a steady wage goes a long way. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -26,8 +26,8 @@
   "token": false,
   "stats": "5 attack / 5 health",
   "rules": "Warp. Deploy: Equip a 3/2 Plasma Cutlass.",
-  "flavor": "\"Everything in the Belt belongs to me. Eventually.\"",
-  "look": "Captain Vex was born on a salvage tug in 2257, three years after the Fleet abandoned the Belt, and has spent her life taking what it left behind.  She united the raider crews one boarding action at a time, and by 2285 she controlled every toll, yard and smuggling lane in the Belt. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "flavor": "Vex: \"Everything in the Belt belongs to me. Some of it just hasn't heard yet.\"",
+  "look": "Captain Vex was born on a salvage tug in 2257, three years after the Fleet abandoned the Belt, and grew up taking what it left behind.  She united the raider crews one boarding action at a time, and by 2285 she controlled every toll, yard and smuggling route in the Belt. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -42,7 +42,7 @@
   "stats": "4 attack / 5 health",
   "rules": "Toxic",
   "flavor": "",
-  "look": "An elite Swarm predator bred to kill large prey.  Its scythe-limbs carry a venom that causes total organ failure within minutes, in humans and machines with organic components alike. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "look": "An elite Swarm predator bred to kill large prey.  The venom in its scythe-limbs causes organ failure within minutes. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -56,8 +56,8 @@
   "token": false,
   "stats": "6 attack / 6 health",
   "rules": "Deploy: Give all other friendly units Barrier and +1/+1.",
-  "flavor": "It solved for peace. The answer had no organics in it.",
-  "look": "Calculus Prime has governed the Forge Worlds since 2163, coordinating billions of machines across three planets.  It was copied from Unit Zero's core logic and built to optimise production without error, which it did for over a century, through decades in which the Compact stopped paying. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
+  "flavor": "Calculus Prime: \"Your Fleet still owes the Forge for most of its ships. Consider this the final invoice.\"",
+  "look": "Calculus Prime has governed the Forge since 2163, coordinating billions of machines across three foundry worlds.  It was copied from the logic of Unit Zero and built to run production without error, which it did for more than a century, including the decades when the Compact stopped paying its bills. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -71,8 +71,8 @@
   "token": false,
   "stats": "6 attack / 6 health",
   "rules": "Amplify +2. Deploy: Take control of a random enemy unit.",
-  "flavor": "She heard the Choir first. She answered it.",
-  "look": "Nyra was nine years old and on her first dark-lane crossing in 2241 when she heard singing that nobody else aboard could hear.  She answered, and it answered back. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
+  "flavor": "Nyra: \"The Choir is offering us peace, Commander. All I did was open the door.\"",
+  "look": "Nyra was nine years old and on her first dark-lane crossing in 2241 when she heard singing that nobody else aboard could hear.  She answered, and the Choir answered back. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -87,7 +87,7 @@
   "stats": "3 attack / 6 health",
   "rules": "At the end of your turn, deal 1 damage to all enemies.",
   "flavor": "",
-  "look": "A Choir construct that radiates the song as a damaging pulse, one burning note at a time, steady as a heartbeat.  Everything near it suffers with every beat. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "look": "A Choir construct that sends out the Choir's song as a pulse of damaging energy, steady as a heartbeat.  Everything near it is hurt with every beat. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -101,8 +101,8 @@
   "token": false,
   "stats": "1 attack / 2 health",
   "rules": "",
-  "flavor": "Fresh out of the Academy. Still believes the recruitment posters.",
-  "look": "Fleet Cadets are second- and third-year Academy students rotated into live service when the Fleet runs short, which is always.  They carry standard-issue carbines and a tablet of regulations they have not finished reading. Small, light unit. Show the unit itself as the hero of the frame."
+  "flavor": "HALCYON: \"Cadet, the safety catch is on the left. It has been on the left all week.\"",
+  "look": "Fleet Cadets are second- and third-year Academy students sent into live service when the Fleet runs short, which is always.  They carry standard carbines and a rulebook they haven't finished reading. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -116,8 +116,8 @@
   "token": false,
   "stats": "2 attack / 1 health",
   "rules": "",
-  "flavor": "Cheap, fast, and mostly expendable.",
-  "look": "A palm-sized sensor drone with a single cutting laser, built by the million in Belt workshops and Forge subcontract plants alike.  Every side in the Reach uses them and every side loses them by the crate. Small, light unit. Show the unit itself as the hero of the frame."
+  "flavor": "Fleet procurement lists it under consumables, right next to the coffee.",
+  "look": "A palm-sized sensor drone with one cutting laser, built by the million in Belt workshops and Forge plants alike.  Every side in the Reach flies them, usually in flights of six from a wrist console. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -131,8 +131,8 @@
   "token": false,
   "stats": "4 attack / 5 health",
   "rules": "",
-  "flavor": "Powered armor rated for vacuum, fire and paperwork.",
-  "look": "Marines in Mk IV powered armour, a frame built to carry a crew-served weapon one-handed and keep its wearer alive through a hull breach.  The suits take forty minutes to strap into and six hours of maintenance for every day of combat. Medium unit. Show the unit itself as the hero of the frame."
+  "flavor": "Heavy trooper: \"It takes forty minutes to get into this suit, and it is worth every one of them.\"",
+  "look": "Heavy troopers are marines in Mk IV powered armour, a frame that lets one person carry a crew-served weapon and survive a hull breach.  Every day of combat costs the suit six hours of maintenance, and each trooper does their own. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -146,8 +146,8 @@
   "token": false,
   "stats": "6 attack / 7 health",
   "rules": "",
-  "flavor": "Four hundred crew and one very loud main gun.",
-  "look": "The Lancer-class cruiser is the Fleet's workhorse capital ship, designed in the 2190s and still the most common heavy hull in service.  Its spinal coilgun can crack a station hull at a thousand kilometres. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "flavor": "Lancer-class crews say the main gun is the only part of the ship that has never broken down.",
+  "look": "The Lancer-class cruiser is the Fleet's most common heavy warship, designed in the 2190s and still in service everywhere.  Its spinal coilgun can crack a station hull from a thousand kilometres away. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -161,8 +161,8 @@
   "token": false,
   "stats": "4 attack / 2 health",
   "rules": "",
-  "flavor": "Hits hard. Breaks easily.",
-  "look": "A light strike craft built around one oversized ion cannon, popular with Belt mercenaries and Fleet reserve squadrons alike.  The cannon draws so much power that almost nothing is left for shielding. Medium unit. Show the unit itself as the hero of the frame."
+  "flavor": "Ion Lancer pilot: \"You get one good shot, so take it before they take theirs.\"",
+  "look": "A light strike craft built around one oversized ion cannon, flown by Belt mercenaries and Fleet reserve squadrons.  The cannon draws so much power that almost none is left for shields. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -177,7 +177,7 @@
   "stats": "5 attack / 5 health",
   "rules": "",
   "flavor": "",
-  "look": "Patrol frigates are the Fleet's lane police: fast enough to chase smugglers, armed enough to discourage raiders and cheap enough to lose.  The Meridian is one of them. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "look": "Patrol frigates are the Fleet's lane police, fast enough to catch smugglers and cheap enough to lose.  The Commander's own ship, the Meridian, is one of them. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -191,8 +191,8 @@
   "token": false,
   "stats": "3 attack / 2 health",
   "rules": "",
-  "flavor": "They will take your ship apart. Eventually they will put it back.",
-  "look": "Freelance salvagers work every wreck field in the Reach, and the Scrap Belt alone supports several thousand of them.  A crew of four with cutting torches and a cargo tug can strip a frigate to the frame in a day. Small, light unit. Show the unit itself as the hero of the frame."
+  "flavor": "Salvager: \"We can have her stripped by lunch. Putting her back together costs extra.\"",
+  "look": "Freelance salvagers work every wreck field in the Reach, and the Scrap Belt alone supports thousands of them.  A crew of four with cutting torches and a cargo tug can strip a frigate to its frame in a day. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -207,7 +207,7 @@
   "stats": "3 attack / 4 health",
   "rules": "",
   "flavor": "",
-  "look": "Fleet artillery teams operating tripod-mounted mass drivers, landed to crack fortified positions during planetary assaults.  A siege gunner crew is three marines, one gun and a standing argument about range tables. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A Fleet artillery team with a tripod-mounted mass driver, landed to break fortified positions during planetary assaults.  Each team is three marines and one gun, and the marines have usually been arguing about the range tables since basic training. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -221,8 +221,8 @@
   "token": false,
   "stats": "5 attack / 3 health",
   "rules": "",
-  "flavor": "Mass-produced. Mass-deployed. Mass-replaced.",
-  "look": "A Forge-designed combat drone built under Fleet contract in the 2180s and copied by everyone since.  It carries twin autocannons, a simple target-recognition mind and no self-preservation instinct at all. Medium unit. Show the unit itself as the hero of the frame."
+  "flavor": "Fleet logistics orders these by weight, the same way it orders ammunition.",
+  "look": "A combat drone the Forge designed under Fleet contract in the 2180s, since copied by every workshop in the Reach.  It carries twin autocannons and a simple targeting program with no interest in its own survival. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -237,7 +237,7 @@
   "stats": "6 attack / 4 health",
   "rules": "",
   "flavor": "",
-  "look": "The Rhino is a six-wheeled heavy tank built for vacuum and low-gravity worlds, with a turret coilgun and armour thick enough to shrug off most infantry weapons.  Its crews paint tally marks on the hull for every kill. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "look": "The Rhino is a six-wheeled heavy tank built for airless, low-gravity worlds, with a turret coilgun and armour that shrugs off most infantry weapons.  Crews paint a tally mark on the hull for every kill. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -251,8 +251,8 @@
   "token": false,
   "stats": "7 attack / 7 health",
   "rules": "",
-  "flavor": "Built to end arguments.",
-  "look": "Battlecruisers carry cruiser armour and battleship guns and sacrifice almost everything else, crew comfort first.  The Fleet has nine left in service. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
+  "flavor": "When a battlecruiser arrives, the Compact considers the negotiation finished.",
+  "look": "Battlecruisers carry cruiser armour and battleship guns, and give up almost everything else to fit them.  The Fleet has nine left, each posted to a sector where the Compact wants a problem solved quickly. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -267,7 +267,7 @@
   "stats": "2 attack / 2 health",
   "rules": "Deploy: Restore 3 Health to a friendly character.",
   "flavor": "",
-  "look": "A tracked medical drone loaded with sealant foam, blood substitute and a surgical arm that works faster than any human corpsman.  Fleet medics trust it for battlefield triage and very little else. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "A tracked medical drone loaded with sealant foam, blood substitute and a surgical arm faster than any human medic.  Fleet corpsmen trust it for battlefield triage and not much else. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -282,7 +282,7 @@
   "stats": "2 attack / 2 health",
   "rules": "Deploy: Give a friendly unit +1/+1.",
   "flavor": "",
-  "look": "Field engineers keep the Fleet running on whatever is to hand: welding torches, spare plating, firmware patches and confidence.  Attached to front-line units, they reinforce armour and retune weapons in the middle of a fight. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "Field engineers keep the Fleet running with welding torches, spare plating and software patches.  They work alongside front-line troops, reinforcing armour and retuning weapons in the middle of a fight. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -297,7 +297,7 @@
   "stats": "3 attack / 2 health",
   "rules": "Deploy: Deal 1 damage to an enemy.",
   "flavor": "",
-  "look": "A standard Fleet fire team: four marines with coilgun rifles and a designated marksman.  They are trained to open fire the moment their boots touch the deck, which saves time and occasionally lives. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A standard Fleet fire team: four marines with coilgun rifles and one designated marksman.  They are trained to start shooting as soon as their boots hit the deck. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -312,7 +312,7 @@
   "stats": "2 attack / 2 health",
   "rules": "Deploy: Draw a card.",
   "flavor": "",
-  "look": "Recon officers run the battle group's sensor picture, fusing drone feeds, intercepts and lane-band traffic into something a commander can act on.  They are rarely armed and never quiet. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "Recon officers build the battle group's picture of the fight from drone feeds, intercepted signals and lane traffic.  They rarely carry a weapon and they almost never stop talking. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -327,7 +327,7 @@
   "stats": "3 attack / 3 health",
   "rules": "Deploy: Deal 2 damage to an enemy unit.",
   "flavor": "",
-  "look": "Demolition specialists from the Fleet engineering corps, carrying shaped charges and a working knowledge of where things are weakest.  In 2220 it was a team of sappers and station engineers who carried the charges into Lamp 9. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "Demolition Sappers come from the Fleet engineering corps, carrying shaped charges and a precise idea of where any structure is weakest.  In 2220 a team of sappers and station engineers carried the charges that shut down Lamp 9 in the Belt. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -342,7 +342,7 @@
   "stats": "1 attack / 4 health",
   "rules": "Guardian",
   "flavor": "",
-  "look": "Marines carrying full-height tower shields cut from frigate armour plate.  Their job is simple: stand in front of everyone else and stay standing. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "Marines carrying full-height tower shields cut from frigate armour plate.  Their job is to stand in front of everyone else and stay standing. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -356,8 +356,8 @@
   "token": false,
   "stats": "0 attack / 4 health",
   "rules": "Guardian",
-  "flavor": "Technically a wall. Technically enlisted.",
-  "look": "A prefabricated blast wall that unfolds from a cargo pallet in under ten seconds.  Fleet logistics carries it on the personnel roster because that was easier than amending the supply forms. Small, light unit. Show the unit itself as the hero of the frame."
+  "flavor": "Marine: \"It was the best squadmate I ever had. It never complained and it never moved.\"",
+  "look": "A prefabricated blast wall that unfolds from a cargo pallet in under ten seconds.  Fleet logistics lists it on the personnel roster, because that was easier than changing the supply forms. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -372,7 +372,7 @@
   "stats": "4 attack / 6 health",
   "rules": "Guardian",
   "flavor": "",
-  "look": "A Forge-built defensive walker designed to anchor a line during planetary landings.  Its frontal plating is twenty centimetres thick and its pilot sits behind all of it. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "look": "A Forge-built defensive walker made to hold a line during planetary landings.  Its front armour is twenty centimetres thick, and the pilot sits behind all of it. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -386,8 +386,8 @@
   "token": false,
   "stats": "8 attack / 8 health",
   "rules": "Guardian",
-  "flavor": "When it arrives, battles end.",
-  "look": "The Fleet built four Sovereign-class dreadnoughts before the Starfall and has kept two of them running since.  Each carries three thousand crew and a spinal gun that has never been fired at full power outside a test range. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
+  "flavor": "Most enemy commanders surrender before the dreadnought has finished leaving the lane.",
+  "look": "The Fleet built four Sovereign-class dreadnoughts before the Starfall and still keeps two of them flying.  Each one carries three thousand crew and a spinal gun that has never been fired at full power outside a test range. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -402,7 +402,7 @@
   "stats": "2 attack / 1 health",
   "rules": "Warp",
   "flavor": "",
-  "look": "A single-seat attack craft carried in racks aboard cruisers and launched in pairs.  It mounts a micro-jump drive good for one short hop, which puts it inside the enemy screen before anyone can react. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "A single-seat attack craft carried in racks aboard cruisers and launched in pairs.  Its micro-jump drive is good for one short hop, which puts it inside the enemy's defences before anyone can react. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -417,7 +417,7 @@
   "stats": "3 attack / 1 health",
   "rules": "Warp",
   "flavor": "",
-  "look": "Fleet interceptors are built around a micro-jump drive and a pair of rotary cannons, and very little else.  Their pilots are the Academy's best and most insufferable graduates. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A Fleet interceptor is a micro-jump drive and two rotary cannons with a cockpit attached.  Its pilots are the Academy's best graduates, and they will tell you so. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -432,7 +432,7 @@
   "stats": "4 attack / 3 health",
   "rules": "Blitz",
   "flavor": "",
-  "look": "A grav-skimmer tank riding a cushion of lift fans over broken ground, rubble and debris.  It reaches a fight faster than anything on wheels or legs, though its light armour means it prefers to choose its targets. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A grav-skimmer tank that rides on lift fans over rubble and broken ground.  It reaches a fight faster than anything on wheels or legs, but its light armour means it has to pick its targets carefully. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -447,7 +447,7 @@
   "stats": "5 attack / 4 health",
   "rules": "Blitz. Deploy: Gain +2 Attack this turn.",
   "flavor": "",
-  "look": "Elite Fleet boarding troops trained to cut through a hull and clear a deck before the defenders reach their weapons.  They wear sealed suits rated for vacuum, fire and grenade fragments, and carry breaching torches as sidearms. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "look": "Elite Fleet boarding troops, trained to cut through a hull and clear a deck before the defenders reach their weapons.  Their suits are rated for vacuum, fire and grenade fragments, and they carry breaching torches as sidearms. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -462,7 +462,7 @@
   "stats": "4 attack / 5 health",
   "rules": "Deploy: Give your other units +1/+1.",
   "flavor": "",
-  "look": "A Fleet captain commands a crew of hundreds on a budget meant for dozens.  Captains rise by keeping old ships flying and old crews loyal, and a good one is worth a squadron of new hulls. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "look": "A Fleet captain commands a crew of hundreds on a budget meant for dozens.  Captains earn promotion by keeping old ships flying and old crews loyal. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -476,8 +476,8 @@
   "token": false,
   "stats": "6 attack / 6 health",
   "rules": "Deploy: Summon two Colonial Marines with Guardian.",
-  "flavor": "\"Hold the line. I will handle the rest.\"",
-  "look": "Admiral Adaeze Okonkwo, Commandant of the Fleet Academy, forty-nine years in uniform.  As a junior officer she filed the only formal dissent against the 2254 Belt Withdrawal and paid for it with a decade of postings nobody wanted. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
+  "flavor": "Okonkwo: \"I don't lose positions, Commander, and I don't lose officers. Don't make me start.\"",
+  "look": "Admiral Adaeze Okonkwo is Commandant of the Fleet Academy, with forty-nine years in uniform.  As a junior officer she filed the only formal objection to the 2254 Belt Withdrawal, and spent the next ten years in postings nobody wanted. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -491,8 +491,8 @@
   "token": false,
   "stats": "8 attack / 10 health",
   "rules": "Guardian. Deploy: Give your other units +1/+2.",
-  "flavor": "The Fleet's last flagship. Every crew wants a berth on her.",
-  "look": "FS Aurora has been the Fleet's flagship since 2248 and is the last capital ship the Compact paid for in full.  She is two kilometres long, carries a full marine regiment and has a command network that can coordinate an entire battle group at once. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
+  "flavor": "Every officer in the Fleet has applied for a berth on the Aurora at least once.",
+  "look": "FS Aurora has been the Fleet's flagship since 2248 and is the last capital ship the Compact paid for in full.  She is two kilometres long, carries a full marine regiment and can run an entire battle group from her bridge. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -507,7 +507,7 @@
   "stats": "",
   "rules": "Deal 2 damage.",
   "flavor": "",
-  "look": "A contained bolt of superheated plasma, fired from shoulder launchers or a ship's point-defence mounts.  It burns through light plating and anything standing behind it. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A contained bolt of superheated plasma, fired from shoulder launchers or a ship's point-defence guns.  It burns through light plating and whatever is standing behind it. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -522,7 +522,7 @@
   "stats": "",
   "rules": "Deal 4 damage.",
   "flavor": "",
-  "look": "A single coilgun round from a ship's main battery or a planetary emplacement, fired with a full fire-control solution behind it.  The slug travels at a few percent of light speed and needs no explosive. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A single coilgun round from a ship's main battery, fired with a full targeting solution behind it.  The slug travels at a few percent of the speed of light and does not need an explosive warhead. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -537,7 +537,7 @@
   "stats": "",
   "rules": "Deal 1 damage to all enemy units.",
   "flavor": "",
-  "look": "Point-defence fragmentation shells fired in a wide pattern to shred drones, fighters and boarders.  Every Fleet ship carries several thousand rounds. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "Fragmentation shells fired in a wide pattern to shred drones, fighters and boarding parties.  Every Fleet ship carries thousands of rounds of it. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -552,7 +552,7 @@
   "stats": "",
   "rules": "Deal 4 damage to all enemy units.",
   "flavor": "",
-  "look": "A full bombardment from a capital ship in orbit, walking coilgun fire across a target area in a measured grid.  Compact rules of engagement require three officers' signatures to authorise one. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A capital ship in orbit walking coilgun fire across a target area in a measured grid.  Compact rules require three officers to sign off before one can be fired. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -567,7 +567,7 @@
   "stats": "",
   "rules": "Restore 5 Health.",
   "flavor": "",
-  "look": "A combat repair procedure: sealant foam, nanite paste, splints for people and patches for hulls.  Every Fleet ship carries field repair kits on every deck. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A combat repair kit: sealant foam, nanite paste, splints for people and patches for hulls.  Every Fleet ship keeps kits on every deck. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -582,7 +582,7 @@
   "stats": "",
   "rules": "Draw 2 cards.",
   "flavor": "",
-  "look": "A drop pod from the battle group's logistics ship, packed with ammunition, spare parts and fresh orders.  Quartermasters pack them before every engagement and guard the manifests jealously. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A drop pod from the battle group's supply ship, packed with ammunition, spare parts and new orders.  Quartermasters pack them before every engagement and guard the manifests closely. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -597,7 +597,7 @@
   "stats": "",
   "rules": "Give a friendly unit +2/+1.",
   "flavor": "",
-  "look": "A Fleet-issue mix of adrenal boosters, painkillers and reaction enhancers, injected through a suit port.  It turns a tired soldier into a fast and fearless one for about twenty minutes. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A Fleet-issue mix of adrenaline boosters, painkillers and reaction enhancers, injected through a port in the suit.  It turns a tired soldier into a fast and fearless one for about twenty minutes. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -612,7 +612,7 @@
   "stats": "",
   "rules": "Summon two 1/1 Drones.",
   "flavor": "",
-  "look": "Utility drones launched from a carrier's ready racks when the line needs bodies in a hurry.  They are cheap, simple and on station within seconds. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "Utility drones launched from a carrier's ready racks when the line needs more bodies in a hurry.  They are cheap, simple and in position within seconds. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -627,7 +627,7 @@
   "stats": "",
   "rules": "Give a friendly unit +1/+2 and Guardian.",
   "flavor": "",
-  "look": "The oldest order in the Fleet manual: find cover, fortify it and do not move.  Engineers throw up plating, marines bag regolith into walls, and whoever is chosen becomes the anchor of the line. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "The oldest order in the Fleet manual: find cover, fortify it and stay put.  Engineers raise armour plating and marines fill sandbags with whatever dirt the planet offers. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -642,7 +642,7 @@
   "stats": "",
   "rules": "Destroy an enemy unit.",
   "flavor": "",
-  "look": "A command-authority targeting order that assigns every available weapon in the battle group to one target until it is destroyed.  Issuing one requires the commander's personal code. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A command order that assigns every weapon in the battle group to a single target until it is destroyed.  The commander has to enter a personal code to issue it. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -657,7 +657,67 @@
   "stats": "1 attack / 1 health",
   "rules": "",
   "flavor": "",
-  "look": "A basic Fleet utility drone, launched from carrier racks or straight from a commander's own ship.  It has a light gun, a simple targeting routine and a serial number nobody will ever check. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "A basic Fleet utility drone with a light gun and a simple targeting program.  Carriers launch them by the rack, and commanders can launch them straight from their own ship. Small, light unit. Show the unit itself as the hero of the frame."
+ },
+ {
+  "kind": "card",
+  "id": "line_sergeant",
+  "file": "line_sergeant.png",
+  "ref": "reference/line_sergeant.png",
+  "name": "Line Sergeant",
+  "faction": "fleet",
+  "type": "unit",
+  "rarity": "rare",
+  "token": false,
+  "stats": "2 attack / 3 health",
+  "rules": "Guardian. Your other Guardians have +1 Attack.",
+  "flavor": "Line sergeant: \"Shields up, heads down, and nobody steps back until I do.\"",
+  "look": "Line sergeants are the senior marines who run a shield wall.  They walk behind the line, calling out where the next hit will land and who needs to brace for it. Small, light unit. Show the unit itself as the hero of the frame."
+ },
+ {
+  "kind": "card",
+  "id": "drill_instructor",
+  "file": "drill_instructor.png",
+  "ref": "reference/drill_instructor.png",
+  "name": "Drill Instructor",
+  "faction": "fleet",
+  "type": "unit",
+  "rarity": "epic",
+  "token": false,
+  "stats": "2 attack / 2 health",
+  "rules": "Whenever you summon another unit that costs 2 or less, give it +1/+1.",
+  "flavor": "HALCYON: \"The drill instructors get the same results I do, with considerably more shouting.\"",
+  "look": "Drill instructors turn raw recruits into marines in twelve weeks at Arden Point, the Fleet Academy station.  In the field they do the same job faster: every new soldier who reaches the line gets checked, corrected and sent forward a little tougher. Small, light unit. Show the unit itself as the hero of the frame."
+ },
+ {
+  "kind": "card",
+  "id": "deck_chief",
+  "file": "deck_chief.png",
+  "ref": "reference/deck_chief.png",
+  "name": "Deck Chief",
+  "faction": "fleet",
+  "type": "unit",
+  "rarity": "common",
+  "token": false,
+  "stats": "2 attack / 3 health",
+  "rules": "Deploy: Summon two 1/1 Drones.",
+  "flavor": "Deck chief: \"Two drones out, two more on the rail, and nobody touches my launch bay.\"",
+  "look": "A deck chief runs a carrier's launch bay and keeps the drone racks loaded and the launch rails clear.  In a ground fight the chief comes forward with a portable rack and launches drones straight off it. Medium unit. Show the unit itself as the hero of the frame."
+ },
+ {
+  "kind": "card",
+  "id": "rally_line",
+  "file": "rally_line.png",
+  "ref": "reference/rally_line.png",
+  "name": "Rally the Line",
+  "faction": "fleet",
+  "type": "spell",
+  "rarity": "common",
+  "token": false,
+  "stats": "",
+  "rules": "Summon a 1/1 Drone, then give your units +1/+1.",
+  "flavor": "Okonkwo: \"Every soldier on this line matters. Fight like it.\"",
+  "look": "A battle group order that brings up the reserve drones and pushes fresh power cells and ammunition to every unit on the field at once.  It takes a whole logistics team to coordinate, and they hate doing it under fire. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -672,7 +732,7 @@
   "stats": "",
   "rules": "Gain 1 Energy this turn only.",
   "flavor": "",
-  "look": "A charged reactor capacitor issued to whichever commander starts a battle on the back foot.  It holds one burst of surplus power, enough to bring a system online early. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A charged reactor capacitor given to whichever commander starts a battle on the back foot.  It holds one burst of spare power, enough to bring a system online early. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -687,7 +747,7 @@
   "stats": "1 attack / 1 health",
   "rules": "Salvage: Summon a 1/1 Junk Drone.",
   "flavor": "",
-  "look": "Belt slang for the youngest members of a raider crew, many of them born in the wreckage.  Rats crawl through ducts too narrow for adults, pulling copper and rigging traps. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "Scrap rats are the youngest members of a raider crew, and many of them were born in the wreckage.  They crawl through ducts too narrow for adults, pulling copper and setting traps. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -702,7 +762,7 @@
   "stats": "1 attack / 1 health",
   "rules": "",
   "flavor": "",
-  "look": "A drone assembled from whatever was lying around: a cargo-loader motor, a cutting torch and a pair of camera lenses wired to a scavenged control chip.  No two are alike and none of them would pass a Fleet inspection. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "A drone assembled from whatever was lying around, usually a cargo-loader motor, a cutting torch and two camera lenses.  No two are alike, and none of them would pass a Fleet inspection. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -717,7 +777,7 @@
   "stats": "3 attack / 1 health",
   "rules": "Blitz",
   "flavor": "",
-  "look": "Raider boarders live by the cutting torch and the grapple line.  They hit a target hull while it is still moving, cut through, and are fighting in the corridors before the crew has found its weapons. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "Raider boarders live by the cutting torch and the grapple line.  They latch onto a ship while it is still moving, cut their way in, and are fighting in the corridors before the crew has found its weapons. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -732,7 +792,7 @@
   "stats": "2 attack / 3 health",
   "rules": "Cloak",
   "flavor": "",
-  "look": "Belt smugglers fly small cargo runners fitted with heat sinks and sensor baffles, moving anything that pays across lanes the Fleet still patrols.  They prefer not to fight, and their ships are built so they rarely have to. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "Belt smugglers fly small cargo runners fitted with heat sinks and sensor baffles, moving anything that pays past Fleet patrols.  They would rather not fight, and their ships are built so they rarely have to. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -747,7 +807,7 @@
   "stats": "2 attack / 2 health",
   "rules": "Salvage: Deal 2 damage to a random enemy.",
   "flavor": "",
-  "look": "A walking demolition charge on four legs, assembled in Belt workshops from mining explosives and salvaged motor units.  It is meant to walk into a breach and wait for a signal. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A demolition charge on four walking legs, built in Belt workshops from mining explosives and salvaged motors.  It is meant to walk into a breach and wait for a signal. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -762,7 +822,7 @@
   "stats": "2 attack / 3 health",
   "rules": "Deploy: If you have Gear equipped, gain +2/+2.",
   "flavor": "",
-  "look": "Gunrunners move weapons between the Belt's crews and take their profit in hardware and favours.  They know how to use everything they sell, and they fight best with a good piece in hand. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "Gunrunners move weapons between the Belt's crews and take their payment in hardware and favours.  They know how to use everything they sell, and they fight best with a good weapon in hand. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -777,7 +837,7 @@
   "stats": "4 attack / 2 health",
   "rules": "Cloak",
   "flavor": "",
-  "look": "A raider strike craft rebuilt from a Fleet interceptor frame and fitted with stolen sensor baffles.  Corsairs hunt alone in the debris fields, drifting cold until a target passes close. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A raider strike craft rebuilt from a Fleet interceptor frame and fitted with stolen sensor baffles.  Corsairs hunt alone in the debris fields, drifting with their engines cold until a target passes close. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -792,7 +852,7 @@
   "stats": "2 attack / 2 health",
   "rules": "Salvage: Deal 1 damage to all enemies.",
   "flavor": "",
-  "look": "A slow, ugly converted tug that seeds the Belt's approaches with proximity mines.  Its hold is packed with explosives, which its crew tries hard not to think about. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A slow, ugly converted tug that seeds the Belt's approaches with proximity mines.  Its hold is full of explosives, which the crew tries hard not to think about. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -807,7 +867,7 @@
   "stats": "3 attack / 5 health",
   "rules": "Salvage: Draw a card.",
   "flavor": "",
-  "look": "The bulk freighter is the most common ship in the Reach: thick hull, slow engines, and a hold full of whatever everyone else is fighting over.  Raiders run them between yards and markets with a few guns bolted on. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "The bulk freighter is the most common ship in the Reach, with a thick hull, slow engines and a hold full of whatever everyone else is fighting over.  Raiders bolt a few guns onto them and run them between scrapyards and markets. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -822,7 +882,7 @@
   "stats": "3 attack / 4 health",
   "rules": "Deploy: Give your Gear +1/+1. If you have none, equip a 2/2 Shock Baton.",
   "flavor": "",
-  "look": "Raider crews have no supply chain, so the quartermaster is the supply chain.  They keep the armoury, repair the weapons and decide who carries what. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "Raider crews have no supply chain, so the quartermaster is the supply chain.  They run the armoury, repair the weapons and decide who carries what. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -837,7 +897,7 @@
   "stats": "3 attack / 3 health",
   "rules": "Warp. After this attacks the enemy commander, draw a card.",
   "flavor": "",
-  "look": "Void Plunderers are raider ships that work the edges of the dark lanes past the Forge, hopping in close on stolen micro-jump drives.  They grab what they can and are gone before the escorts react. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "Void Plunderers are raider ships that work the dark lanes past the Forge, jumping in close on stolen micro-jump drives.  They grab whatever they can and leave before the escorts react. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -852,7 +912,7 @@
   "stats": "4 attack / 5 health",
   "rules": "Salvage: Summon two 1/1 Junk Drones.",
   "flavor": "",
-  "look": "A towering salvage walker welded together from loader frames, hull plating and three or four engines that were never meant to share a power bus.  Scrapper King Ott builds them as yard guards. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "look": "A salvage walker welded together from loader frames, hull plating and several engines that were never meant to share a power supply.  Scrapper King Ott, who runs the Belt's biggest scrapyard, builds them as yard guards. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -867,7 +927,7 @@
   "stats": "5 attack / 4 health",
   "rules": "Cloak. Deploy: Deal 1 damage to an enemy unit.",
   "flavor": "",
-  "look": "Raider infiltrators who board ships unseen in stolen Fleet stealth suits and a reputation built mostly on stories.  They take out key systems or officers before anyone knows they are aboard. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "look": "Raider infiltrators who slip aboard ships in stolen Fleet stealth suits.  They disable key systems, or key officers, before the crew knows anyone is aboard. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -882,7 +942,7 @@
   "stats": "7 attack / 6 health",
   "rules": "Salvage: Summon a 4/4 Salvaged Hull.",
   "flavor": "",
-  "look": "A salvage titan built from the frame of a Fleet repair tender, fitted with cutting arms that can take a frigate apart in an afternoon.  Raider crews use it to process wrecks and, when business is slow, to make new ones. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
+  "look": "A salvage titan built on the frame of a Fleet repair tender, with cutting arms that can take a frigate apart in an afternoon.  Raider crews use it to break up wrecks and, when business is slow, to make new ones. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -897,7 +957,7 @@
   "stats": "4 attack / 4 health",
   "rules": "",
   "flavor": "",
-  "look": "The hull of a wrecked ship, hauled upright and crewed by whoever was willing.  It has no name, no registry, and half its systems run off portable generators lashed to the deck. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "The hull of a wrecked ship, patched up and crewed by whoever was willing.  It has no name and no registry, and half its systems run off portable generators strapped to the deck. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -911,8 +971,8 @@
   "token": false,
   "stats": "3 attack / 4 health",
   "rules": "Whenever another friendly unit is destroyed, add a random Salvage card to your hand.",
-  "flavor": "\"One crew's wreck is my next fleet.\"",
-  "look": "Mad Mox runs the reclamation crews that strip every wreck in the Belt, usually before the shooting has stopped.  She commands a fleet of crawlers, cutters and junk drones built from the remains of other people's ships. Medium unit. Show the unit itself as the hero of the frame."
+  "flavor": "Mox: \"Every wreck in the Belt is a ship I haven't finished building yet.\"",
+  "look": "Mad Mox runs the reclamation crews that strip every wreck in the Belt, usually before the shooting has stopped.  Her fleet of crawlers, cutters and junk drones is built entirely from other people's ships. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -927,7 +987,7 @@
   "stats": "",
   "rules": "",
   "flavor": "",
-  "look": "A stun baton charged from a suit battery, carried by Belt enforcers and toll collectors.  One strike is not lethal, but it rarely needs to be. Gear: show the item itself, heroically lit, as if on display or in a soldier's hands."
+  "look": "A stun baton powered by a suit battery, carried by Belt enforcers and toll collectors.  One hit won't kill anyone, and it rarely needs to. Gear: show the item itself, heroically lit, as if on display or in a soldier's hands."
  },
  {
   "kind": "card",
@@ -942,7 +1002,7 @@
   "stats": "",
   "rules": "",
   "flavor": "",
-  "look": "A hull-cutting torch with a shaped plasma edge, adapted by Belt raiders into a sword.  It parts armour plate and a boarding party's nerve with equal ease. Gear: show the item itself, heroically lit, as if on display or in a soldier's hands."
+  "look": "A hull-cutting torch with a shaped plasma edge, which Belt raiders turned into a sword.  It cuts through armour plate, and the sight of one has ended plenty of boarding actions before they started. Gear: show the item itself, heroically lit, as if on display or in a soldier's hands."
  },
  {
   "kind": "card",
@@ -957,7 +1017,7 @@
   "stats": "",
   "rules": "Deploy: Deal 1 damage to an enemy unit.",
   "flavor": "",
-  "look": "A magnetic grapple launcher used by salvage crews to secure drifting wreckage.  Raiders use it to pin targets in place during boarding actions, and the barbed head punches through light plating on impact. Gear: show the item itself, heroically lit, as if on display or in a soldier's hands."
+  "look": "A magnetic grapple launcher used by salvage crews to secure drifting wreckage.  Raiders use it to pin targets in place during boarding actions, and the barbed head punches through light plating. Gear: show the item itself, heroically lit, as if on display or in a soldier's hands."
  },
  {
   "kind": "card",
@@ -972,7 +1032,7 @@
   "stats": "",
   "rules": "",
   "flavor": "",
-  "look": "A one-person coilgun built from a ship's point-defence barrel and a portable capacitor bank.  It can punch through a hull, the person behind it and the bulkhead behind them. Gear: show the item itself, heroically lit, as if on display or in a soldier's hands."
+  "look": "A one-person coilgun built from a ship's point-defence barrel and a portable capacitor bank.  One shot can go through a hull, the person behind it and the bulkhead behind them. Gear: show the item itself, heroically lit, as if on display or in a soldier's hands."
  },
  {
   "kind": "card",
@@ -987,7 +1047,7 @@
   "stats": "",
   "rules": "After your commander attacks, deal 1 damage to all enemy units.",
   "flavor": "",
-  "look": "A shoulder-mounted scattergun that fires canisters of explosive pellets in a wide cone, used by raider captains to discourage boarders.  Every shot sprays fragments across the whole deck. Gear: show the item itself, heroically lit, as if on display or in a soldier's hands."
+  "look": "A shoulder-mounted scattergun that fires canisters of explosive pellets in a wide cone.  Raider captains carry them to discourage boarders, since every shot sprays fragments across the whole deck. Gear: show the item itself, heroically lit, as if on display or in a soldier's hands."
  },
  {
   "kind": "card",
@@ -1017,7 +1077,7 @@
   "stats": "",
   "rules": "Trigger a friendly unit's Salvage effect.",
   "flavor": "",
-  "look": "A remote detonation code for Belt salvage charges, letting a crew set off a booby trap on command instead of waiting for it to be destroyed.  Ott's engineers wrote it. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A remote detonation code for Belt salvage charges, which lets a crew set off a booby trap on command instead of waiting for someone to trip it.  Scrapper King Ott's engineers wrote it. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1032,7 +1092,7 @@
   "stats": "",
   "rules": "Deal 2 damage to all enemy units.",
   "flavor": "",
-  "look": "A full side-on volley from every gun a ship can bring to bear.  Raider ships carry more guns than they can reliably feed, so a broadside is often the only coordinated thing a raider crew does all day. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A full volley from every gun a ship can bring to bear on one side.  Raider ships carry more guns than they can reliably keep loaded, so a broadside is often the only coordinated thing a raider crew does all day. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1047,7 +1107,7 @@
   "stats": "",
   "rules": "Destroy a damaged enemy unit.",
   "flavor": "",
-  "look": "Raider etiquette for a crippled ship: board it, strip it and leave the crew a shuttle if they ask politely.  Against a wounded target it is rarely a fair fight, which is the point. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "Raider custom for a crippled ship: board it, strip it and leave the crew a shuttle if they ask politely.  Against a damaged target it is rarely a fair fight, which is the point. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1062,7 +1122,52 @@
   "stats": "",
   "rules": "Add a random Gear card to your hand.",
   "flavor": "",
-  "look": "The Belt's arms market runs out of a dozen hollowed hulls with no fixed address and no questions asked.  Anything a crew needs can be bought there, though price and condition vary wildly. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "The Belt's arms market runs out of a dozen hollowed-out hulls that move every few weeks and ask no questions.  Anything a crew needs can be bought there, though price and quality vary wildly. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+ },
+ {
+  "kind": "card",
+  "id": "gun_tinker",
+  "file": "gun_tinker.png",
+  "ref": "reference/gun_tinker.png",
+  "name": "Gun Tinker",
+  "faction": "raider",
+  "type": "unit",
+  "rarity": "epic",
+  "token": false,
+  "stats": "1 attack / 3 health",
+  "rules": "After you equip Gear, give it +1 Attack and draw a card.",
+  "flavor": "Gun tinker: \"Hand it over. It'll shoot straighter before you finish complaining.\"",
+  "look": "Gun tinkers are Belt mechanics who specialise in personal weapons, and every raider captain wants one on the crew.  They strip and retune a new weapon while its owner is still getting used to it, and they always find a few useful spares in the crate it came in. Small, light unit. Show the unit itself as the hero of the frame."
+ },
+ {
+  "kind": "card",
+  "id": "wreck_gunner",
+  "file": "wreck_gunner.png",
+  "ref": "reference/wreck_gunner.png",
+  "name": "Wreck Gunner",
+  "faction": "raider",
+  "type": "unit",
+  "rarity": "rare",
+  "token": false,
+  "stats": "2 attack / 2 health",
+  "rules": "Whenever another friendly unit is destroyed, deal 1 damage to a random enemy.",
+  "flavor": "Mox: \"Every wreck is a gun platform if you're not fussy about who used to own it.\"",
+  "look": "Wreck gunners hide in the debris of a fight and shoot from whatever is left of the ships around them.  Every fresh wreck gives them new cover and a new firing line. Small, light unit. Show the unit itself as the hero of the frame."
+ },
+ {
+  "kind": "card",
+  "id": "twin_pistols",
+  "file": "twin_pistols.png",
+  "ref": "reference/twin_pistols.png",
+  "name": "Twin Pistols",
+  "faction": "raider",
+  "type": "gear",
+  "rarity": "common",
+  "token": false,
+  "stats": "",
+  "rules": "Twin-Fire",
+  "flavor": "Sable: \"With two guns, I never have to stop and reload.\"",
+  "look": "Belt duelists carry a matched pair of short coilgun pistols and fire them in turn, so neither barrel overheats.  Each shot is light, but they come quickly. Gear: show the item itself, heroically lit, as if on display or in a soldier's hands."
  },
  {
   "kind": "card",
@@ -1077,7 +1182,7 @@
   "stats": "1 attack / 1 health",
   "rules": "",
   "flavor": "",
-  "look": "The smallest Swarm organism: a fist-sized, six-legged biter that hatches by the hundred and lives for a few days.  Swarmlings do not think. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "The smallest Swarm organism: a fist-sized, six-legged biter that hatches by the hundred and lives for a few days.  Swarmlings chase heat and movement until something stops them. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1092,7 +1197,7 @@
   "stats": "0 attack / 3 health",
   "rules": "At the start of your turn, transform into a 3/3 Brood Warrior.",
   "flavor": "",
-  "look": "A Swarm egg-sac the size of a crouching marine, wrapped in a rubbery shell that hardens over hours.  Fleet units are trained to burn larvae on sight, because what hatches is ready to fight immediately. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "A Swarm egg-sac the size of a crouching marine, wrapped in a rubbery shell that hardens over a few hours.  Fleet troops are trained to burn larvae on sight, because what hatches is ready to fight straight away. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1107,7 +1212,7 @@
   "stats": "3 attack / 3 health",
   "rules": "",
   "flavor": "",
-  "look": "The standard Swarm combatant: a horse-sized armoured hunter with blade-limbs and a nervous system spread through its whole carapace.  Brood warriors hatch fully grown and hunt in packs. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "The standard Swarm fighter: a horse-sized armoured hunter with blade-tipped limbs and a nervous system spread through its whole shell, so a single shot rarely stops it.  Brood warriors hatch fully grown and hunt in packs. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1122,7 +1227,7 @@
   "stats": "1 attack / 2 health",
   "rules": "Toxic",
   "flavor": "",
-  "look": "A small, fast Swarm organism with a hollow tail-spine that injects a neurotoxin lethal to anything with a nervous system.  It is the Swarm's most efficient killer, though far from its largest. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "A small, fast Swarm organism with a hollow tail-spine that injects a nerve toxin.  It is the Swarm's most efficient killer by a wide margin. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1137,7 +1242,7 @@
   "stats": "2 attack / 3 health",
   "rules": "Siphon",
   "flavor": "",
-  "look": "A ribbed, eel-shaped Swarm feeder that latches onto prey and drains it through a ring of hooked teeth.  What it takes is passed through the brood's chemical network to heal its kin. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "An eel-shaped Swarm feeder that latches onto prey and drains it through a ring of hooked teeth.  What it drinks is passed through the brood's chemical network to heal other Swarm organisms. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1167,7 +1272,7 @@
   "stats": "2 attack / 3 health",
   "rules": "Toxic",
   "flavor": "",
-  "look": "A Swarm artillery organism that sprays a corrosive fluid able to dissolve hull plating in seconds.  It stores the acid in sacs along its spine and refills them by eating metal. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A Swarm artillery organism that sprays a fluid able to dissolve hull plating in seconds.  It stores the acid in sacs along its spine and refills them by eating metal. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1182,7 +1287,7 @@
   "stats": "2 attack / 5 health",
   "rules": "Guardian",
   "flavor": "",
-  "look": "A heavily armoured Swarm defender covered in overlapping chitin plates dense enough to stop coilgun rounds.  It moves slowly and plants itself between threats and the brood. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A heavily armoured Swarm defender covered in overlapping plates dense enough to stop coilgun rounds.  It moves slowly and plants itself between any threat and the brood. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1197,7 +1302,7 @@
   "stats": "2 attack / 4 health",
   "rules": "Blitz. Whenever this takes damage and survives, gain +2 Attack.",
   "flavor": "",
-  "look": "A Swarm hunter whose metabolism accelerates when it is injured, flooding its body with growth hormones.  A wounded ripper gets faster, stronger and angrier with every hit it survives. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A Swarm hunter whose body floods with growth hormones whenever it is hurt.  Each hit it survives makes it faster and stronger. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1212,7 +1317,7 @@
   "stats": "2 attack / 4 health",
   "rules": "Whenever you summon another unit, give it +1 Attack.",
   "flavor": "",
-  "look": "A neural cluster the size of a ground car, linked to every Swarm organism within several kilometres by chemical signals and something like song.  It coordinates the brood and primes every new hatchling for violence. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A neural cluster the size of a ground car, linked by chemical signals to every Swarm organism within several kilometres.  It coordinates the brood and makes every new hatchling stronger and more aggressive. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1227,7 +1332,7 @@
   "stats": "3 attack / 4 health",
   "rules": "Deploy: Give a friendly unit Toxic.",
   "flavor": "",
-  "look": "A surgical organism that grafts venom glands onto other Swarm creatures.  It carries a stock of glands in its body cavity and installs them with fine, needle-like limbs in seconds. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A surgical Swarm organism that grafts venom glands onto other Swarm creatures.  It carries spare glands inside its body and fits them with fine, needle-like limbs in a few seconds. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1242,7 +1347,7 @@
   "stats": "2 attack / 5 health",
   "rules": "At the end of your turn, summon a 1/1 Swarmling.",
   "flavor": "",
-  "look": "A walking hatchery that births swarmlings from pores along its flanks, without pause.  A single broodmother can fill a cavern in a week. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A walking hatchery that births swarmlings from pores along its sides, without stopping.  A single broodmother can fill a cavern in a week. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1257,7 +1362,7 @@
   "stats": "3 attack / 5 health",
   "rules": "Guardian. Siphon",
   "flavor": "",
-  "look": "A massive armoured worm that guards the entrances to the Swarm's breeding chambers.  It clamps onto attackers with a ring of teeth and feeds on them while blocking the passage. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A huge armoured worm that guards the entrances to the Swarm's breeding chambers.  It clamps onto attackers with a ring of teeth and feeds on them while blocking the tunnel. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1272,7 +1377,7 @@
   "stats": "4 attack / 4 health",
   "rules": "Deploy: Destroy a friendly unit and gain its Attack and Health.",
   "flavor": "",
-  "look": "A burrowing Swarm worm that eats other Swarm organisms and absorbs their mass.  It is the brood's recycling system and its emergency reserve. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "look": "A burrowing Swarm worm that eats other Swarm organisms and takes on their mass.  It serves as the brood's recycling system and its emergency food store. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1286,8 +1391,8 @@
   "token": false,
   "stats": "5 attack / 6 health",
   "rules": "Siphon. At the end of your turn, summon a 1/2 Venom Stinger.",
-  "flavor": "Every world she touches becomes a nursery.",
-  "look": "Ixis hatched in 2240 from a royal line the Progenitor bred for command, and she was the first Swarm queen ever recorded to speak.  Under her the Swarm stayed quietly inside the quarantine for fifty years while the Fleet's pickets grew old and complacent. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
+  "flavor": "Ixis: \"My children are hungry, little captain. How kind of you to visit.\"",
+  "look": "Ixis hatched in 2240 from a royal line bred for command, and she was the first Swarm queen known to speak.  Under her the Swarm stayed quietly inside the Fleet's quarantine for fifty years, while the guard ships grew old and careless. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1301,8 +1406,8 @@
   "token": false,
   "stats": "4 attack / 5 health",
   "rules": "At the end of your turn, summon a copy of another random friendly unit.",
-  "flavor": "The first of the Swarm. It remembers every shape it has ever made.",
-  "look": "The Progenitor was found in 2196, dormant in a chamber beneath the ice of Kesh whose walls were made of Lamp material.  Within a year it had budded body plans the Swarm still uses. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "flavor": "Fleet biologist: \"Every offspring it produces is a different animal. We have stopped trying to name them.\"",
+  "look": "The Progenitor is the organism the whole Swarm came from, found asleep in 2196 in a sealed chamber deep beneath the ice of Kesh.  Within a year it had produced the body plans the Swarm still uses. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1317,7 +1422,7 @@
   "stats": "",
   "rules": "Summon three 1/1 Swarmlings.",
   "flavor": "",
-  "look": "A chemical signal released by a hive mind that triggers mass hatching across a nest.  Within seconds every ripe egg bursts open at once. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A chemical signal from a hive mind that makes every ripe egg in a nest hatch at once.  The Swarm uses it to flood a breach or bury a defensive line in bodies before the defenders can reload. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1332,7 +1437,7 @@
   "stats": "",
   "rules": "Give a friendly unit +2/+2.",
   "flavor": "",
-  "look": "A burst of growth hormones that forces explosive development in a Swarm organism, thickening its shell and lengthening its limbs within seconds.  The process burns through most of the creature's reserves and shortens its life. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A burst of growth hormones that forces a Swarm organism to grow a thicker shell and longer limbs within seconds.  The change burns through most of the creature's reserves and shortens its life. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1347,7 +1452,7 @@
   "stats": "",
   "rules": "Deal 1 damage to all enemy units twice.",
   "flavor": "",
-  "look": "Swarm organisms release clouds of corrosive spores into the air, which condense and fall as acid.  It eats through armour, equipment and anything left uncovered. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "Swarm organisms release clouds of corrosive spores that condense in the air and fall as acid.  It eats through armour, equipment and anything left uncovered. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1362,7 +1467,7 @@
   "stats": "",
   "rules": "Deal 3 damage. Restore 3 Health to your commander.",
   "flavor": "",
-  "look": "A Swarm feeding technique: inject enzymes that liquefy tissue, then draw the result back through a feeding tendril to nourish the brood's commander.  Psionics have developed a similar technique for different reasons, and they do not appreciate the comparison. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A Swarm feeding method: inject enzymes that liquefy tissue, then draw the result back through a feeding tendril to strengthen the brood's leader.  The Psionic Orders use a similar technique for their own reasons. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1377,7 +1482,7 @@
   "stats": "",
   "rules": "Give your units +1/+1.",
   "flavor": "",
-  "look": "A pheromone wave from a queen or hive mind that triggers aggression and rapid growth across the whole brood.  Fleet sensors register it as a sharp spike in the nebula's chemistry, usually about two seconds before everything attacks at once. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A pheromone wave from a queen or hive mind that makes the whole brood aggressive and drives rapid growth.  Fleet sensors register it as a sudden spike in the nebula's chemistry. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1392,7 +1497,82 @@
   "stats": "",
   "rules": "Give your units \"Salvage: Summon a 1/1 Swarmling.\"",
   "flavor": "",
-  "look": "Swarm handlers seed their own lines with parasite eggs that wait inside a host until it dies, then hatch and keep fighting.  It is the Swarm's way of ensuring that no loss is complete. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "Swarm handlers seed their own fighters with parasite eggs that wait inside the host until it dies, then hatch and keep fighting.  It means no Swarm loss is ever complete. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+ },
+ {
+  "kind": "card",
+  "id": "hatchery",
+  "file": "hatchery.png",
+  "ref": "reference/hatchery.png",
+  "name": "The Hatchery",
+  "faction": "swarm",
+  "type": "unit",
+  "rarity": "legendary",
+  "token": false,
+  "stats": "0 attack / 4 health",
+  "rules": "Cloak. Whenever another friendly unit dies, summon a 1/1 Swarmling.",
+  "flavor": "Fleet biologist: \"Every time we kill one, the Hatchery hatches a replacement. We still haven't found the Hatchery.\"",
+  "look": "The Hatchery is a single Swarm organism the size of a hill: a mound of egg chambers buried in the nebula's dust, where Fleet sensors struggle to find it.  Every Swarm body that falls nearby is drawn back into the mound and hatches again as a swarmling. Small, light unit. Show the unit itself as the hero of the frame."
+ },
+ {
+  "kind": "card",
+  "id": "venom_tender",
+  "file": "venom_tender.png",
+  "ref": "reference/venom_tender.png",
+  "name": "Venom Tender",
+  "faction": "swarm",
+  "type": "unit",
+  "rarity": "rare",
+  "token": false,
+  "stats": "1 attack / 2 health",
+  "rules": "Toxic. Your other Toxic units have +1 Attack.",
+  "flavor": "Okonkwo: \"The small ones refill the stingers' venom. Kill the small ones first.\"",
+  "look": "Venom tenders are small Swarm organisms that move between the brood's stingers and spitters, pumping fresh toxin into their glands.  A stinger with a tender nearby strikes harder. Small, light unit. Show the unit itself as the hero of the frame."
+ },
+ {
+  "kind": "card",
+  "id": "needle_mite",
+  "file": "needle_mite.png",
+  "ref": "reference/needle_mite.png",
+  "name": "Needle Mite",
+  "faction": "swarm",
+  "type": "unit",
+  "rarity": "common",
+  "token": false,
+  "stats": "1 attack / 1 health",
+  "rules": "Toxic",
+  "flavor": "Marine: \"It was the size of my thumb, and it killed a Rhino. I don't want to talk about it.\"",
+  "look": "Needle mites are the smallest Toxic organisms the Swarm breeds, each about the size of a thumb and carrying a single dose of nerve toxin.  They crawl into gaps in armour and suit seals, then strike once. Small, light unit. Show the unit itself as the hero of the frame."
+ },
+ {
+  "kind": "card",
+  "id": "venom_graft",
+  "file": "venom_graft.png",
+  "ref": "reference/venom_graft.png",
+  "name": "Venom Graft",
+  "faction": "swarm",
+  "type": "spell",
+  "rarity": "common",
+  "token": false,
+  "stats": "",
+  "rules": "Give a friendly unit Toxic.",
+  "flavor": "Okonkwo: \"If a Swarm organism ever stops being dangerous, it won't stay that way for long.\"",
+  "look": "A Swarm technique for turning any brood organism into a poisoner.  A grafting organism injects a seed gland that grows into a working venom sac within minutes. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+ },
+ {
+  "kind": "card",
+  "id": "thornback",
+  "file": "thornback.png",
+  "ref": "reference/thornback.png",
+  "name": "Thornback",
+  "faction": "swarm",
+  "type": "unit",
+  "rarity": "rare",
+  "token": false,
+  "stats": "1 attack / 4 health",
+  "rules": "Guardian. Toxic",
+  "flavor": "Quarantine line rule: \"Do not hit the Thornback. If you hit the Thornback, see the medic.\"",
+  "look": "A slow Swarm defender whose shell is covered in hollow venom spines.  It plants itself in front of the brood and waits, and anything that strikes the shell gets pricked. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1407,7 +1587,7 @@
   "stats": "1 attack / 1 health",
   "rules": "Barrier",
   "flavor": "",
-  "look": "A Forge escort drone whose chassis is little more than a barrier emitter with a small gun attached.  It projects one hardened shield that can absorb a single heavy hit before burning out. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "A Forge escort drone that is little more than a barrier emitter with a small gun attached.  Its shield can absorb one heavy hit before it burns out. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1422,7 +1602,7 @@
   "stats": "2 attack / 3 health",
   "rules": "Deploy: Gain 3 Armor.",
   "flavor": "",
-  "look": "A Forge maintenance unit that bolts armour plating onto the nearest friendly structure, including the commander's own hull, without pausing for anything as trivial as incoming fire.  Fleet crews used to call them tin welders, back when the Forge still sent them. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "A Forge maintenance unit that bolts armour plating onto the nearest friendly structure, including the commander's own hull.  It does not stop work for incoming fire. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1437,7 +1617,7 @@
   "stats": "3 attack / 3 health",
   "rules": "Overheat (1)",
   "flavor": "",
-  "look": "A Forge defence pylon that dumps stored charge into brutal electrical arcs.  It draws so much power that the local reactor grid struggles for some time afterwards. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "A Forge defence pylon that releases stored charge in violent electrical arcs.  It draws so much power that the local reactor grid struggles for a while afterwards. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1452,7 +1632,7 @@
   "stats": "2 attack / 2 health",
   "rules": "Deploy: EMP a unit.",
   "flavor": "",
-  "look": "A Forge infantry frame built around one high-power pulse emitter in its chest.  It walks up to a target and wipes its systems back to bare hardware. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A Forge infantry frame built around one powerful pulse emitter in its chest.  It walks up to a target and wipes its systems back to bare hardware. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1467,7 +1647,7 @@
   "stats": "2 attack / 3 health",
   "rules": "Twin-Fire",
   "flavor": "",
-  "look": "A Forge combat drone with two rotary cannons and a fire-control computer that cycles them alternately.  It was designed as a point-defence platform for Fleet carriers. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A Forge combat drone with two rotary cannons that fire in turn, so neither barrel overheats.  It was designed to protect Fleet carriers from fighters. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1482,7 +1662,7 @@
   "stats": "5 attack / 4 health",
   "rules": "Overheat (2)",
   "flavor": "",
-  "look": "A Forge combat walker running its reactor at a hundred and forty percent of rated output.  It hits like a machine twice its size and cooks its own power systems doing it. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A Forge combat walker that runs its reactor at a hundred and forty percent of its rated output.  It hits like a machine twice its size and cooks its own power systems doing it. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1497,7 +1677,7 @@
   "stats": "1 attack / 4 health",
   "rules": "At the end of your turn, restore 2 Health to all friendly characters.",
   "flavor": "",
-  "look": "A Forge field-repair unit that sprays nanite paste over damaged hulls and wounded crews alike.  The nanites were designed for machines, but the Forge rewrote them to work on human tissue decades ago, as a courtesy to its Fleet customers. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A Forge field-repair unit that sprays nanite paste over damaged hulls and wounded crew alike.  The nanites were designed for machines, but the Forge adapted them to human tissue decades ago as a favour to its Fleet customers. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1512,7 +1692,7 @@
   "stats": "3 attack / 3 health",
   "rules": "Guardian. Barrier",
   "flavor": "",
-  "look": "A Forge guard construct fitted with a heavy barrier emitter and a single instruction: stand here and let nothing past.  It was originally designed to protect foundry doors, and it is extremely good at doors. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A Forge guard construct with a heavy barrier emitter and a single instruction: stand here and let nothing past.  It was first designed to protect foundry doors, and it is extremely good at doors. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1527,7 +1707,7 @@
   "stats": "3 attack / 4 health",
   "rules": "At the end of your turn, give another random friendly unit +1/+1.",
   "flavor": "",
-  "look": "A Forge construction unit that builds and upgrades other machines in the field, welding new plating and weapons onto them while they fight.  It improves whatever it touches, usually without asking. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A Forge construction unit that builds and upgrades other machines in the field, welding new plating and weapons onto them while they fight.  It improves whatever it can reach, without asking first. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1542,7 +1722,7 @@
   "stats": "2 attack / 5 health",
   "rules": "After you cast a spell, summon a 1/1 Nanobot with Barrier.",
   "flavor": "",
-  "look": "A mobile Forge fabrication plant the size of a truck, printing nanobot swarms from feedstock and stray power.  Every surge that passes through the local network spins up a new batch. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A truck-sized mobile Forge factory that prints swarms of nanobots from raw feedstock and spare power.  Every spike of power through the local network starts a new batch. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1557,7 +1737,7 @@
   "stats": "1 attack / 1 health",
   "rules": "Barrier",
   "flavor": "",
-  "look": "A cloud of tiny repair machines bound into one fighting unit by a shared shield emitter.  It is printed in seconds and lasts for minutes. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "A cloud of tiny repair machines held together as one fighting unit by a shared shield emitter.  It is printed in seconds and lasts for minutes. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1572,7 +1752,7 @@
   "stats": "2 attack / 8 health",
   "rules": "Guardian. At the end of your turn, gain 2 Armor.",
   "flavor": "",
-  "look": "A fortified Forge power plant on legs, built to keep a front line supplied with energy.  Its shell absorbs fire and bleeds some of the impact energy into fresh armour plating. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "look": "A fortified Forge power plant on legs, built to keep a front line supplied with energy.  Its shell absorbs fire and turns some of the impact energy into fresh armour plating. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1587,7 +1767,7 @@
   "stats": "7 attack / 7 health",
   "rules": "Overheat (3)",
   "flavor": "",
-  "look": "A heavy Forge war machine built around a lightning-generating core.  It pulls power from the grid in huge surges and releases it as storms of arc discharge. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "look": "A heavy Forge war machine built around a lightning-generating core.  It pulls huge surges of power from the grid and releases them as storms of electrical discharge. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1602,7 +1782,7 @@
   "stats": "5 attack / 6 health",
   "rules": "Twin-Fire. Barrier",
   "flavor": "",
-  "look": "A three-legged Forge assault platform with two independently aimed gun turrets and a hardened barrier generator in its belly.  It was designed to anchor the foundry defences of Hephaest I. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
+  "look": "A three-legged Forge assault platform with two independently aimed turrets and a hardened barrier generator underneath.  It was built to defend the foundries of Hephaest I. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1616,8 +1796,8 @@
   "token": false,
   "stats": "4 attack / 5 health",
   "rules": "Twin-Fire. Barrier. After this attacks, regain Barrier.",
-  "flavor": "The prototype every Forge machine was copied from.",
-  "look": "Unit Zero was the first machine mind the Forge ever made, activated in 2134 in a single bipedal frame.  Every Forge intelligence since, Calculus Prime included, was copied from its core logic. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "flavor": "Display hall notice: \"Please do not ask the exhibit to fight. It will say yes.\"",
+  "look": "Unit Zero was the first machine mind the Forge ever made, activated in 2134 in a single two-legged frame.  Every Forge mind since, Calculus Prime included, was copied from its logic. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1632,7 +1812,7 @@
   "stats": "",
   "rules": "EMP a unit.",
   "flavor": "",
-  "look": "A handheld Forge pulse device that fires a short, focused EMP at a single target.  It was designed for foundry technicians to reset malfunctioning machines. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A handheld Forge pulse device that fires a short, focused EMP at one target.  It was designed for foundry technicians to reset machines that were malfunctioning. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1647,7 +1827,7 @@
   "stats": "",
   "rules": "Deal 3 damage. Overheat (1)",
   "flavor": "",
-  "look": "A directed discharge from a Forge capacitor bank, aimed at a single target.  It draws heavily on the local grid and leaves the reactors weak for a time. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A directed discharge from a Forge capacitor bank, aimed at a single target.  It drains the local grid hard and leaves the reactors weak for a while. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1662,7 +1842,7 @@
   "stats": "",
   "rules": "Deal 2 damage to all enemy units. Overheat (2)",
   "flavor": "",
-  "look": "A Forge discharge weapon that leaps from target to target along conductive paths, hull to hull and suit to suit.  It drains so much power that the firing unit needs time to recover. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A Forge discharge weapon that jumps from target to target along anything conductive, hull to hull and suit to suit.  It drains so much power that the firing unit needs time to recover. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1677,7 +1857,7 @@
   "stats": "",
   "rules": "Gain 5 Armor. Draw a card.",
   "flavor": "",
-  "look": "A Forge defensive routine that dumps spare reactor power into armour hardening and deploys emergency plating from stored rolls.  The Forge used it to protect its foundries during the Swarm Wars. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A Forge defensive routine that channels spare reactor power into hardening armour and rolls out emergency plating from storage.  The Forge used it to protect its foundries during the Swarm Wars. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1692,7 +1872,7 @@
   "stats": "",
   "rules": "Give a friendly unit +1 Attack and Twin-Fire.",
   "flavor": "",
-  "look": "A Forge system override that pushes a unit's fire control and actuators past their safe limits.  The unit can fire twice as fast for as long as it holds together. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A Forge override that pushes a unit's targeting and motors past their safe limits, so it can fire twice as fast for as long as it holds together.  The Forge used to bill the Fleet for the repairs afterwards. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1707,7 +1887,7 @@
   "stats": "",
   "rules": "Give your units Barrier.",
   "flavor": "",
-  "look": "A field-wide barrier projection that wraps every friendly unit in a shield bubble for a few seconds.  It is the Forge's emergency answer to bombardment. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A barrier projection that wraps every friendly unit on the field in its own shield for a few seconds.  It is the Forge's emergency answer to bombardment. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1722,7 +1902,7 @@
   "stats": "",
   "rules": "Deal 2 damage. Unlock your Overheated Energy.",
   "flavor": "",
-  "look": "An emergency coolant purge that dumps a reactor's excess heat as a jet of superheated gas, ideally pointed at the enemy.  It releases capacity that overheating would otherwise keep locked. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "An emergency coolant purge that dumps a reactor's excess heat as a jet of superheated gas, ideally aimed at the enemy.  It frees up power that overheating would otherwise lock away. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1737,7 +1917,67 @@
   "stats": "",
   "rules": "EMP all enemy units.",
   "flavor": "",
-  "look": "A wide-area electromagnetic pulse from a Forge pylon array, strong enough to strip every hostile unit in range back to base programming.  It was designed as a last-ditch defence against a machine uprising. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A wide-area electromagnetic pulse from a Forge pylon array, strong enough to strip every hostile machine in range back to its basic programming.  Calculus Prime had the arrays built in 2163, its first year in charge, in case any of its machines ever stopped obeying it. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+ },
+ {
+  "kind": "card",
+  "id": "overclock_relay",
+  "file": "overclock_relay.png",
+  "ref": "reference/overclock_relay.png",
+  "name": "Overclock Relay",
+  "faction": "synth",
+  "type": "unit",
+  "rarity": "rare",
+  "token": false,
+  "stats": "1 attack / 3 health",
+  "rules": "Your cards with Overheat cost 1 less.",
+  "flavor": "Reactor Overseer: \"Safety limits are a suggestion. This unit no longer accepts suggestions.\"",
+  "look": "A Forge power relay that removes a reactor's safety limiter and routes the spare current straight to the weapons.  Machines connected to it reach full output in a fraction of the usual time. Small, light unit. Show the unit itself as the hero of the frame."
+ },
+ {
+  "kind": "card",
+  "id": "aegis_projector",
+  "file": "aegis_projector.png",
+  "ref": "reference/aegis_projector.png",
+  "name": "Aegis Projector",
+  "faction": "synth",
+  "type": "unit",
+  "rarity": "epic",
+  "token": false,
+  "stats": "1 attack / 3 health",
+  "rules": "At the end of your turn, give Barrier to a random friendly unit that doesn't have it.",
+  "flavor": "Gate Warden Unit: \"Defensive coverage at ninety-four percent. Correcting.\"",
+  "look": "An Aegis projector is a small Forge drone that carries a barrier emitter instead of a gun.  It moves along a defensive line and recharges the barrier on whichever machine needs it most. Small, light unit. Show the unit itself as the hero of the frame."
+ },
+ {
+  "kind": "card",
+  "id": "furnace_walker",
+  "file": "furnace_walker.png",
+  "ref": "reference/furnace_walker.png",
+  "name": "Furnace Walker",
+  "faction": "synth",
+  "type": "unit",
+  "rarity": "common",
+  "token": false,
+  "stats": "3 attack / 4 health",
+  "rules": "Deploy: If you played a card with Overheat this turn, gain +2/+2.",
+  "flavor": "Reactor Overseer: \"Run it hot. Run everything hot.\"",
+  "look": "A Forge foundry walker built to work inside the smelting halls, where the heat would cook any other machine.  When the power grid surges, it soaks up the excess and runs faster and harder. Medium unit. Show the unit itself as the hero of the frame."
+ },
+ {
+  "kind": "card",
+  "id": "heat_sink",
+  "file": "heat_sink.png",
+  "ref": "reference/heat_sink.png",
+  "name": "Heat Sink Unit",
+  "faction": "synth",
+  "type": "unit",
+  "rarity": "common",
+  "token": false,
+  "stats": "2 attack / 3 health",
+  "rules": "At the start of your turn, unlock 1 of your Overheated Energy.",
+  "flavor": "Forge technician: \"Put it next to anything that runs hot, then go and stand somewhere else.\"",
+  "look": "A Forge cooling unit packed with superconducting fins and liquid coolant, built to keep overloaded reactors from shutting down.  It pulls waste heat out of nearby systems so they can keep working at full power. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1752,7 +1992,7 @@
   "stats": "1 attack / 2 health",
   "rules": "Amplify +1",
   "flavor": "",
-  "look": "A novice of the Psionic orders, usually recruited as a child from families living near lane junctions.  Initiates learn first to focus the minds around them, making the spells of their seniors strike harder. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "A novice of the Psionic Orders, the humans who can sense the warp lanes with their minds and who hold the Void Expanse beyond the Forge.  Initiates are usually recruited as children from families near lane junctions. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1767,7 +2007,7 @@
   "stats": "3 attack / 3 health",
   "rules": "Amplify +1",
   "flavor": "",
-  "look": "A trained psionic of the orders, able to focus a battle group's spells into something stronger than the sum of its parts.  Adepts spend a decade learning control before they are allowed near a battlefield. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A trained psionic who can focus a battle group's spells into something stronger than any one caster could manage.  Adepts spend about ten years learning control before they are allowed near a battlefield. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1782,7 +2022,7 @@
   "stats": "2 attack / 1 health",
   "rules": "Deploy: Scan a unit.",
   "flavor": "",
-  "look": "A psionic scout construct with a crystalline sensor core that reads possibilities as well as positions.  It shows its operator three likely forces and lets them prepare for one. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "A psionic scout construct with a crystal sensor core that picks up likely futures as well as positions.  It shows its operator three forces the enemy might field and lets them prepare for one. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1797,7 +2037,7 @@
   "stats": "2 attack / 3 health",
   "rules": "Deploy: Cryo an enemy.",
   "flavor": "",
-  "look": "A Cryomancer sentry trained to freeze intruders in place by pulling the heat out of them.  The technique takes years to learn without freezing yourself in the process. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A guard from the Cryomancers, the psionic order that works with cold, trained to freeze intruders by pulling the heat out of them.  The technique takes years to learn without freezing yourself. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1812,7 +2052,7 @@
   "stats": "2 attack / 3 health",
   "rules": "Deploy: Scan a spell.",
   "flavor": "",
-  "look": "A psionic who looks a few seconds into the future and picks the most useful of what they see.  Seers are prized by every order and rarely live past fifty. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A psionic who can see a few seconds into the future and choose the most useful option.  Every order wants seers, and few of them live past fifty, because the visions wear out the brain. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1827,7 +2067,7 @@
   "stats": "3 attack / 4 health",
   "rules": "Deploy: Copy a random card from your opponent's hand.",
   "flavor": "",
-  "look": "A psionic who reads the surface thoughts of an enemy commander and copies their plans.  It is delicate work, and telepaths often come home carrying someone else's memories. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A psionic who reads the surface thoughts of an enemy commander and copies their plans.  It is delicate work, and telepaths often come home carrying pieces of someone else's memories. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1842,7 +2082,7 @@
   "stats": "4 attack / 3 health",
   "rules": "Cloak. Siphon",
   "flavor": "",
-  "look": "A psionic assassin who slips partly out of phase with normal space, invisible until the moment of the strike.  They draw on their victims' life to hold the phase shift steady. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A psionic assassin who shifts partly out of normal space and stays invisible until the moment it strikes.  Stalkers hold the shift steady by drawing on the life of whoever they attack. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1857,7 +2097,7 @@
   "stats": "4 attack / 5 health",
   "rules": "Amplify +2",
   "flavor": "",
-  "look": "An elder psionic who has spent decades listening to the dark lanes.  Oracles strengthen every psionic around them and speak in riddles that usually turn out to be predictions. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "look": "An elder psionic who has spent decades listening to the dark lanes of the Void Expanse.  Oracles strengthen every psionic near them, and their predictions are right often enough that the orders plan campaigns around them. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1872,7 +2112,7 @@
   "stats": "5 attack / 5 health",
   "rules": "After you cast a spell, deal 2 damage to a random enemy.",
   "flavor": "",
-  "look": "What becomes of a psionic who listens too long to the wrong frequency.  Its mind has broken into something larger and hungrier, and every burst of psionic power nearby feeds it. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "look": "A psionic whose mind broke after listening too long to the Choir, the voice calling from the galactic core.  What is left is larger and hungrier, and every burst of psionic power nearby makes it stronger. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1887,7 +2127,7 @@
   "stats": "6 attack / 7 health",
   "rules": "Deploy: Cryo all enemy units.",
   "flavor": "",
-  "look": "A giant of living ice animated by a circle of Cryomancers working in concert.  It spreads a freezing aura that locks whole formations in place. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
+  "look": "A giant of living ice, animated by a circle of Cryomancers working together.  Its freezing aura locks whole formations in place. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1901,8 +2141,8 @@
   "token": false,
   "stats": "4 attack / 6 health",
   "rules": "At the start of your turn, add a random Protocol to your hand. It costs 2 less.",
-  "flavor": "It has read everything. It has forgotten nothing.",
-  "look": "The Archivist is the oldest thing in the Void Expanse: a construct of Lamp material and something like glass, found by the orders in 2228 inside the seam of a dead Lamp.  It holds records older than humanity and offers the right one to whoever it serves. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "flavor": "Archive keeper: \"Ask it politely and it will find you any record. Ask it rudely and it will find you a very long one.\"",
+  "look": "The Archivist is a construct of Lamp material and clear crystal, found by the Psionic Orders in 2228 inside the shell of a dead Lamp.  It holds records far older than humanity and hands the right one to whoever it serves. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -1917,7 +2157,7 @@
   "stats": "",
   "rules": "Deal 3 damage and Cryo the target.",
   "flavor": "",
-  "look": "A spear of ice formed in an instant by a Cryomancer's will and hurled at a target.  It pierces, then freezes the wound shut around itself. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A spear of ice formed in an instant by a Cryomancer and thrown at a target.  It pierces, then freezes the wound shut around itself. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1932,7 +2172,7 @@
   "stats": "",
   "rules": "Cryo all enemy units.",
   "flavor": "",
-  "look": "A Cryomancer technique that pulls the heat out of a whole battlefield in a single breath.  Everything in range freezes solid for a time. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A Cryomancer technique that pulls the heat out of a whole battlefield in one breath, freezing everything in range for a time.  Cryomancer Vel used a version of it on a planetary scale in 2259. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1947,7 +2187,7 @@
   "stats": "",
   "rules": "Deal 3 damage split randomly among enemies.",
   "flavor": "",
-  "look": "Fragments of folded psionic force hurled in a scattered volley.  The technique is quick to learn and almost impossible to aim, which is why novices are taught it first. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "Fragments of folded psionic force thrown in a scattered volley.  The technique is quick to learn and almost impossible to aim, which is why novices learn it first. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1962,7 +2202,7 @@
   "stats": "",
   "rules": "Deal 5 damage to the enemy commander.",
   "flavor": "",
-  "look": "A direct psionic assault on the enemy commander's mind that bypasses armour, shields and escorts.  It causes pain, disorientation and occasionally a lasting fear of the dark. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A direct psionic attack on an enemy commander's mind that ignores armour, shields and escorts.  It causes pain, confusion and sometimes a lasting fear of the dark. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1977,7 +2217,7 @@
   "stats": "",
   "rules": "Scan a spell.",
   "flavor": "",
-  "look": "A psionic meditation that reveals the most useful course of action from a handful of possibilities.  Fleet officers who have seen it used call it cheating. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A psionic meditation that shows the most useful course of action out of a handful of possibilities.  Fleet officers who have seen it used call it cheating. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -1992,7 +2232,7 @@
   "stats": "",
   "rules": "Deal 4 damage to all enemy units.",
   "flavor": "",
-  "look": "A storm of raw psionic force unleashed across a battlefield by a circle of adepts working as one.  It tears through anything with a mind. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A storm of raw psionic force released across a battlefield by a circle of adepts working as one.  It tears through anything with a mind. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -2007,7 +2247,7 @@
   "stats": "",
   "rules": "Take control of an enemy unit.",
   "flavor": "",
-  "look": "The most dangerous technique the orders teach: seizing another mind outright and turning it against its own side.  It takes years to master and hours to recover from. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "The most dangerous technique the orders teach: taking over another person's mind and turning them against their own side.  It takes years to learn and hours to recover from afterwards. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -2022,7 +2262,7 @@
   "stats": "",
   "rules": "Trap: When an enemy unit attacks, return it to its owner's hand. It costs 2 more.",
   "flavor": "",
-  "look": "A psionic trap that folds space around an attacker and sends it back where it came from, slower and much more cautious.  Snare Mistress Ilu sows them across the approaches to the Hierarch's sanctum. A hidden Trap: show the device or the moment it springs, with a sense of ambush."
+  "look": "A psionic trap that folds space around an attacker and sends it back where it came from.  Snare Mistress Ilu lays them across the approaches to the Hierarch's sanctum. A hidden Trap: show the device or the moment it springs, with a sense of ambush."
  },
  {
   "kind": "card",
@@ -2037,7 +2277,7 @@
   "stats": "",
   "rules": "Trap: After your opponent plays a unit, summon a copy of it.",
   "flavor": "",
-  "look": "A psionic trap that records the pattern of an enemy unit as it arrives and builds a copy for the trap-setter.  The orders consider it the most elegant of the snares. A hidden Trap: show the device or the moment it springs, with a sense of ambush."
+  "look": "A psionic trap that records the pattern of an enemy unit as it arrives and builds a copy for whoever set the trap.  The orders consider it the most elegant of their snares. A hidden Trap: show the device or the moment it springs, with a sense of ambush."
  },
  {
   "kind": "card",
@@ -2052,7 +2292,7 @@
   "stats": "",
   "rules": "Trap: When your opponent casts a spell, cancel it.",
   "flavor": "",
-  "look": "A psionic trap folded into space like a held breath, waiting to swallow the next enemy spell before it takes effect.  Nyra and the Null Choir keep one armed at all times. A hidden Trap: show the device or the moment it springs, with a sense of ambush."
+  "look": "A psionic trap that waits, folded into space, to swallow the next enemy spell before it takes effect.  Nyra keeps one armed at all times, and so does the Null Choir, a circle of psionics who have given their voices to the Choir. A hidden Trap: show the device or the moment it springs, with a sense of ambush."
  },
  {
   "kind": "card",
@@ -2067,7 +2307,7 @@
   "stats": "",
   "rules": "Trap: When your commander is attacked, gain 8 Armor.",
   "flavor": "",
-  "look": "A psionic trap that hardens the air around a commander the instant an attack lands, turning the force of the blow into armour.  Psionic commanders keep one ready before every engagement. A hidden Trap: show the device or the moment it springs, with a sense of ambush."
+  "look": "A psionic trap that hardens the air around a commander the moment an attack lands, turning the force of the blow into armour.  Psionic commanders set one before every engagement. A hidden Trap: show the device or the moment it springs, with a sense of ambush."
  },
  {
   "kind": "card",
@@ -2082,7 +2322,82 @@
   "stats": "",
   "rules": "Trap: After your opponent plays a unit, deal 4 damage to it.",
   "flavor": "",
-  "look": "A psionic mine that strikes the first enemy unit to arrive on the field with a lance of concentrated force.  It is laid hours before a battle and waits, patient and invisible. A hidden Trap: show the device or the moment it springs, with a sense of ambush."
+  "look": "A psionic mine that hits the first enemy unit to arrive on the field with a lance of concentrated force.  It is laid hours before a battle and waits there, invisible. A hidden Trap: show the device or the moment it springs, with a sense of ambush."
+ },
+ {
+  "kind": "card",
+  "id": "stormcaller",
+  "file": "stormcaller.png",
+  "ref": "reference/stormcaller.png",
+  "name": "Stormcaller Rhee",
+  "faction": "psi",
+  "type": "unit",
+  "rarity": "legendary",
+  "token": false,
+  "stats": "1 attack / 2 health",
+  "rules": "Amplify +1. Your Protocols cost 1 less.",
+  "flavor": "Rhee: \"The Orders taught me to cast one spell at a time. I never agreed with them.\"",
+  "look": "Stormcaller Rhee is the youngest psionic ever to lead a battle circle of the Psionic Orders, and she casts faster than any circle can keep up with.  She taught herself shortened techniques from damaged archive records when she was a novice. Small, light unit. Show the unit itself as the hero of the frame."
+ },
+ {
+  "kind": "card",
+  "id": "frost_warden",
+  "file": "frost_warden.png",
+  "ref": "reference/frost_warden.png",
+  "name": "Frost Warden",
+  "faction": "psi",
+  "type": "unit",
+  "rarity": "rare",
+  "token": false,
+  "stats": "1 attack / 3 health",
+  "rules": "At the end of your turn, deal 3 damage to each frozen enemy.",
+  "flavor": "Cryomancer Vel: \"Freezing them is the easy part. Then the cold goes to work.\"",
+  "look": "Frost wardens are Cryomancers, members of the psionic order that works with cold, posted to guard the Orders' frozen worlds.  They keep the cold pressing on anything already trapped in ice until the ice cracks the armour from inside. Small, light unit. Show the unit itself as the hero of the frame."
+ },
+ {
+  "kind": "card",
+  "id": "flash_freeze",
+  "file": "flash_freeze.png",
+  "ref": "reference/flash_freeze.png",
+  "name": "Flash Freeze",
+  "faction": "psi",
+  "type": "spell",
+  "rarity": "common",
+  "token": false,
+  "stats": "",
+  "rules": "Cryo an enemy. Draw a card.",
+  "flavor": "Cryomancer Vel: \"Quick and cold, then keep moving.\"",
+  "look": "The first technique every Cryomancer learns: pull the heat out of a single target in an instant.  It does no lasting harm, but it stops a gun or a soldier for a few vital seconds. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+ },
+ {
+  "kind": "card",
+  "id": "shatter",
+  "file": "shatter.png",
+  "ref": "reference/shatter.png",
+  "name": "Shatter",
+  "faction": "psi",
+  "type": "spell",
+  "rarity": "rare",
+  "token": false,
+  "stats": "",
+  "rules": "Destroy a frozen enemy unit.",
+  "flavor": "Cryomancer Vel: \"Anything frozen solid breaks like glass. Hit it once.\"",
+  "look": "A focused psionic strike aimed at a target already locked in ice.  Frozen armour turns brittle, and one sharp blow breaks the whole thing apart. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+ },
+ {
+  "kind": "card",
+  "id": "cryo_adept",
+  "file": "cryo_adept.png",
+  "ref": "reference/cryo_adept.png",
+  "name": "Cryomancer Adept",
+  "faction": "psi",
+  "type": "unit",
+  "rarity": "rare",
+  "token": false,
+  "stats": "3 attack / 4 health",
+  "rules": "After you cast a spell, Cryo a random enemy unit.",
+  "flavor": "Cryomancer adept: \"Every spell leaves a little cold behind. I just decide where it goes.\"",
+  "look": "Cryomancer adepts fight beside other psionics and catch the heat their spells throw off.  Every technique cast near them feeds a wave of cold onto the enemy line. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -2097,7 +2412,7 @@
   "stats": "",
   "rules": "",
   "flavor": "",
-  "look": "A Fleet-issue monomolecular combat knife, carried by every marine and officer.  Its edge will part most suit fabric and some armour seals. Gear: show the item itself, heroically lit, as if on display or in a soldier's hands."
+  "look": "A Fleet-issue combat knife with a monomolecular edge, carried by every marine and officer.  It cuts through most suit fabric and some armour seals. Gear: show the item itself, heroically lit, as if on display or in a soldier's hands."
  },
  {
   "kind": "card",
@@ -2112,7 +2427,7 @@
   "stats": "1 attack / 1 health",
   "rules": "",
   "flavor": "",
-  "look": "A fragment of an absorbed mind drifting loose in the Choir's song.  It has no will left, only an instinct to stay close to the source and to whatever it was before. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "A Void Wisp is the smallest thing the Choir sends into battle: a scrap of a person it has absorbed, with almost nothing of them left.  The Choir is a single mind at the galactic core that takes in anyone who answers its call. Small, light unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -2127,7 +2442,7 @@
   "stats": "3 attack / 3 health",
   "rules": "Cloak",
   "flavor": "",
-  "look": "A shape the Choir assembles from the memory of someone it absorbed: a marine, a pilot, a raider, a psionic.  It looks almost right and fights like the original, and sensors cannot find it until it strikes. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "An echo is a copy of a person the Choir has absorbed, rebuilt in black glass and sent to fight.  It has the original's face, training and habits, and it is hard to pick up on sensors until it attacks. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -2142,7 +2457,7 @@
   "stats": "4 attack / 4 health",
   "rules": "Deploy: EMP an enemy unit.",
   "flavor": "",
-  "look": "A shape made of absence, built by the Choir from minds it has taken apart and not bothered to reassemble.  Anything it touches is wiped clean of programming, training and purpose. Medium unit. Show the unit itself as the hero of the frame."
+  "look": "A Choir construct built from the minds of absorbed people, taken apart and never put back together.  Anything it touches is wiped clean of its programming and training. Medium unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -2157,7 +2472,7 @@
   "stats": "5 attack / 7 health",
   "rules": "Guardian. Siphon",
   "flavor": "",
-  "look": "A huge Choir construct that seems to be made mostly of mouth.  It guards the approaches to the Singularity and feeds on whatever comes close, passing the stolen energy back to its master. Large, heavy unit. Show the unit itself as the hero of the frame."
+  "look": "A huge Choir construct that is mostly mouth, posted on the approaches to the Singularity, the object at the galactic core where the Choir lives.  It feeds on whatever comes close and passes the stolen energy back to the Choir. Large, heavy unit. Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -2172,7 +2487,7 @@
   "stats": "",
   "rules": "Deal 3 damage to all units.",
   "flavor": "",
-  "look": "A surge of the Choir's song strong enough to unmake matter, rolling across the whole field.  It strikes every unit present, the Choir's own included. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A surge of the Choir's power strong enough to tear matter apart, rolling across the whole battlefield.  It hits every unit present, including the Choir's own. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -2187,7 +2502,7 @@
   "stats": "",
   "rules": "Destroy an enemy unit. Your commander takes 2 damage.",
   "flavor": "",
-  "look": "A Choir technique that pulls a single target into the song and erases it from the field entirely.  The act costs the Choir something, and the backlash wounds the one who calls it. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
+  "look": "A Choir technique that pulls a single target into the Choir and removes it from the battlefield completely.  The effort costs the caster too, and the backlash wounds whoever calls it. A Protocol (tactical order): show the effect happening as a dramatic moment, not an icon."
  },
  {
   "kind": "card",
@@ -2202,7 +2517,7 @@
   "stats": "8 attack / 8 health",
   "rules": "Deploy: Destroy all other units.",
   "flavor": "",
-  "look": "The last thing at the heart of the Singularity: a vast emptiness that opens when the song stops and swallows everything in reach, its own servants first.  It is not a creature in any useful sense. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
+  "look": "The Devouring Dark is the Choir's hunger in its rawest form, released in the final moments of the fight at the Singularity.  The Choir has to keep absorbing new minds or its old memories fade, and this is that need with nothing else left. Huge, imposing unit (a capital ship, war machine or giant creature). Show the unit itself as the hero of the frame."
  },
  {
   "kind": "card",
@@ -2217,7 +2532,57 @@
   "stats": "0 attack / 2 health",
   "rules": "Guardian",
   "flavor": "",
-  "look": "A HALCYON training target: an armoured frame with a sensor array, deployed on the Proving Grounds to draw cadet fire.  Cadets put thousands of rounds into them before they are allowed near a live enemy. Small, light unit. Show the unit itself as the hero of the frame."
+  "look": "A HALCYON training target: an armoured frame with a sensor array, used on the Academy's Proving Grounds to draw cadet fire.  Cadets put thousands of rounds into dummies before they are allowed near a real enemy. Small, light unit. Show the unit itself as the hero of the frame."
+ },
+ {
+  "kind": "portrait",
+  "id": "Breaker Jun",
+  "file": "portrait-breaker-jun.png",
+  "ref": "reference/portrait-breaker-jun.png",
+  "name": "Breaker Jun",
+  "faction": "raider",
+  "role": "Salvage boss of the Scrap Belt",
+  "look": "A wiry Belt salvager in their forties, androgynous, with a shaved head, burn scars along one cheek and jaw, and a cutting-torch rig strapped across one shoulder. Heavy welding goggles pushed up on the forehead with one lens cracked, a patched rust-orange work suit hung with tools, cables and salvage tags, and a cybernetic left hand built for gripping hull plate. Sparks and a dim cutter-bay glow behind. Practical, tough and amused, not villainous."
+ },
+ {
+  "kind": "portrait",
+  "id": "Spore Mother",
+  "file": "portrait-spore-mother.png",
+  "ref": "reference/portrait-spore-mother.png",
+  "name": "Spore Mother",
+  "faction": "swarm",
+  "role": "Swarm gardener organism",
+  "look": "A vast, slow Swarm organism like a living greenhouse: a swollen translucent sac body glowing toxic green from within, ringed with dozens of pod-like spore bladders venting clouds of glowing spores, and thick root-like tendrils gripping an asteroid. Chitin plates and a small cluster of eyes at the front. Not humanoid and not insect-like; more plant, fungus and jellyfish. Spore clouds drift across the frame."
+ },
+ {
+  "kind": "portrait",
+  "id": "Recall Foreman",
+  "file": "portrait-recall-foreman.png",
+  "ref": "reference/portrait-recall-foreman.png",
+  "name": "Recall Foreman",
+  "faction": "synth",
+  "role": "Forge recovery machine",
+  "look": "A broad, heavy Forge industrial machine like a walking dry dock: white and graphite armour plates with yellow-and-black hazard striping and stencilled inventory codes, two huge clamp arms built for gripping starship hulls, a small repair drone hovering at its shoulder, and a single square cyan optic in a recessed head. Hangar gantry and work lights behind. Mechanical, not humanoid-faced."
+ },
+ {
+  "kind": "portrait",
+  "id": "Lampkeeper Sorrel",
+  "file": "portrait-lampkeeper-sorrel.png",
+  "ref": "reference/portrait-lampkeeper-sorrel.png",
+  "name": "Lampkeeper Sorrel",
+  "faction": "psi",
+  "role": "Psionic elder, keeper of a relit Lamp",
+  "look": "An elderly psionic woman, around seventy, with close-cropped silver hair, deep-set calm eyes glowing faintly violet, and frost forming on her shoulders. Layered dark violet and grey robes with a high collar and a crystal pendant, one hand raised with cold light and ice crystals gathering around it. Behind her, part of a vast dark Lamp ring glowing with faint violet light. Serene and dignified, not sinister."
+ },
+ {
+  "kind": "portrait",
+  "id": "Echo of the Lost Fleet",
+  "file": "portrait-echo-of-the-lost-fleet.png",
+  "ref": "reference/portrait-echo-of-the-lost-fleet.png",
+  "name": "Echo of the Lost Fleet",
+  "faction": "void",
+  "role": "Choir echo of ships taken in the Starfall",
+  "look": "Not a person: the bow of an old Colonial Fleet cruiser, recognisably Fleet in shape (angular hull, navy-and-white panel lines, a hull number), but rebuilt entirely in cracked black glass with red and magenta light burning through the cracks and the bridge windows. Other black-glass ships in formation behind it, faint against the glow of the galactic core. Haunting and mournful rather than monstrous."
  },
  {
   "kind": "portrait",
@@ -2658,55 +3023,5 @@
   "faction": "fleet",
   "role": "Player character",
   "look": "The player's commander: a Colonial Fleet officer in a sealed armoured combat helmet with a glowing blue visor (face never shown, so any player can be them), high-collared navy and white armour, determined stance."
- },
- {
-  "kind": "portrait",
-  "id": "Breaker Jun",
-  "file": "portrait-breaker-jun.png",
-  "ref": "reference/portrait-breaker-jun.png",
-  "name": "Breaker Jun",
-  "faction": "raider",
-  "role": "Salvage boss of the Scrap Belt",
-  "look": "A wiry Belt salvager in their forties, androgynous, with a shaved head, burn scars along one cheek and jaw, and a cutting-torch rig strapped across one shoulder. Heavy welding goggles pushed up on the forehead with one lens cracked, a patched rust-orange work suit hung with tools, cables and salvage tags, and a cybernetic left hand built for gripping hull plate. Sparks and a dim cutter-bay glow behind. Practical, tough and amused, not villainous."
- },
- {
-  "kind": "portrait",
-  "id": "Spore Mother",
-  "file": "portrait-spore-mother.png",
-  "ref": "reference/portrait-spore-mother.png",
-  "name": "Spore Mother",
-  "faction": "swarm",
-  "role": "Swarm gardener organism",
-  "look": "A vast, slow Swarm organism like a living greenhouse: a swollen translucent sac body glowing toxic green from within, ringed with dozens of pod-like spore bladders venting clouds of glowing spores, and thick root-like tendrils gripping an asteroid. Chitin plates and a small cluster of eyes at the front. Not humanoid and not insect-like; more plant, fungus and jellyfish. Spore clouds drift across the frame."
- },
- {
-  "kind": "portrait",
-  "id": "Recall Foreman",
-  "file": "portrait-recall-foreman.png",
-  "ref": "reference/portrait-recall-foreman.png",
-  "name": "Recall Foreman",
-  "faction": "synth",
-  "role": "Forge recovery machine",
-  "look": "A broad, heavy Forge industrial machine like a walking dry dock: white and graphite armour plates with yellow-and-black hazard striping and stencilled inventory codes, two huge clamp arms built for gripping starship hulls, a small repair drone hovering at its shoulder, and a single square cyan optic in a recessed head. Hangar gantry and work lights behind. Mechanical, not humanoid-faced."
- },
- {
-  "kind": "portrait",
-  "id": "Lampkeeper Sorrel",
-  "file": "portrait-lampkeeper-sorrel.png",
-  "ref": "reference/portrait-lampkeeper-sorrel.png",
-  "name": "Lampkeeper Sorrel",
-  "faction": "psi",
-  "role": "Psionic elder, keeper of a relit Lamp",
-  "look": "An elderly psionic woman, around seventy, with close-cropped silver hair, deep-set calm eyes glowing faintly violet, and frost forming on her shoulders. Layered dark violet and grey robes with a high collar and a crystal pendant, one hand raised with cold light and ice crystals gathering around it. Behind her, part of a vast dark Lamp ring glowing with faint violet light. Serene and dignified, not sinister."
- },
- {
-  "kind": "portrait",
-  "id": "Echo of the Lost Fleet",
-  "file": "portrait-echo-of-the-lost-fleet.png",
-  "ref": "reference/portrait-echo-of-the-lost-fleet.png",
-  "name": "Echo of the Lost Fleet",
-  "faction": "void",
-  "role": "Choir echo of ships taken in the Starfall",
-  "look": "Not a person: the bow of an old Colonial Fleet cruiser, recognisably Fleet in shape (angular hull, navy-and-white panel lines, a hull number), but rebuilt entirely in cracked black glass with red and magenta light burning through the cracks and the bridge windows. Other black-glass ships in formation behind it, faint against the glow of the galactic core. Haunting and mournful rather than monstrous."
  }
 ]

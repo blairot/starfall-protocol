@@ -27,7 +27,8 @@ function minionValue(s, m) {
   if (m.kw.cloak) v += 0.8;
   if (m.kw.siphon) v += a * 0.4;
   if (m.kw.amplify) v += m.kw.amplify * 1.2;
-  if (!m.silenced && d.value) v += d.value;
+  // value: a number, or (s, m) => number for effects whose worth depends on the board or hand
+  if (!m.silenced && d.value) v += typeof d.value === 'function' ? d.value(s, m) : d.value;
   if (m.extraDeath.length) v += m.extraDeath.length * 1.2;
   if (m.frozen) v -= a * 0.4;
   return v;

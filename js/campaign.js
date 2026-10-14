@@ -402,7 +402,7 @@ function grantCard(save, id, n) { let scrap = 0; for (let k = 0; k < (n || 1); k
 function collectionCount(save) { return Object.values(save.coll).reduce((a, b) => a + b, 0); }
 
 // Rough card quality, used by auto-fill and when slotting in new cards.
-const SITUATIONAL = new Set(['infest', 'mirror_field', 'emp_blast', 'dominate', 'devourer_worm', 'echo_protocol', 'shakedown', 'black_market', 'telepath', 'cluster_cannon', 'overdrive', 'vent_heat', 'disruptor', 'psionic_null', 'grav_snare', 'combat_stims', 'smoke_screen', 'gunrunner', 'field_repair', 'barricade', 'larva']);
+const SITUATIONAL = new Set(['infest', 'mirror_field', 'emp_blast', 'dominate', 'devourer_worm', 'echo_protocol', 'shakedown', 'black_market', 'telepath', 'cluster_cannon', 'overdrive', 'vent_heat', 'disruptor', 'psionic_null', 'grav_snare', 'combat_stims', 'smoke_screen', 'gunrunner', 'field_repair', 'barricade', 'larva', 'venom_graft', 'shatter', 'furnace_walker']);
 const REMOVAL = new Set(['kill_order', 'railgun', 'plasma_bolt', 'frost_lance', 'flak_barrage', 'broadside', 'psionic_storm', 'life_drain', 'sapper', 'lightning_arc', 'chain_lightning', 'acid_rain', 'void_shards', 'orbital_strike', 'rifle_squad', 'ghost_operative', 'fleet_captain', 'okonkwo', 'supply_drop', 'recon_officer', 'fortify']);
 function cardRating(id) {
   const d = D(id); const r = { common: 0, rare: 1, epic: 2, legendary: 3 }[d.rarity];
@@ -412,11 +412,14 @@ function cardRating(id) {
   if (REMOVAL.has(id)) v += 0.8;
   if (d.cost >= 8) v -= 0.8;
   if (d.overheat) v -= d.overheat * 0.3;
+  // strategy engines do little on their own; autoFillDeck slots them in next to their strategy
+  if (d.engine) v -= 1.2;
   return v;
 }
 
 // Share of the deck wanted at each cost (0-1, 2, 3, 4, 5, 6, 7+).
 const CURVE = [0.14, 0.2, 0.2, 0.16, 0.12, 0.09, 0.09];
+const ENGINE_MIN = 5;   // strategy cards a deck needs before auto-fill adds that strategy's engine
 const bucketOf = id => { const c = D(id).cost; return c <= 1 ? 0 : Math.min(6, c - 1); };
 
 // Fill the deck up to `size` with strong owned cards along a sensible curve (or trim it).
@@ -425,6 +428,7 @@ function autoFillDeck(save, size, score) {
   const rate = score || cardRating;
   const have = {}; const deck = [];
   save.deck.forEach(id => { if ((have[id] || 0) < Math.min(save.coll[id] || 0, maxCopies(D(id)))) { deck.push(id); have[id] = (have[id] || 0) + 1; } });
+  const kept = deck.length;
   const avail = [];
   Object.entries(save.coll).forEach(([id, n]) => { for (let k = have[id] || 0; k < Math.min(n, maxCopies(D(id))); k++) avail.push(id); });
   const val = {}; avail.forEach(id => { if (val[id] == null) val[id] = rate(id) + (score ? 0 : Math.random() * 0.4); });
@@ -446,6 +450,16 @@ function autoFillDeck(save, size, score) {
     deck.forEach((id, i) => { const b = bucketOf(id); const over = inBucket(b) > Math.ceil(CURVE[b] * size) ? -1.5 : 0; const r = rate(id) + over; if (r < ws) { ws = r; worst = i; } });
     deck.splice(worst, 1);
   }
+  // pass 3: strategy engines. Each one replaces the weakest added card outside its
+  // strategy once the deck holds at least ENGINE_MIN cards of that strategy.
+  const stratN = ks => deck.filter(x => (D(x).strat || []).some(k => ks.includes(k))).length;
+  [...new Set(avail)].filter(id => D(id).engine && !deck.includes(id))
+    .map(id => ({ id, n: stratN(D(id).strat) })).filter(e => e.n >= ENGINE_MIN).sort((a, b) => b.n - a.n)
+    .forEach(({ id }) => {
+      const ks = D(id).strat; let worst = -1, ws = 1e9;
+      deck.forEach((x, i) => { const dx = D(x); if (i < kept || dx.engine || (dx.strat || []).some(k => ks.includes(k))) return; const r = rate(x); if (r < ws) { ws = r; worst = i; } });
+      if (worst >= 0) deck[worst] = id;
+    });
   save.deck = deck;
 }
 

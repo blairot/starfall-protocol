@@ -1330,6 +1330,13 @@ const ART = {
   kinetic_barrier: ['trap', { type: 'barrier' }], sniper_mine: ['trap', { type: 'mine' }],
   void_wisp: ['horror', { wisp: 1 }], choir_echo: ['psion', { echo: 1, pose: 'raise' }], null_horror: ['horror', {}], abyssal_maw: ['horror', { maw: 1 }], herald_of_end: ['psion', { herald: 1, pose: 'spread' }],
   entropy_wave: ['blast', { type: 'void' }], unmaking: ['emblem', { type: 'void' }], devouring_dark: ['horror', { maw: 1, giant: 1 }], target_dummy: ['structure', { type: 'dummy' }],
+  // strategy cards (not painted yet)
+  line_sergeant: ['trooper', { pose: 'brace', helm: 'crest', visor: 'a', shield: 1, weapon: 'carbine', pad: 1.3, stripe: 1 }], drill_instructor: ['bust', { cap: 1, hair: 'short', scar: 1, boards: 1, skin: 2 }],
+  deck_chief: ['bust', { headset: 1, hair: 'short', straps: 1, skin: 1 }], rally_line: ['emblem', { type: 'chevrons' }],
+  gun_tinker: ['bust', { goggles: 1, cyber: 1, straps: 1, hair: 'mohawk', skin: 3 }], wreck_gunner: ['trooper', { pose: 'kneel', helm: 'rebreather', visor: 'a', weapon: 'sniper', pad: 0.6, accent: 20, pack: 'tank' }], twin_pistols: ['weapon', { type: 'rifle' }],
+  hatchery: ['pod', { big: 1, spore: 1 }], venom_tender: ['bug', { plan: 'spider', small: 1 }], needle_mite: ['bug', { plan: 'scorpion', small: 1 }], venom_graft: ['emblem', { type: 'helix' }], thornback: ['bug', { plan: 'beetle', big: 1 }],
+  overclock_relay: ['structure', { type: 'coil' }], aegis_projector: ['drone', { plan: 'disc', shield: 1 }], furnace_walker: ['mech', { plan: 'walker', heavy: 1 }], heat_sink: ['structure', { type: 'reactor' }],
+  stormcaller: ['psion', { pose: 'spread', halo: 1, runes: 1 }], frost_warden: ['psion', { pose: 'raise', mask: 1 }], flash_freeze: ['projectile', { type: 'frost' }], shatter: ['blast', { type: 'cryo' }], cryo_adept: ['psion', { pose: 'raise', halo: 1 }],
 };
 
 const FACTION_CODE = { neutral: 'NTL', fleet: 'FLT', raider: 'RDR', swarm: 'SWM', synth: 'SYN', psi: 'PSI', void: 'VOID' };

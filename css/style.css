@@ -1523,3 +1523,24 @@ body.touch .inspect-hint { color: var(--t-3); }
   .cin-over .cin-big { font-size: clamp(24px, 8.4vw, 44px); letter-spacing: .1em; }
   .cin-titlecard .cin-big { font-size: clamp(26px, 9vw, 48px); letter-spacing: .08em; line-height: 1.15; text-wrap: balance; max-width: 100%; overflow-wrap: anywhere; }
 }
+
+/* ===== 23. Faction strategies in the Hangar */
+.strat-box { display: grid; gap: 6px; padding: 10px 0 4px; border-top: 1px solid var(--edge-1); }
+.sb-h { font: 600 11px var(--f-label); letter-spacing: .2em; text-transform: uppercase; color: var(--t-3); }
+.strat-row { display: flex; flex-wrap: wrap; gap: 5px; }
+.strat-chip { display: grid; gap: 1px; text-align: left; border: 0; cursor: pointer; padding: 7px 10px; color: var(--t-1); background: linear-gradient(90deg, hsl(var(--h) 50% 40% / .25), transparent);
+  box-shadow: inset 2px 0 0 hsl(var(--h) 70% 60%), inset 0 0 0 1px var(--edge-1); }
+.strat-chip b { font: 700 13px var(--f-display); letter-spacing: .06em; text-transform: uppercase; }
+.strat-chip span { font: 600 11px var(--f-label); letter-spacing: .06em; color: var(--t-3); }
+.strat-chip:hover, .strat-chip.on { box-shadow: inset 2px 0 0 hsl(var(--h) 70% 60%), inset 0 0 0 1px hsl(var(--h) 70% 60% / .7); }
+.strat-all { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 10px; }
+.strat-mini { border: 0; cursor: pointer; padding: 5px 9px; font: 700 11px var(--f-label); letter-spacing: .1em; text-transform: uppercase; color: hsl(var(--h) 70% 75%);
+  background: hsl(var(--h) 50% 30% / .22); box-shadow: inset 0 0 0 1px hsl(var(--h) 60% 55% / .35); }
+.strat-mini:hover { color: #fff; }
+.strat-banner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: start; gap: 10px 16px; margin: 0 0 12px; padding: 12px 14px;
+  background: linear-gradient(100deg, hsl(var(--h) 50% 30% / .35), transparent 70%); box-shadow: inset 3px 0 0 hsl(var(--h) 70% 60%), inset 0 0 0 1px var(--edge-1); }
+.strat-banner > div { min-width: 0; flex: 1 1 280px; display: grid; gap: 4px; }
+.strat-banner h3 { margin: 0; font: 700 20px var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: #fff; }
+.strat-banner p { margin: 0; max-width: 70ch; }
+.ins-strat { display: grid; gap: 6px; }
+.ins-strat p { margin: 0; }

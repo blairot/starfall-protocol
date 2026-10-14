@@ -1104,7 +1104,7 @@ function briefDeckHTML(save, enc, size, deckOk, tunedOn) {
 // ============================================================================
 // HANGAR (deck builder)
 // ============================================================================
-const Hangar = { back: null, filter: 'all', cost: -1, q: '', mode: 'deck' };
+const Hangar = { back: null, filter: 'all', cost: -1, q: '', mode: 'deck', strat: null };
 
 function openHangar(back) {
   Hangar.back = back || openMap;
@@ -1122,7 +1122,8 @@ function renderHangar() {
     .filter(d => Hangar.filter === 'all' || d.type === Hangar.filter)
     .filter(d => Hangar.cost < 0 || (Hangar.cost >= 7 ? d.cost >= 7 : d.cost === Hangar.cost))
     .filter(d => !Hangar.q || (d.name + ' ' + d.text).toLowerCase().includes(Hangar.q.toLowerCase()))
-    .sort((a, b) => a.cost - b.cost || a.name.localeCompare(b.name));
+    .filter(d => !Hangar.strat || (d.strat || []).includes(Hangar.strat))
+    .sort((a, b) => Hangar.strat ? (b.engine ? 1 : 0) - (a.engine ? 1 : 0) || a.cost - b.cost || a.name.localeCompare(b.name) : a.cost - b.cost || a.name.localeCompare(b.name));
   const grid = craft ? owned.map(d => {
     const n = save.coll[d.id] || 0, max = maxCopies(d);
     return `<button class="coll-card ${n ? '' : 'unowned'} ${n >= max ? 'complete' : ''}" data-craft="${d.id}">${cardHTML(d.id)}<span class="in-deck ${n >= max ? '' : 'need'}">${n}/${max}${n < max && canCraft(save, d.id) ? ' · ⚙ craft' : ''}</span></button>`;
@@ -1147,6 +1148,7 @@ function renderHangar() {
         <div class="filters">${tabs.map(([k, l]) => `<button class="chipbtn ${Hangar.filter === k ? 'on' : ''}" data-f="${k}">${l}</button>`).join('')}
           <span class="sep"></span>${[-1, 0, 1, 2, 3, 4, 5, 6, 7].map(c => `<button class="chipbtn cost ${Hangar.cost === c ? 'on' : ''}" data-c="${c}">${c < 0 ? 'Any' : c >= 7 ? '7+' : c}</button>`).join('')}
           <input id="h-q" type="search" placeholder="Search cards" value="${esc(Hangar.q)}" aria-label="Search cards"></div>
+        ${stratBannerHTML(save)}
         <div class="coll-grid">${grid}</div>
       </section>
       <button class="deck-fab" id="h-jump" aria-label="Show your deck">${esc(activeDeck(save).name)} <b>${save.deck.length}/${size}</b></button>
@@ -1155,6 +1157,7 @@ function renderHangar() {
         <div class="dp-head"><h3>Cards</h3><div class="dp-count ${save.deck.length === size ? 'ok' : 'bad'}"><b>${save.deck.length}</b>/${size}</div></div>
         <div class="curve">${curve.map((n, i) => `<div class="bar"><i style="height:${(n / cmax) * 100}%"></i><span>${i >= 7 ? '7+' : i}</span><em>${n || ''}</em></div>`).join('')}</div>
         <div class="muted small">${types.unit} units · ${types.spell} protocols${types.gear ? ` · ${types.gear} gear` : ''}${types.trap ? ` · ${types.trap} traps` : ''}</div>
+        ${deckStratHTML(save)}
         <div class="deck-list">${rows || '<p class="muted">Empty deck.</p>'}</div>
         <div class="dp-btns"><button class="btn small" id="h-auto">Auto-fill</button><button class="btn small ghost" id="h-clear">Clear</button></div>
         ${signatureHTML(save)}
@@ -1168,6 +1171,8 @@ function renderHangar() {
     const add = t.closest('[data-add]'), rm = t.closest('[data-rm]'), f = t.closest('[data-f]'), c = t.closest('[data-c]'), pw = t.closest('[data-pw]');
     const cr = t.closest('[data-craft]'), md = t.closest('[data-mode]'), dk = t.closest('[data-dk]');
     if (!t.closest('[data-dk-del]')) Brief.delArm = false;
+    const st = t.closest('[data-strat]');
+    if (st) { Hangar.strat = st.dataset.strat || null; Hangar.filter = 'all'; Hangar.cost = -1; Hangar.q = ''; SFX.click(); renderHangar(); const g = $('.coll'); if (g && TOUCH.on) g.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' }); return; }
     if (dk) { const i = +dk.dataset.dk; if (i !== save.activeDeck) { const short = switchDeck(save, i, size); persist(); SFX.click(); toast(`Switched to ${esc(activeDeck(save).name)}.${short ? ' It was short of cards, so it was topped up.' : ''}`); } renderHangar(); return; }
     if (t.closest('[data-dk-new]')) { const tmp = { coll: save.coll, deck: [] }; autoFillDeck(tmp, size); if (addSavedDeck(save, 'New deck', tmp.deck, size)) { persist(); SFX.click(); toast('New deck created from your best cards. Rename it below.'); } renderHangar(); return; }
     if (t.closest('[data-dk-dup]')) { if (addSavedDeck(save, activeDeck(save).name + ' copy', save.deck, size)) { persist(); SFX.click(); toast('Deck copied. You are now editing the copy.'); } renderHangar(); return; }
@@ -1220,6 +1225,35 @@ function deckBarHTML(save) {
     <div class="dk-foot"><span class="dk-saved">${ico('check')} Changes save automatically</span>
       <span class="dk-acts">${room ? '<button class="linkbtn" data-dk-dup>Duplicate</button>' : ''}${decks.length > 1 ? `<button class="linkbtn ${Brief.delArm ? 'danger' : ''}" data-dk-del>${Brief.delArm ? 'Tap again to delete' : 'Delete'}</button>` : ''}</span></div>
     ${hint}</div>`;
+}
+
+// Strategies available so far: their faction's set is unlocked.
+function openStrategies(save) {
+  return Object.keys(STRATEGIES).filter(k => strategyCards(k).some(d => setUnlocked(save, d.tier)));
+}
+
+// Deck sidebar: which strategies this deck leans toward, or suggestions when it has none.
+function deckStratHTML(save) {
+  if (typeof STRATEGIES === 'undefined') return '';
+  const open = openStrategies(save); if (!open.length) return '';
+  const mine = deckStrategies(save.deck).filter(x => x.n >= 2 && STRATEGIES[x.key]).slice(0, 2);
+  const chip = (k, extra) => `<button class="strat-chip ${Hangar.strat === k ? 'on' : ''}" data-strat="${Hangar.strat === k ? '' : k}" style="--h:${FACTIONS[STRATEGIES[k].faction].hue}" title="${esc(STRATEGIES[k].text)}"><b>${esc(STRATEGIES[k].name)}</b>${extra || ''}</button>`;
+  if (mine.length) return `<div class="strat-box"><div class="sb-h">Strategy</div>${mine.map(x => chip(x.key, `<span>${x.n} card${x.n > 1 ? 's' : ''}${x.engine ? ' · engine' : ' · no engine yet'}</span>`)).join('')}</div>`;
+  // suggest strategies from the factions already in the deck, newest sets first
+  const facN = {}; save.deck.forEach(id => { const f = D(id).faction; facN[f] = (facN[f] || 0) + 1; });
+  const tierOf = k => Math.min(...strategyCards(k).map(d => d.tier));
+  const pickN = open.slice().sort((a, b) => (facN[STRATEGIES[b].faction] || 0) - (facN[STRATEGIES[a].faction] || 0) || tierOf(b) - tierOf(a)).slice(0, 4);
+  return `<div class="strat-box"><div class="sb-h">Pick a strategy</div><p class="muted small">Decks built around one plan are stronger. Tap one to see its cards.</p><div class="strat-row">${pickN.map(k => chip(k)).join('')}</div></div>`;
+}
+
+// Banner above the collection while it is filtered to one strategy.
+function stratBannerHTML(save) {
+  const k = Hangar.strat; if (!k || typeof STRATEGIES === 'undefined' || !STRATEGIES[k]) return Hangar.mode === 'deck' && typeof STRATEGIES !== 'undefined' ? `<div class="strat-all"><span class="muted small">Strategies:</span>${openStrategies(save).map(x => `<button class="strat-mini" data-strat="${x}" style="--h:${FACTIONS[STRATEGIES[x].faction].hue}">${esc(STRATEGIES[x].name)}</button>`).join('')}</div>` : '';
+  const S = STRATEGIES[k], all = strategyCards(k), eng = all.filter(d => d.engine);
+  const owned = all.filter(d => (save.coll[d.id] || 0) > 0).length;
+  return `<div class="strat-banner" style="--h:${FACTIONS[S.faction].hue}"><div><div class="m-eyebrow">${esc(FACTIONS[S.faction].name)} strategy</div><h3>${esc(S.name)}</h3><p>${esc(S.text)}</p>
+    <p class="muted small">${eng.length ? `Engine card: <b>${eng.map(d => esc(d.name)).join(', ')}</b>. ` : ''}You own ${owned} of its ${all.length} cards.${Hangar.mode === 'deck' && owned < all.length ? ' Switch to Craft cards to see the rest.' : ''}</p></div>
+    <button class="btn small ghost" data-strat="">Show all cards</button></div>`;
 }
 
 function signatureHTML(save) {

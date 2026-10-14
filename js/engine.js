@@ -419,6 +419,7 @@ function equip(s, pi, id) {
   if (p.weapon) { const old = p.weapon; p.weapon = null; ev(s, { t: 'unequip', pi }); const od = D(old.id); if (od.death) od.death(s, ctx(s, pi)); }
   p.weapon = { id, atk: d.atk, dur: d.hp, uid: s.uid++ };
   ev(s, { t: 'equip', pi, id });
+  fire(s, 'onEquip', pi, { weapon: p.weapon });
 }
 
 function steal(s, m, newOwner) {
