@@ -59,7 +59,7 @@ function openInspect(id, opts) {
   const isSig = save && save.signature === id;
   const el = inspectLayer();
   el.style.setProperty('--h', f.hue);
-  el.innerHTML = `<div class="m-box" role="dialog" aria-label="${esc(d.name)}"><div class="m-in">
+  el.innerHTML = `<button class="ins-x" type="button" data-ia="close" aria-label="Close">&times;</button><div class="m-box" role="dialog" aria-label="${esc(d.name)}"><div class="m-in">
     <div class="ins">
       <div class="ins-stage">${cardHTML(id, { cls: 'huge' })}</div>
       <div class="ins-side">
@@ -112,7 +112,7 @@ function openCommander(src) {
   const lore = ch ? (ch.body || '').split(/\n\s*\n/).map(t => `<p>${esc(t)}</p>`).join('') : '<p class="muted">No further records on file.</p>';
   const el = inspectLayer(); Inspect.id = null;
   el.style.setProperty('--h', f.hue);
-  el.innerHTML = `<div class="m-box" role="dialog" aria-label="${esc(name)}"><div class="m-in">
+  el.innerHTML = `<button class="ins-x" type="button" data-ia="close" aria-label="Close">&times;</button><div class="m-box" role="dialog" aria-label="${esc(name)}"><div class="m-in">
     <div class="ins">
       <div class="ins-stage"><div class="cmdr-portrait" style='background-image:${portrait}'></div></div>
       <div class="ins-side">
