@@ -90,6 +90,16 @@ const LORE = {
 
   // ------------------------------------------------------------------ characters
   characters: {
+    breaker_jun: { name: "Breaker Jun", role: "Salvage boss of the Scrap Belt",
+      body: "Breaker Jun runs the largest salvage crew in the Belt: forty cutters, three tugs and a reputation for stripping a wreck to the frame in a single shift. Jun's crews took the reactor injectors out of Anchorage years ago and have wanted the rest of the station ever since. Jun is not a killer by trade, just someone who has never met a salvage claim they couldn't argue." },
+    spore_mother: { name: "Spore Mother", role: "Swarm gardener organism",
+      body: "A Spore Mother is a Swarm organism the size of a frigate that seeds asteroid fields with spores. The spores grow into food for the brood, so a single Mother can feed a whole nest. Fleet biologists consider them the most important creature in the Hive Nebula, and the most important one to burn." },
+    recall_foreman: { name: "Recall Foreman", role: "Forge recovery machine",
+      body: "Recall Foremen are Forge machines built to recover equipment the Forge considers its property. Since the Forge went silent, Calculus Prime has decided that includes every Fleet ship it ever built, crews and all. Foremen work politely, thoroughly and without any sense of irony." },
+    lampkeeper_sorrel: { name: "Lampkeeper Sorrel", role: "Psionic elder, keeper of a relit Lamp",
+      body: "Sorrel is one of Hierarch Nyra's oldest followers. She guards a Lamp the Orders switched back on in 2290 and has spent every day since listening to it. She believes, as Nyra does, that the Choir is offering peace, and she is gentle with everyone who tries to tell her otherwise." },
+    lost_fleet: { name: "Echo of the Lost Fleet", role: "Choir echo of ships taken in the Starfall",
+      body: "During the Starfall the Choir pulled more than a thousand ships out of the lanes. At the galactic core it has rebuilt some of them as echoes in black glass, still flying their old Fleet formations with nobody aboard. Their hull numbers match ships on the memorial at Concord." },
     commander: { name: "The Commander", role: "Fleet officer, captain of the Meridian, keeper of Anchorage",
       body: "The Commander is the newest graduate of the Fleet Academy: top of a small class, and now in charge of a frigate, a derelict station and orders that are mostly improvisation. HALCYON passed them and Admiral Okonkwo signed the commission. The Fleet doesn't have a better option, and people keep mentioning it." },
     meridian: { name: "FS Meridian", role: "Patrol frigate, the Commander's ship",

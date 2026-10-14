@@ -2658,5 +2658,55 @@
   "faction": "fleet",
   "role": "Player character",
   "look": "The player's commander: a Colonial Fleet officer in a sealed armoured combat helmet with a glowing blue visor (face never shown, so any player can be them), high-collared navy and white armour, determined stance."
+ },
+ {
+  "kind": "portrait",
+  "id": "Breaker Jun",
+  "file": "portrait-breaker-jun.png",
+  "ref": "reference/portrait-breaker-jun.png",
+  "name": "Breaker Jun",
+  "faction": "raider",
+  "role": "Salvage boss of the Scrap Belt",
+  "look": "A wiry Belt salvager in their forties, androgynous, with a shaved head, burn scars along one cheek and jaw, and a cutting-torch rig strapped across one shoulder. Heavy welding goggles pushed up on the forehead with one lens cracked, a patched rust-orange work suit hung with tools, cables and salvage tags, and a cybernetic left hand built for gripping hull plate. Sparks and a dim cutter-bay glow behind. Practical, tough and amused, not villainous."
+ },
+ {
+  "kind": "portrait",
+  "id": "Spore Mother",
+  "file": "portrait-spore-mother.png",
+  "ref": "reference/portrait-spore-mother.png",
+  "name": "Spore Mother",
+  "faction": "swarm",
+  "role": "Swarm gardener organism",
+  "look": "A vast, slow Swarm organism like a living greenhouse: a swollen translucent sac body glowing toxic green from within, ringed with dozens of pod-like spore bladders venting clouds of glowing spores, and thick root-like tendrils gripping an asteroid. Chitin plates and a small cluster of eyes at the front. Not humanoid and not insect-like; more plant, fungus and jellyfish. Spore clouds drift across the frame."
+ },
+ {
+  "kind": "portrait",
+  "id": "Recall Foreman",
+  "file": "portrait-recall-foreman.png",
+  "ref": "reference/portrait-recall-foreman.png",
+  "name": "Recall Foreman",
+  "faction": "synth",
+  "role": "Forge recovery machine",
+  "look": "A broad, heavy Forge industrial machine like a walking dry dock: white and graphite armour plates with yellow-and-black hazard striping and stencilled inventory codes, two huge clamp arms built for gripping starship hulls, a small repair drone hovering at its shoulder, and a single square cyan optic in a recessed head. Hangar gantry and work lights behind. Mechanical, not humanoid-faced."
+ },
+ {
+  "kind": "portrait",
+  "id": "Lampkeeper Sorrel",
+  "file": "portrait-lampkeeper-sorrel.png",
+  "ref": "reference/portrait-lampkeeper-sorrel.png",
+  "name": "Lampkeeper Sorrel",
+  "faction": "psi",
+  "role": "Psionic elder, keeper of a relit Lamp",
+  "look": "An elderly psionic woman, around seventy, with close-cropped silver hair, deep-set calm eyes glowing faintly violet, and frost forming on her shoulders. Layered dark violet and grey robes with a high collar and a crystal pendant, one hand raised with cold light and ice crystals gathering around it. Behind her, part of a vast dark Lamp ring glowing with faint violet light. Serene and dignified, not sinister."
+ },
+ {
+  "kind": "portrait",
+  "id": "Echo of the Lost Fleet",
+  "file": "portrait-echo-of-the-lost-fleet.png",
+  "ref": "reference/portrait-echo-of-the-lost-fleet.png",
+  "name": "Echo of the Lost Fleet",
+  "faction": "void",
+  "role": "Choir echo of ships taken in the Starfall",
+  "look": "Not a person: the bow of an old Colonial Fleet cruiser, recognisably Fleet in shape (angular hull, navy-and-white panel lines, a hull number), but rebuilt entirely in cracked black glass with red and magenta light burning through the cracks and the bridge windows. Other black-glass ships in formation behind it, faint against the glow of the galactic core. Haunting and mournful rather than monstrous."
  }
 ]
