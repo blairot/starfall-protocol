@@ -5,7 +5,7 @@
 
 function packHTML(tier, cls) {
   const set = PACK_SETS[tier - 1];
-  return `<div class="pack ${cls || ''}" style='--h:${set.hue};background-image:${portraitPlate(set.name, ENEMY_FACTION[tier - 1] === 'neutral' ? 'fleet' : ENEMY_FACTION[tier - 1], SECTOR_ART[tier - 1])}'>
+  return `<div class="pack ${cls || ''}" style='--h:${set.hue};background-image:${extraArt('pack-' + tier) || portraitPlate(set.name, ENEMY_FACTION[tier - 1] === 'neutral' ? 'fleet' : ENEMY_FACTION[tier - 1], SECTOR_ART[tier - 1])}'>
     <div class="pk-band"></div>
     <div class="pk-name">${esc(set.name.replace(' Pack', ''))}</div><div class="pk-sub">Supply Pack</div></div>`;
 }

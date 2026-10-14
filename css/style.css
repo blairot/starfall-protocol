@@ -665,6 +665,7 @@ button.foe-art:hover { filter: brightness(1.2); }
 .po-front { transform: rotateY(180deg); display: grid; place-items: center; }
 .po-front .card { font-size: 11.5px; }
 .po-back { display: grid; place-items: center; box-shadow: inset 0 0 0 1px #5a6878; background: radial-gradient(circle at 50% 50%, hsl(var(--sec-h) 40% 20%), transparent 60%), repeating-linear-gradient(135deg, #151c25 0 4px, #0d1218 4px 8px); clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px); transition: filter .3s; }
+.po-back { background-image: var(--cardback, none), radial-gradient(circle at 50% 50%, hsl(var(--sec-h) 40% 20%), transparent 60%), repeating-linear-gradient(135deg, #151c25 0 4px, #0d1218 4px 8px); background-size: cover; background-position: center; }
 .po-back span { font: 700 34px var(--f-display); color: #5a6878; }
 .po-card:not(.flipped):hover .po-back { filter: brightness(1.3); }
 .po-card.r-rare .po-back { box-shadow: inset 0 0 0 1px var(--r-rare), inset 0 0 30px #4f9ef088; }
@@ -853,6 +854,7 @@ button.foe-art:hover { filter: brightness(1.2); }
 .e-hand { display: flex; justify-content: center; align-items: flex-start; padding-top: 4px; }
 .cback { position: relative; width: 28px; height: 39px; margin-left: -7px; background: radial-gradient(circle at 50% 45%, hsl(var(--sec-h) 50% 30%), transparent 60%), repeating-linear-gradient(135deg, #1b2430 0 3px, #0e131a 3px 6px);
   box-shadow: inset 0 0 0 1px #6a7888, 0 3px 6px #000a; clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px); font-style: normal; }
+.cback { background-image: var(--cardback, none), radial-gradient(circle at 50% 45%, hsl(var(--sec-h) 50% 30%), transparent 60%), repeating-linear-gradient(135deg, #1b2430 0 3px, #0e131a 3px 6px); background-size: cover; background-position: center; }
 .cback em { position: absolute; left: 0; right: 0; bottom: 2px; text-align: center; font: 700 12px var(--f-card); color: var(--cyan-hi); font-style: normal; text-shadow: 0 0 4px #000; }
 .hero-row { display: flex; justify-content: center; align-items: center; gap: 16px; position: relative; }
 .traps, .passives { width: 120px; display: flex; gap: 5px; flex-wrap: wrap; align-content: center; }
@@ -1390,3 +1392,14 @@ body.touch .inspect-hint { color: var(--t-3); }
   clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); }
 .ins-x:hover { box-shadow: inset 0 0 0 1px var(--amber), 0 4px 18px rgba(0, 0, 0, .6); color: var(--amber-hi); }
 @media (max-width: 640px) { .modal.inspect .m-in { padding-top: 58px; } }
+
+/* ===== 19. Painted art, second pass (all optional: each slot keeps its old look until the image exists) */
+.m-hero { aspect-ratio: 3 / 1; margin: -4px 0 14px; background: center / cover no-repeat; clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+  box-shadow: inset 0 0 0 1px hsl(var(--sec-h) 60% 65% / .3); -webkit-mask-image: linear-gradient(#000 70%, transparent); mask-image: linear-gradient(#000 70%, transparent); }
+.m-hero.stn-hero { aspect-ratio: 2 / 1; margin: 0 0 10px; }
+.m-hero.arch-hero { aspect-ratio: 16 / 5; margin: 6px 0 8px; }
+.stn-map.painted::before { content: ''; position: absolute; inset: 0; background: var(--stn-bg) center / cover no-repeat; opacity: .38; filter: saturate(.8); pointer-events: none; }
+.end-bg { position: absolute; inset: 0; background: center / cover no-repeat; opacity: .55; animation: endpan 40s ease-in-out infinite alternate; pointer-events: none; }
+.end-bg::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, transparent 20%, #05080ccc 85%); }
+@keyframes endpan { from { transform: scale(1.06) translateX(-1.5%); } to { transform: scale(1.12) translateX(1.5%); } }
+@media (prefers-reduced-motion: reduce) { .end-bg { animation: none; } }

@@ -212,7 +212,7 @@ function archivePage(sec, save) {
     return `<div class="m-eyebrow">Archive // The setting</div><h2>${esc(u.title || 'The Universe')}</h2>${P(u.intro)}${(u.sections || []).map(s => `<article><h4>${esc(s.h)}</h4>${P(s.body)}</article>`).join('')}`;
   }
   if (sec === 'timeline') return `<div class="m-eyebrow">Archive // History</div><h2>Timeline</h2><dl class="arch-tl">${(lore.timeline || []).map(t => `<dt>${esc(t.when)}</dt><dd>${esc(t.text)}</dd>`).join('')}</dl>`;
-  if (sec === 'places') return `<div class="m-eyebrow">Archive // Astrography</div><h2>Places</h2>${Object.entries(lore.places || {}).map(([k, p]) => `<article><h4>${esc(p.name)}${SECTORS.find(s => s.id === k) ? ` <small>Sector ${SECTORS.findIndex(s => s.id === k) + 1}</small>` : ''}</h4>${P(p.body)}</article>`).join('')}`;
+  if (sec === 'places') return `<div class="m-eyebrow">Archive // Astrography</div><h2>Places</h2>${Object.entries(lore.places || {}).map(([k, p]) => `<article>${paintedBanner(k === 'anchorage' ? 'station-exterior' : 'sector-' + k, 'arch-hero')}<h4>${esc(p.name)}${SECTORS.find(s => s.id === k) ? ` <small>Sector ${SECTORS.findIndex(s => s.id === k) + 1}</small>` : ''}</h4>${P(p.body)}</article>`).join('')}`;
   if (sec.startsWith('faction:')) {
     const k = sec.split(':')[1], f = (lore.factions || {})[k]; if (!f) return '<p class="muted">No file.</p>';
     const cards = CARD_LIST.filter(d => !d.token && d.faction === k);

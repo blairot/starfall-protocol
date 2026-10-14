@@ -87,6 +87,8 @@ const Cinema = (() => {
     if (sh.type === 'title') return `<div class="cin-bg cam-push dim" style="background-image:${bdUrl(sec)}"></div><div class="cin-titlecard"><div class="cin-kick">${esc(sh.kicker || cine.kicker || '')}</div><div class="cin-big">${esc(sh.title || cine.title)}</div></div>`;
     if (sh.type === 'space') return bg + ov;
     if (sh.type === 'ship') {
+      const still = extraArt(`still-${cid}-${si}`);
+      if (still) return `<div class="cin-bg cam-${cam}" style='background-image:${still}'></div>` + ov;
       const kind = sh.ship || 'meridian', act = sh.action || 'pass';
       let ships = ship(kind, 'act-' + act);
       if (act === 'battle') ships = ship(kind, 'act-battle a') + ship(kind, 'act-battle b') + ship(kind === 'meridian' || kind === 'fleet' ? 'raiders' : 'fleet', 'act-battle c foe') + '<div class="cin-tracers"></div>';

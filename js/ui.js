@@ -758,7 +758,7 @@ function endBattle() {
     const offerEasy = save.streak.n >= 2 && save.diff !== 'cadet';
     const done = applyContracts(save, tally);
     persist(); SFX.lose(); if (Music.stinger) Music.stinger('defeat');
-    const m = modal(`<div class="m-eyebrow danger">Defeat</div><h2>${esc(enc.name)}</h2>
+    const m = modal(`${paintedBanner('screen-defeat')}<div class="m-eyebrow danger">Defeat</div><h2>${esc(enc.name)}</h2>
       <p>Your flagship withdraws to repair. Adjust your deck in the Hangar and try again.</p>
       ${done.length ? `<div class="rewards">${contractLines(done)}</div>` : ''}
       ${(enc.tips || []).length ? `<div class="advisor inline"><div class="adv-h">Advisor</div><div class="adv-t">${pick(enc.tips)}</div></div>` : ''}
@@ -807,7 +807,7 @@ function endBattle() {
   if (newSector) bits.push(`<div class="got"><b>Deck size increased to ${deckSizeFor(save)}.</b> <span class="muted">Your deck was topped up automatically. A new pack set is available at the Supply Depot.</span></div>`);
   if (graduated) bits.push('<div class="got"><b>Training complete: Supply Depot and Anchorage unlocked.</b> <span class="muted">Battles and contracts now earn Credits for Supply Packs at the Depot, and Alloy to repair Anchorage, your new forward base. Craft the cards you want with Scrap in the Hangar.</span></div>');
   const unopened = unopenedPacks(save);
-  const m = modal(`<div class="m-eyebrow ok">Victory</div><h2>${esc(enc.name)}</h2>
+  const m = modal(`${paintedBanner('screen-victory')}<div class="m-eyebrow ok">Victory</div><h2>${esc(enc.name)}</h2>
     ${enc.victory && firstClear ? `<p class="story">${esc(enc.victory)}</p>` : ''}
     ${chips.length || done.length ? `<div class="rewards">${chips.join('')}${contractLines(done)}</div>` : ''}
     ${economyOpen(save) ? `<div class="wallet-line"><span>${ico('credits')} <b>${save.credits}</b> Credits</span><span>${ico('scrap')} <b>${save.scrap}</b> Scrap</span><span>${ico('alloy')} <b>${ensureStation(save).alloy}</b> Alloy</span>${unopened ? `<span>${ico('pack')} <b>${unopened}</b> unopened pack${unopened > 1 ? 's' : ''}</span>` : ''}</div>` : ''}
@@ -849,7 +849,7 @@ function showEnding() {
   const save = App.save; save.finished = true; persist();
   const mins = Math.round((save.stats.playMs || 0) / 60000);
   showScreen('title');
-  $('#title').innerHTML = `<div class="title-wrap ending">
+  $('#title').innerHTML = `${extraArt('screen-ending') ? `<div class="end-bg" style='background-image:${extraArt('screen-ending')}'></div>` : ''}<div class="title-wrap ending">
     <div class="eyebrow">Campaign complete</div>
     <h1 class="logo">STARFALL<span>PROTOCOL</span></h1>
     <p class="story big">The Choir is silent. The galaxy is quiet, and it belongs to its people again.</p>
@@ -886,7 +886,7 @@ function openMap() {
   if (!save.seenSector[hs]) {
     save.seenSector[hs] = true; persist();
     const sec = SECTORS[hs];
-    const m = modal(`<div class="m-eyebrow">Sector ${String(hs + 1).padStart(2, '0')} // new heading</div><h2>${esc(sec.name)}</h2><p class="story">${esc(sec.intro)}</p>
+    const m = modal(`${paintedBanner('sector-' + sec.id)}<div class="m-eyebrow">Sector ${String(hs + 1).padStart(2, '0')} // new heading</div><h2>${esc(sec.name)}</h2><p class="story">${esc(sec.intro)}</p>
       ${hs > 0 ? `<p class="muted">Deck size is now <b>${DECK_SIZES[hs]}</b> cards.</p>` : ''}<div class="m-actions"><button class="btn primary" data-a="ok">Set course</button></div>`, 'sector-modal');
     m.onclick = e => { if (e.target.dataset.a) closeModal(); };
   }
@@ -922,7 +922,7 @@ function renderMap() {
     const un = sectorUnlocked(save, i), es = ENCOUNTERS.filter(e => e.sector === i), dn = es.filter(e => save.cleared[e.id]).length;
     if (!un && i > hs + 1) return `<div class="gs hidden-sec"><span class="gs-n">${String(i + 1).padStart(2, '0')}</span><span class="gs-name">· · ·</span></div>`;
     return `<button class="gs ${i === si ? 'on' : ''} ${un ? '' : 'locked'}" ${un ? `data-sec="${i}"` : 'disabled'} style="--h:${s.hue}">
-      <span class="gs-art" ${un ? `style='background-image:${portraitPlate(s.name, ENEMY_FACTION[i], SECTOR_ART[i])}'` : ''}>${un ? '' : ico('lock')}</span>
+      <span class="gs-art" ${un ? `style='background-image:${extraArt('sector-' + s.id) || portraitPlate(s.name, ENEMY_FACTION[i], SECTOR_ART[i])}'` : ''}>${un ? '' : ico('lock')}</span>
       <span class="gs-txt"><span class="gs-n">Sector ${String(i + 1).padStart(2, '0')}</span><span class="gs-name">${un ? esc(s.name) : 'Uncharted'}</span>
       <span class="gs-pips">${es.filter(e => !e.elite).map(e => `<i class="${save.cleared[e.id] ? 'on' : ''}"></i>`).join('')}</span></span></button>`;
   }).join('');

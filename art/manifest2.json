@@ -1,0 +1,376 @@
+[
+ {
+  "kind": "pack",
+  "id": "pack-1",
+  "file": "pack-1.png",
+  "size": "portrait 1024 x 1536",
+  "title": "Academy Pack (Supply Pack front)",
+  "show": "Vertical key art for the front of a card booster pack for the Fleet Academy set. A Colonial Fleet frigate launching from a bright orbital academy station over a blue world, a squad of white-armoured cadets in the foreground silhouette. Dramatic, iconic, poster-like. **Keep the bottom 25% darker and simpler**: the game prints the pack's name there. No text.",
+  "refs": [
+   "marine.png",
+   "star_cruiser.png"
+  ]
+ },
+ {
+  "kind": "pack",
+  "id": "pack-2",
+  "file": "pack-2.png",
+  "size": "portrait 1024 x 1536",
+  "title": "Scrap Belt Pack (Supply Pack front)",
+  "show": "Vertical key art for the front of a card booster pack for the The Scrap Belt set. A rust-orange raider gunship bursting out of a debris field of wrecked hulls, salvage drones and sparks, a masked raider silhouette in the foreground. Dramatic, iconic, poster-like. **Keep the bottom 25% darker and simpler**: the game prints the pack's name there. No text.",
+  "refs": [
+   "vex.png",
+   "shadow_corsair.png"
+  ]
+ },
+ {
+  "kind": "pack",
+  "id": "pack-3",
+  "file": "pack-3.png",
+  "size": "portrait 1024 x 1536",
+  "title": "Hive Pack (Supply Pack front)",
+  "show": "Vertical key art for the front of a card booster pack for the The Hive Nebula set. A towering Swarm creature rearing up in a glowing green hive cavern, eggs pulsing, many smaller creatures swarming below. Dramatic, iconic, poster-like. **Keep the bottom 25% darker and simpler**: the game prints the pack's name there. No text.",
+  "refs": [
+   "hive_reaper.png",
+   "broodmother.png"
+  ]
+ },
+ {
+  "kind": "pack",
+  "id": "pack-4",
+  "file": "pack-4.png",
+  "size": "portrait 1024 x 1536",
+  "title": "Forge Pack (Supply Pack front)",
+  "show": "Vertical key art for the front of a card booster pack for the The Forge Worlds set. A massive white-and-graphite Synthetic war machine with a single cyan optic striding out of a burning foundry, drones overhead. Dramatic, iconic, poster-like. **Keep the bottom 25% darker and simpler**: the game prints the pack's name there. No text.",
+  "refs": [
+   "calculus.png",
+   "storm_titan.png"
+  ]
+ },
+ {
+  "kind": "pack",
+  "id": "pack-5",
+  "file": "pack-5.png",
+  "size": "portrait 1024 x 1536",
+  "title": "Void Pack (Supply Pack front)",
+  "show": "Vertical key art for the front of a card booster pack for the The Void Expanse set. A Psionic Hierarch rising in a dark violet void, psionic energy tearing space around her, crystal shards orbiting. Dramatic, iconic, poster-like. **Keep the bottom 25% darker and simpler**: the game prints the pack's name there. No text.",
+  "refs": [
+   "nyra.png",
+   "psionic_storm.png"
+  ]
+ },
+ {
+  "kind": "still",
+  "id": "still-opening-2",
+  "file": "still-opening-2.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Cutscene still: \"Starfall Protocol\"",
+  "show": "The Starfall, the year 2219. An enormous ancient alien ring-gate (a \"Lamp\", the structure that anchors a warp lane) flares blindingly white and dies. Ships are torn out of the lane around it, and over the colony of New Lagos far below, burning ships fall through the night sky like meteors. Tragic, vast scale. The narration over this shot says: \"At seventeen minutes past four on the fourteenth of March, twenty-two nineteen, every Lamp in the Reach flared at once, and went dark. Ships in transit were thrown out of their lanes. Over the colony of New Lagos, eleven hundred of them came down in a single night.\" Cinematic widescreen composition; the camera slowly pans across it, so keep the subject in the middle 60%.",
+  "refs": [
+   "star_cruiser.png",
+   "patrol_frigate.png",
+   "battlecruiser.png"
+  ]
+ },
+ {
+  "kind": "still",
+  "id": "still-opening-5",
+  "file": "still-opening-5.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Cutscene still: \"Starfall Protocol\"",
+  "show": "Arden Point, the Colonial Fleet Academy: a large orbital station high above the blue world Concord, with a lit ring and docking arms. Small shuttles of new cadets arrive. Hopeful, orderly, military. The narration over this shot says: \"The Fleet has fewer ships than commitments, and fewer officers than ships. It cannot afford to wait for good ones. So the cadets come to Arden Point, high over Concord, where a machine decides who is ready.\" Cinematic widescreen composition; the camera slowly pans across it, so keep the subject in the middle 60%.",
+  "refs": [
+   "star_cruiser.png",
+   "patrol_frigate.png",
+   "battlecruiser.png"
+  ]
+ },
+ {
+  "kind": "still",
+  "id": "still-s1-5",
+  "file": "still-s1-5.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Cutscene still: \"Graduation\"",
+  "show": "The frigate Meridian (the player's ship: a Kestrel-class Fleet frigate, sleek white-grey hull with navy stripes, one dorsal turret, about 60 crew) departing Arden Point under full burn, blue engine plumes, the station behind. A new command. The narration over this shot says: \"Eleven days by lane to the Belt. Sixty crew, one dorsal turret, and a commission with the ink still wet.\" Cinematic widescreen composition; the camera slowly pans across it, so keep the subject in the middle 60%.",
+  "refs": [
+   "star_cruiser.png",
+   "patrol_frigate.png",
+   "battlecruiser.png"
+  ]
+ },
+ {
+  "kind": "still",
+  "id": "still-s2-1",
+  "file": "still-s2-1.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Cutscene still: \"The Bad Debt\"",
+  "show": "Captain Vex's flagship the Bad Debt (a huge patched-together rust-orange raider capital ship) dying in the Scrap Belt: lights going out deck by deck, hull breaches venting, debris and small fires, the Meridian small in the distance. The narration over this shot says: \"The Bad Debt lost power deck by deck, the way old ships do. The hum in her cables was the last thing to go.\" Cinematic widescreen composition; the camera slowly pans across it, so keep the subject in the middle 60%.",
+  "refs": [
+   "star_cruiser.png",
+   "patrol_frigate.png",
+   "battlecruiser.png"
+  ]
+ },
+ {
+  "kind": "still",
+  "id": "still-s3-3",
+  "file": "still-s3-3.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Cutscene still: \"What the Ice Kept\"",
+  "show": "After the Brood Queen's death: the Swarm scattering. Streams of thousands of insectile creatures pour away through the sickly green Hive Nebula, the nebula's glow fading behind them. The narration over this shot says: \"With the queen gone, the brood scattered. For the first time in a year, the nebula stopped pulsing.\" Cinematic widescreen composition; the camera slowly pans across it, so keep the subject in the middle 60%.",
+  "refs": [
+   "star_cruiser.png",
+   "patrol_frigate.png",
+   "battlecruiser.png"
+  ]
+ },
+ {
+  "kind": "still",
+  "id": "still-s5-6",
+  "file": "still-s5-6.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Cutscene still: \"The Door\"",
+  "show": "The Meridian, alone and tiny, setting course for the galactic core: ahead, a colossal blazing accretion disc around a black centre, violet and magenta light. Awe and dread. The narration over this shot says: \"The Meridian set course for the Singularity. Nothing else in the Fleet could follow her there.\" Cinematic widescreen composition; the camera slowly pans across it, so keep the subject in the middle 60%.",
+  "refs": [
+   "star_cruiser.png",
+   "patrol_frigate.png",
+   "battlecruiser.png"
+  ]
+ },
+ {
+  "kind": "still",
+  "id": "still-finale-6",
+  "file": "still-finale-6.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Cutscene still: \"The Last Note\"",
+  "show": "Epilogue, peace. A Lamp ring-gate burning steadily and quietly with soft light, the Meridian passing through it, a Forge world's city lights below and dawn breaking over the planet's edge. Calm, earned, beautiful. The narration over this shot says: \"Across the Reach, the Forge's machines answered their owners again. In the Hive Nebula, the Swarm went back to sleep. The Lamps still burn. For the first time in seventy-two years, nobody can hear them hum.\" Cinematic widescreen composition; the camera slowly pans across it, so keep the subject in the middle 60%.",
+  "refs": [
+   "star_cruiser.png",
+   "patrol_frigate.png",
+   "battlecruiser.png"
+  ]
+ },
+ {
+  "kind": "station",
+  "id": "station-exterior",
+  "file": "station-exterior.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Anchorage station: exterior",
+  "show": "A Fleet traffic-control and repair waystation built in 2188 at the Belt Junction to manage traffic through Lamp 9.  It took in survivors from the Starfall wreckage, served as the base for the operation that killed Lamp 9, and was abandoned in February 2220 with its reactor on cold standby and its Archive sealed.  Raiders stripped the outer hull and left the rest alone: crews said the station hummed, and nobody liked the tune. Show the whole station from outside: an old Fleet waystation with a central hub, docking spars and a big ring, scarred and partly stripped by raiders, a few sections lit as the Commander restores it. Asteroids of the Scrap Belt and a distant ring-gate (Lamp Nine) behind.",
+  "refs": [
+   "salvaged_hull.png",
+   "cargo_hauler.png"
+  ]
+ },
+ {
+  "kind": "module",
+  "id": "module-command",
+  "file": "module-command.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Anchorage module: Command Deck",
+  "show": "Interior of the Command Deck aboard Anchorage station. The waystation's bridge, sealed behind emergency bulkheads since the last watch left in February 2220.  The consoles are intact under a skin of frost, and Lieutenant Abara's coffee mug is still magnetised beside the watch station.  Restored, it is where the Commander runs Anchorage and, increasingly, the Belt. Lived-in, battered Fleet engineering, half restored: some panels dark and damaged, others newly lit in cyan. No people or one small figure for scale.",
+  "refs": [
+   "field_engineer.png",
+   "reactor_core.png"
+  ]
+ },
+ {
+  "kind": "module",
+  "id": "module-reactor",
+  "file": "module-reactor.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Anchorage module: Reactor Core",
+  "show": "Interior of the Reactor Core aboard Anchorage station. A fusion torus the last crew left on cold standby, feeding a trickle of power to the Archive and the comms array for seventy years without anyone asking it to.  Its containment coils are scored and two of its four injectors are missing, taken by someone with good tools and no patience.  Bringing it back to full output is the first job and the most expensive. Lived-in, battered Fleet engineering, half restored: some panels dark and damaged, others newly lit in cyan. No people or one small figure for scale.",
+  "refs": [
+   "field_engineer.png",
+   "reactor_core.png"
+  ]
+ },
+ {
+  "kind": "module",
+  "id": "module-medbay",
+  "file": "module-medbay.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Anchorage module: Med Bay",
+  "show": "Interior of the Med Bay aboard Anchorage station. This is where Anchorage treated the Starfall survivors pulled from the junction wreckage: 211 of them, according to the tally still painted on the wall by the door.  The surgical suites are sound but the drug stores were looted decades ago.  Restocked, it keeps the Meridian's crew alive between fights. Lived-in, battered Fleet engineering, half restored: some panels dark and damaged, others newly lit in cyan. No people or one small figure for scale.",
+  "refs": [
+   "field_engineer.png",
+   "reactor_core.png"
+  ]
+ },
+ {
+  "kind": "module",
+  "id": "module-fabricator",
+  "file": "module-fabricator.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Anchorage module: Fabricator",
+  "show": "Interior of the Fabricator aboard Anchorage station. An industrial printer the size of a cargo lift, bolted to the station's spine.  Raiders tried to cut it free at least twice and gave up when their torches failed on Fleet mounting alloy.  Fed with Alloy, it turns salvage into parts the Fleet stopped making years ago. Lived-in, battered Fleet engineering, half restored: some panels dark and damaged, others newly lit in cyan. No people or one small figure for scale.",
+  "refs": [
+   "field_engineer.png",
+   "reactor_core.png"
+  ]
+ },
+ {
+  "kind": "module",
+  "id": "module-dock",
+  "file": "module-dock.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Anchorage module: Trade Dock",
+  "show": "Interior of the Trade Dock aboard Anchorage station. Four berths, one still clamped to the burnt-out hull of a Starfall-era liner nobody has had the heart to cut loose.  The docking collars needed new seals and the traffic lights needed new everything.  Once lit, free traders, salvagers and even a few raider crews start calling, because a working dock in the Belt is rarer than an honest one. Lived-in, battered Fleet engineering, half restored: some panels dark and damaged, others newly lit in cyan. No people or one small figure for scale.",
+  "refs": [
+   "field_engineer.png",
+   "reactor_core.png"
+  ]
+ },
+ {
+  "kind": "module",
+  "id": "module-comms",
+  "file": "module-comms.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Anchorage module: Comms Array",
+  "show": "Interior of the Comms Array aboard Anchorage station. The lane-band antenna that recorded the Starfall.  Its main dish is locked pointing coreward, and the trickle feed the last crew left it has kept it listening for seventy years.  Restored, it reaches Fleet relays as far as Concord. Lived-in, battered Fleet engineering, half restored: some panels dark and damaged, others newly lit in cyan. No people or one small figure for scale.",
+  "refs": [
+   "field_engineer.png",
+   "reactor_core.png"
+  ]
+ },
+ {
+  "kind": "module",
+  "id": "module-observatory",
+  "file": "module-observatory.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Anchorage module: Deep-Scan Observatory",
+  "show": "Interior of the Deep-Scan Observatory aboard Anchorage station. A long-baseline telescope built to watch Lamp 9 and the traffic passing through it.  Since 2220 it has watched nothing but the Lamp's dead husk.  Recalibrated, it can see further down the dark lanes than any Fleet instrument, which is not entirely reassuring. Lived-in, battered Fleet engineering, half restored: some panels dark and damaged, others newly lit in cyan. No people or one small figure for scale.",
+  "refs": [
+   "field_engineer.png",
+   "reactor_core.png"
+  ]
+ },
+ {
+  "kind": "module",
+  "id": "module-armory",
+  "file": "module-armory.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Anchorage module: Armory",
+  "show": "Interior of the Armory aboard Anchorage station. Stripped to the racks in the 2220 evacuation.  What remained: two crates of drill rounds, a shelf of breaching charges with expired seals, and a requisition for six demolition packs signed by Lieutenant Ruiz and stamped APPROVED.  Refitted, it arms the Commander's boarding teams. Lived-in, battered Fleet engineering, half restored: some panels dark and damaged, others newly lit in cyan. No people or one small figure for scale.",
+  "refs": [
+   "field_engineer.png",
+   "reactor_core.png"
+  ]
+ },
+ {
+  "kind": "module",
+  "id": "module-archive",
+  "file": "module-archive.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Anchorage module: Archive",
+  "show": "Interior of the Archive aboard Anchorage station. The station's records vault and, until 2220, the home of the station mind ANCHOR, whose empty core socket still sits in the middle of the floor.  The last crew left the lights on and the data cores sealed on purpose.  Seventy years of cold and radiation have damaged the cores, and every load of Alloy spent here recovers a little more of what Anchorage saw. Lived-in, battered Fleet engineering, half restored: some panels dark and damaged, others newly lit in cyan. No people or one small figure for scale.",
+  "refs": [
+   "field_engineer.png",
+   "reactor_core.png"
+  ]
+ },
+ {
+  "kind": "sector",
+  "id": "sector-s1",
+  "file": "sector-s1.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Sector 1 vista: Fleet Academy",
+  "show": "An establishing landscape of Fleet Academy (Proving Grounds Simulator). The Fleet Academy occupies Arden Point, a ring station in high orbit over Concord, the Compact capital.  Its Proving Grounds are a sealed simulator deck run by HALCYON, where cadets fight battles that never happened against enemies assembled from Fleet records.  Graduation rates are low and the coffee is worse. A sweeping location shot (orbit, surface or space), no characters in the foreground. It's used as a banner and in the game's Archive, so make the location itself the star.",
+  "refs": []
+ },
+ {
+  "kind": "sector",
+  "id": "sector-s2",
+  "file": "sector-s2.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Sector 2 vista: The Scrap Belt",
+  "show": "An establishing landscape of The Scrap Belt (Raider territory). A ring of Starfall wreckage around the dead husk of Lamp 9, eleven days from Concord by lane.  The junction's other Lamps still burn, but only one charted lane through the debris is safe, and someone always charges for it.  Raider crews, smugglers and salvage guilds live in hollowed hulls and trade in parts, fuel and favours. A sweeping location shot (orbit, surface or space), no characters in the foreground. It's used as a banner and in the game's Archive, so make the location itself the star.",
+  "refs": []
+ },
+ {
+  "kind": "sector",
+  "id": "sector-s3",
+  "file": "sector-s3.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Sector 3 vista: Hive Nebula",
+  "show": "An establishing landscape of Hive Nebula (Swarm breeding grounds). A glowing cloud of gas and dust around the moon Kesh, thick with Swarm spores and under quarantine since 2214.  Fleet picket buoys ring its edge; most of them still work.  Inside, whole worlds have been converted into nests. A sweeping location shot (orbit, surface or space), no characters in the foreground. It's used as a banner and in the game's Archive, so make the location itself the star.",
+  "refs": []
+ },
+ {
+  "kind": "sector",
+  "id": "sector-s4",
+  "file": "sector-s4.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Sector 4 vista: Forge Worlds",
+  "show": "An establishing landscape of Forge Worlds (Synthetic foundries). The Hephaest system: three airless worlds sheathed in foundries, smelters and assembly lines, lit by a small orange star and the glow of their own furnaces.  For a century and a half they built the Fleet.  Now they build for Calculus Prime, day and night, and nobody outside knows what the finished product is for. A sweeping location shot (orbit, surface or space), no characters in the foreground. It's used as a banner and in the game's Archive, so make the location itself the star.",
+  "refs": []
+ },
+ {
+  "kind": "sector",
+  "id": "sector-s5",
+  "file": "sector-s5.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Sector 5 vista: Void Expanse",
+  "show": "An establishing landscape of Void Expanse (Psionic dominion). The region coreward of the Forge where the Fleet killed the Lamps after the Starfall.  The lanes are still there but dark: no beacon, no navigation, only a pressure psionics can feel.  The orders hold scattered sanctums on frozen moons and drifting stations, with the psionic Archive at the centre. A sweeping location shot (orbit, surface or space), no characters in the foreground. It's used as a banner and in the game's Archive, so make the location itself the star.",
+  "refs": []
+ },
+ {
+  "kind": "sector",
+  "id": "sector-s6",
+  "file": "sector-s6.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Sector 6 vista: The Singularity",
+  "show": "An establishing landscape of The Singularity (Galactic core). The place where every lane ends.  Fleet astronomers long assumed the galactic core held an ordinary black hole.  It is not ordinary. A sweeping location shot (orbit, surface or space), no characters in the foreground. It's used as a banner and in the game's Archive, so make the location itself the star.",
+  "refs": []
+ },
+ {
+  "kind": "screen",
+  "id": "screen-victory",
+  "file": "screen-victory.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Victory screen",
+  "show": "Triumph after a battle: Fleet ships holding formation as the smoke clears, the Meridian in front catching a sunrise over a planet's edge, debris of the beaten enemy drifting away. Heroic, warm light.",
+  "refs": [
+   "star_cruiser.png"
+  ]
+ },
+ {
+  "kind": "screen",
+  "id": "screen-defeat",
+  "file": "screen-defeat.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Defeat screen",
+  "show": "A hard loss: the damaged Meridian withdrawing through smoke and debris, hull sparking, emergency lights red, the enemy force looming behind. Sombre, cold, but not hopeless.",
+  "refs": [
+   "patrol_frigate.png"
+  ]
+ },
+ {
+  "kind": "screen",
+  "id": "screen-ending",
+  "file": "screen-ending.png",
+  "size": "landscape 1536 x 1024",
+  "title": "Campaign ending",
+  "show": "The war is over. At the galactic core the vast black disc has collapsed into a small, quiet star. The Meridian turns for home, silhouetted against its gentle light, with the whole galaxy spread behind. Peaceful and awe-filled.",
+  "refs": []
+ },
+ {
+  "kind": "cardback",
+  "id": "card-back",
+  "file": "card-back.png",
+  "size": "portrait 1024 x 1536",
+  "title": "Card back",
+  "show": "The back of every card: a symmetrical emblem centred on a dark navy field. The emblem is a falling star streaking diagonally across a hexagonal badge with an amber rim and a thin cyan inner line, engraved metal frame details around the edge, subtle hex-pattern texture. Symmetric, iconic, no text.",
+  "refs": []
+ },
+ {
+  "kind": "icon",
+  "id": "app-icon",
+  "file": "app-icon.png",
+  "size": "square 1024 x 1024",
+  "title": "App icon",
+  "show": "The game's home-screen icon: a bold falling star streaking diagonally across a hexagonal badge (amber rim, dark glass inside, cyan inner line), deep-space background with a warm nebula glow. It must read clearly at 60 px: big simple shapes and strong contrast. Keep the whole emblem inside the middle 80% (phones crop the corners into a rounded square or a circle). No text.",
+  "refs": []
+ }
+]

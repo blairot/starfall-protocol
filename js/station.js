@@ -66,7 +66,7 @@ function openStation(back) {
   if (!save.station.seen) {
     save.station.seen = true; persist();
     const lore = LORE_SAFE('places', 'anchorage');
-    const m = modal(`<div class="m-eyebrow">New command // Scrap Belt</div><h2>Anchorage Station</h2>
+    const m = modal(`${paintedBanner('station-exterior')}<div class="m-eyebrow">New command // Scrap Belt</div><h2>Anchorage Station</h2>
       <p class="story">${esc(lore || 'A Fleet waystation, abandoned for decades, drifting in the Scrap Belt. Its reactor is cold and most of its decks are open to vacuum. Fleet Command has signed it over to you.')}</p>
       <p>Battles now pay <b>Alloy</b>. Spend it here to repair modules. Each one unlocks something new: more Health for your commander, cheaper crafting, deck loadouts, enemy intel and lost records about the Signal.</p>
       <p class="muted">Start with the Reactor Core. Every other module can only be repaired as far as the reactor can power it.</p>
@@ -112,13 +112,13 @@ function renderStation() {
     ${cmdBar(save, 'station')}
     <div class="sub-head"><div><div class="sh-tag">Forward base // Scrap Belt</div><h1>Anchorage</h1></div><span class="muted">Repair modules with Alloy from battles. Each one unlocks a new feature or upgrade.</span><button class="btn primary" id="stn-done">Done</button></div>
     <div class="stn-body">
-      <section class="stn-map" data-key="stn-map">
+      <section class="stn-map ${extraArt('station-exterior') ? 'painted' : ''}" data-key="stn-map" style='--stn-bg:${extraArt('station-exterior') || 'none'}'>
         <div class="stn-head"><div class="ch-n">Station integrity ${Math.round(have / total * 100)}%</div><h2>Anchorage</h2><div class="ch-prog"><b>${have}</b>/${total} systems restored</div></div>
         ${stationSVG(save)}${nodes}
         <div class="chart-coords">ALLOY ${st.alloy} · FLEET REGISTRY W-0417</div>
       </section>
       <aside class="stn-panel frame" data-key="stn-${sel}">
-        <div class="m-eyebrow">${ico(m.icon)} Module</div>
+        ${paintedBanner('module-' + sel, 'stn-hero')}<div class="m-eyebrow">${ico(m.icon)} Module</div>
         <h2>${esc(m.name)}</h2>
         <div class="stn-status">${status}</div>
         ${lore ? `<p class="stn-lore">${esc(lore)}</p>` : ''}
