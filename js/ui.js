@@ -759,7 +759,7 @@ function endBattle() {
     const done = applyContracts(save, tally);
     persist(); SFX.lose(); if (Music.stinger) Music.stinger('defeat');
     const m = modal(`${paintedBanner('screen-defeat')}<div class="m-eyebrow danger">Defeat</div><h2>${esc(enc.name)}</h2>
-      <p>Your flagship withdraws to repair. Adjust your deck in the Hangar and try again.</p>
+      <p>Your forces pull back to regroup. Adjust your deck in the Hangar and try again.</p>
       ${done.length ? `<div class="rewards">${contractLines(done)}</div>` : ''}
       ${(enc.tips || []).length ? `<div class="advisor inline"><div class="adv-h">Advisor</div><div class="adv-t">${pick(enc.tips)}</div></div>` : ''}
       ${offerEasy ? `<p class="muted">That's ${save.streak.n} losses in a row here. <b>Retry on Cadet</b> runs this one battle with weaker enemies and doesn't change your difficulty setting.</p>` : save.diff !== 'cadet' && save.stats.losses >= 3 ? '<p class="muted">Struggling? You can switch to Cadet difficulty in Settings at any time.</p>' : ''}
@@ -852,9 +852,9 @@ function showEnding() {
   $('#title').innerHTML = `${extraArt('screen-ending') ? `<div class="end-bg" style='background-image:${extraArt('screen-ending')}'></div>` : ''}<div class="title-wrap ending">
     <div class="eyebrow">Campaign complete</div>
     <h1 class="logo">STARFALL<span>PROTOCOL</span></h1>
-    <p class="story big">The Choir is silent. The galaxy is quiet, and it belongs to its people again.</p>
+    <p class="story big">The Choir is destroyed and the Lamps are safe. For the first time since the Starfall, nothing at the galactic core is calling to us.</p>
     <div class="stats-row"><div><b>${save.stats.wins}</b><span>Victories</span></div><div><b>${save.stats.losses}</b><span>Defeats</span></div><div><b>${collectionCount(save)}</b><span>Cards collected</span></div><div><b>${mins >= 60 ? Math.floor(mins / 60) + 'h ' + (mins % 60) + 'm' : mins + 'm'}</b><span>Time in command</span></div></div>
-    <p class="muted">Thank you for playing, ${esc(save.name)}. You can keep replaying any battle from the Star Map to finish your collection, or start a new campaign on Admiral difficulty.</p>
+    <p class="muted">Thank you for playing, ${esc(save.name)}. You can replay any battle from the Star Map to complete your collection, or start a new campaign on Admiral difficulty for a tougher fight.</p>
     <div class="title-btns"><button class="btn primary" id="end-map">Return to Star Map</button></div></div>`;
   $('#end-map').onclick = openMap;
 }

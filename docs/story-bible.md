@@ -62,7 +62,5 @@ HALCYON opens Sector 7 after the player leaves, learns it was ANCHOR and the Pro
 
 ## Tone rules
 
-- Hard sci-fi, terse and weary: short declarative sentences, concrete numbers and hardware, dry understatement. No whimsy, no cartoon villains and no purple prose. Humour comes from bureaucracy, budgets and soldiers' slang.
-- The Choir is never explained outright in card or story text. Hint through Lamps, chords, black glass and "nothing that sings with us is lost".
-- Lore text uses no em dashes. Card lore runs 2-4 sentences and complements the flavor line without repeating it.
+See `docs/voice-and-tone.md` (October 2026): clear, plain-spoken narration with character-led cutscenes. The old "never explain the Choir" rule is retired; the guide sets out what the player learns in each act.
 - Keep **Void** (the region and psionic naming) separate from **the Choir** (the void faction). Psionic cards may say "Void". Choir cards should not call the Choir "the Void".

@@ -67,8 +67,8 @@ function openStation(back) {
     save.station.seen = true; persist();
     const lore = LORE_SAFE('places', 'anchorage');
     const m = modal(`${paintedBanner('station-exterior')}<div class="m-eyebrow">New command // Scrap Belt</div><h2>Anchorage Station</h2>
-      <p class="story">${esc(lore || 'A Fleet waystation, abandoned for decades, drifting in the Scrap Belt. Its reactor is cold and most of its decks are open to vacuum. Fleet Command has signed it over to you.')}</p>
-      <p>Battles now pay <b>Alloy</b>. Spend it here to repair modules. Each one unlocks something new: more Health for your commander, cheaper crafting, deck loadouts, enemy intel and lost records about the Signal.</p>
+      <p class="story">${esc(lore || 'Anchorage is an old Fleet waystation in the Scrap Belt. It sheltered survivors after the Starfall and was abandoned in 2220. Its reactor is cold and most of its decks are open to vacuum. Admiral Okonkwo has signed it over to you as your forward base.')}</p>
+      <p>Battles now pay <b>Alloy</b>. Spend it here to repair modules. Each one unlocks something new: more Health for your commander, cheaper crafting, deck loadouts, enemy intel and the station's old records in the Archive.</p>
       <p class="muted">Start with the Reactor Core. Every other module can only be repaired as far as the reactor can power it.</p>
       <div class="m-actions"><button class="btn primary" data-a="ok">Begin repairs</button></div>`);
     m.onclick = e => { if (e.target.dataset.a) closeModal(); };
