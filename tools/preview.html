@@ -73,6 +73,15 @@ if (view === 'packopen') { openShop(openMap); openPackFlow(3); setTimeout(() => 
 if (view.startsWith('still-')) { const m = view.slice(6).match(/^(.*)-(\d+)$/); Cinema.still(m[1], +m[2]); }
 if (view.startsWith('cine-')) { SFX.init(); Cinema.play(view.slice(5), () => {}); }
 if (view === 'packfront') { openShop(openMap); openPackFlow(3); }
+// frozen tear states for screenshots: packrip (rip half way), packout (strip gone, cards out)
+if (view === 'packrip' || view === 'packout') { openShop(openMap); openPackFlow(2); const pk = document.getElementById('po-pack');
+  document.body.insertAdjacentHTML('beforeend', '<style>*{animation-play-state:paused!important;transition:none!important}</style>');
+  pk.querySelector('.po-rip i').style.width = '55%'; pk.style.setProperty('--ry', '-8deg'); pk.style.setProperty('--rx', '4deg'); pk.style.setProperty('--fx', '30%');
+  if (view === 'packout') { const pts = []; for (let i = 0; i <= 20; i++) pts.push((i * 5) + '% ' + (10.5 + (i % 2 ? 1.4 : -1.1)) + '%');
+    pk.querySelector('.po-body').style.clipPath = 'polygon(' + pts.join(', ') + ', 100% 100%, 0 100%)';
+    pk.querySelector('.po-lid').style.clipPath = 'polygon(0 0, 100% 0, ' + pts.slice().reverse().join(', ') + ')';
+    pk.classList.add('torn', 'out'); pk.querySelector('.po-lid').style.transform = 'translate(38%, -40%) rotate(16deg)'; pk.querySelector('.po-lid').style.animation = 'none';
+    pk.querySelector('.po-body').style.cssText += ';transform:none!important;opacity:1'; } }
 if (view === 'packbacks') { openShop(openMap); openPackFlow(3); setTimeout(() => document.getElementById('po-pack').click(), 300); }
 if (view.startsWith('sheet')) {
   // #sheet=id1,id2,... renders raw art plates in a 3-column grid with labels

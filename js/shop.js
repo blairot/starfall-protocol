@@ -3,11 +3,16 @@
 // STARFALL PROTOCOL — Supply Depot (pack shop), pack opening, crafting dialog
 // ============================================================================
 
+// A sealed foil booster: crimped seals top and bottom, the set's art printed on the face, a foil sheen.
 function packHTML(tier, cls) {
   const set = PACK_SETS[tier - 1];
-  return `<div class="pack ${cls || ''}" style='--h:${set.hue};background-image:${extraArt('pack-' + tier) || portraitPlate(set.name, ENEMY_FACTION[tier - 1] === 'neutral' ? 'fleet' : ENEMY_FACTION[tier - 1], SECTOR_ART[tier - 1])}'>
-    <div class="pk-band"></div>
-    <div class="pk-name">${esc(set.name.replace(' Pack', ''))}</div><div class="pk-sub">Supply Pack</div></div>`;
+  const art = extraArt('pack-' + tier) || portraitPlate(set.name, ENEMY_FACTION[tier - 1] === 'neutral' ? 'fleet' : ENEMY_FACTION[tier - 1], SECTOR_ART[tier - 1]);
+  return `<div class="pack ${cls || ''}" style='--h:${set.hue};--art:${art}'>
+    <div class="pk-crimp top"></div>
+    <div class="pk-face"><div class="pk-brand"><b>STARFALL</b><span>PROTOCOL</span></div>
+      <div class="pk-band"><div class="pk-name">${esc(set.name.replace(' Pack', ''))}</div><div class="pk-sub">Supply Pack<span class="pk-n"> · ${ECON.packSize} cards</span></div></div>
+      <div class="pk-foil"></div></div>
+    <div class="pk-crimp bottom"></div></div>`;
 }
 
 const Shop = { back: null };
@@ -67,17 +72,52 @@ function openPackFlow(tier) {
   if (!(save.packs[tier] > 0)) return;
   const set = PACK_SETS[tier - 1];
   const m = modal(`<div class="po-stage"><div class="m-eyebrow">${esc(set.name)}</div><h2>Open your pack</h2>
-    <button class="po-pack" id="po-pack" aria-label="Open pack">${packHTML(tier, 'big')}</button><p class="muted">Click the pack to tear it open.</p></div>`, 'wide packopen');
-  m.onclick = async e => {
-    if (!e.target.closest('#po-pack')) return;
-    m.onclick = null;
+    <div class="po-pack" id="po-pack" role="button" tabindex="0" aria-label="Tear open the pack">
+      <div class="po-cards" aria-hidden="true">${'<i></i>'.repeat(ECON.packSize)}</div>
+      ${packHTML(tier, 'big po-body')}
+      <div class="po-lid" aria-hidden="true">${packHTML(tier, 'big')}</div>
+      <div class="po-notch" aria-hidden="true"><span>Tear here</span></div>
+      <div class="po-rip" aria-hidden="true"><i></i></div>
+    </div>
+    <p class="muted" id="po-hint">${TOUCH.on ? 'Swipe across the top of the pack to tear it open.' : 'Drag across the top of the pack to tear it open, or just click it.'}</p></div>`, 'wide packopen');
+  const pk = $('#po-pack'), body = pk.querySelector('.po-body'), lid = pk.querySelector('.po-lid'), rip = pk.querySelector('.po-rip i');
+  let drag = null, done = false, lastTick = 0;
+  // tilt toward the pointer; the foil follows
+  const tilt = e => { if (done) return; const r = pk.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+    pk.style.setProperty('--ry', (x * 18).toFixed(1) + 'deg'); pk.style.setProperty('--rx', (-y * 14).toFixed(1) + 'deg'); pk.style.setProperty('--fx', (50 - x * 120).toFixed(0) + '%'); };
+  const progress = p => { rip.style.width = Math.round(Math.min(1, p) * 100) + '%'; pk.style.setProperty('--shake', p > 0.02 ? 1 : 0); };
+  // the tear: a jagged line across the top; the strip above it flies off and the cards slide out
+  const tear = async () => {
+    if (done) return; done = true;
     save.packs[tier]--; if (!save.packs[tier]) delete save.packs[tier];
     const res = openPack(save, tier);
     persist();
-    const pk = $('#po-pack'); pk.classList.add('tearing'); SFX.trap();
-    await sleep(T(650));
+    const cut = 10.5, pts = [];
+    for (let i = 0; i <= 20; i++) pts.push([i * 5, cut + (i % 2 ? 1.4 : -1.1) + (Math.random() - 0.5) * 1.6]);
+    const line = pts.map(([x, y]) => `${x}% ${y.toFixed(2)}%`).join(', ');
+    lid.style.clipPath = `polygon(0 0, 100% 0, ${pts.slice().reverse().map(([x, y]) => `${x}% ${y.toFixed(2)}%`).join(', ')})`;
+    body.style.clipPath = `polygon(${line}, 100% 100%, 0 100%)`;
+    pk.classList.add('torn'); progress(1);
+    if (SFX.static) SFX.static(); else SFX.zap();
+    await sleep(T(380));
+    pk.classList.add('out'); SFX.play();
+    await sleep(T(900));
     revealPack(tier, res);
   };
+  // a tap tears it for you: the rip races across first
+  const autoTear = async () => { if (done || drag) return; for (let p = 0.1; p < 1; p += 0.18) { progress(p); await sleep(30); } tear(); };
+  pk.addEventListener('pointermove', e => {
+    tilt(e);
+    if (!drag || done) return;
+    const p = Math.abs(e.clientX - drag.x) / pk.getBoundingClientRect().width * 1.35;
+    drag.p = Math.max(drag.p, p); progress(drag.p);
+    if (performance.now() - lastTick > 140 && SFX.click) { SFX.click(); lastTick = performance.now(); }
+    if (drag.p >= 0.75) { drag = null; tear(); }
+  });
+  pk.addEventListener('pointerdown', e => { if (done) return; drag = { x: e.clientX, p: 0, t: performance.now() }; try { pk.setPointerCapture(e.pointerId); } catch (err) { /* older browsers */ } });
+  pk.addEventListener('pointerup', () => { if (!drag) return; const d = drag; drag = null; if (d.p < 0.08 && performance.now() - d.t < 450) autoTear(); });
+  pk.addEventListener('pointerleave', () => { if (!drag) { pk.style.setProperty('--rx', '0deg'); pk.style.setProperty('--ry', '0deg'); } });
+  pk.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); autoTear(); } });
 }
 
 function revealPack(tier, res) {
