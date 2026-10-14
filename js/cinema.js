@@ -9,7 +9,7 @@
 // ============================================================================
 
 const Cinema = (() => {
-  const SFX_MAP = { boom: 'bigHit', warp: 'phase', alarm: 'enemyTurn', static: 'zap', hum: 'shield', chime: 'turn' };
+  const SFX_MAP = { boom: 'bigHit', warp: 'warp', alarm: 'alarm', static: 'static', hum: 'hum', chime: 'chime' };
   const FX_COLOR = { none: 'var(--t-1)', radio: '#ffd08a', ai: '#bff3ff', synth: '#7fe3ff', alien: '#b8f07a', psi: '#d2b8ff', choir: '#ffb8e6' };
   let run = null;   // the cutscene in progress
 
