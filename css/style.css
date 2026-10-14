@@ -1403,3 +1403,44 @@ body.touch .inspect-hint { color: var(--t-3); }
 .end-bg::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, transparent 20%, #05080ccc 85%); }
 @keyframes endpan { from { transform: scale(1.06) translateX(-1.5%); } to { transform: scale(1.12) translateX(1.5%); } }
 @media (prefers-reduced-motion: reduce) { .end-bg { animation: none; } }
+
+/* ===== 20. Saved decks and the mission-tuned deck */
+.dk-bar { display: grid; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid var(--edge-1); }
+.dk-h { display: flex; justify-content: space-between; align-items: center; }
+.dk-h h3 { margin: 0; }
+.dk-tabs { display: flex; flex-wrap: wrap; gap: 5px; }
+.dk-tab { display: grid; gap: 1px; text-align: left; border: 0; cursor: pointer; padding: 7px 11px; min-height: 40px; color: var(--t-2); background: rgba(2, 5, 9, .7); box-shadow: inset 0 0 0 1px var(--edge-1);
+  font: 700 13px var(--f-display); letter-spacing: .06em; text-transform: uppercase; clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px); }
+.dk-tab:hover { color: #fff; box-shadow: inset 0 0 0 1px var(--edge-2, #6b8aa8); }
+.dk-tab.on { color: var(--amber-hi); background: linear-gradient(180deg, rgba(242, 169, 59, .18), rgba(242, 169, 59, .05)); box-shadow: inset 0 0 0 1px var(--amber); }
+.dk-tab i { font: 600 10px var(--f-label); font-style: normal; letter-spacing: .16em; color: var(--amber); }
+.dk-tab.add { color: var(--cyan-hi); box-shadow: inset 0 0 0 1px rgba(115, 207, 255, .35); }
+.dk-name { display: grid; gap: 3px; }
+.dk-name input { font: 700 16px var(--f-display); letter-spacing: .05em; color: #fff; background: rgba(2, 5, 9, .7); border: 0; box-shadow: inset 0 0 0 1px var(--edge-1); padding: 8px 10px; min-width: 0; }
+.dk-name input:focus { outline: none; box-shadow: inset 0 0 0 1px var(--amber); }
+.dk-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.dk-saved { display: inline-flex; align-items: center; gap: 5px; font: 600 12px var(--f-label); color: var(--green-hi, #7dffa8); letter-spacing: .04em; }
+.dk-saved svg { width: 13px; height: 13px; }
+.dk-acts { display: inline-flex; gap: 12px; }
+.linkbtn { border: 0; background: none; cursor: pointer; padding: 4px 0; font: 600 12px var(--f-label); letter-spacing: .12em; text-transform: uppercase; color: var(--t-3); }
+.linkbtn:hover { color: var(--amber-hi); }
+.linkbtn.danger { color: var(--red-hi); }
+.brief-deck { font: 700 14px var(--f-display); color: #fff; background: rgba(2, 5, 9, .8); border: 0; box-shadow: inset 0 0 0 1px var(--edge-1); padding: 5px 8px; margin: 0 4px; }
+.tune { --cut: 10px; --edge: rgba(115, 207, 255, .35); display: grid; gap: 8px; margin-top: 12px; padding: 12px 14px; background: rgba(4, 12, 20, .6); box-shadow: inset 0 0 0 1px rgba(115, 207, 255, .25); }
+.tune p { margin: 0; }
+.tune-h { display: flex; align-items: center; gap: 8px; font: 700 14px var(--f-display); letter-spacing: .08em; text-transform: uppercase; }
+.tune-prog { height: 6px; background: rgba(150, 190, 230, .12); overflow: hidden; }
+.tune-prog i { display: block; height: 100%; background: linear-gradient(90deg, var(--cyan, #4fd2ec), var(--amber)); transition: width .2s; }
+.tune-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: space-between; }
+.tune-use { display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer; }
+.tune-use input { width: 18px; height: 18px; accent-color: var(--amber); }
+.tune-diff summary { cursor: pointer; color: var(--t-2); font: 600 13px var(--f-label); letter-spacing: .06em; }
+.tune-diff .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.tune-diff .chip.add { color: #9ff0b8; } .tune-diff .chip.rem { color: #ff9c9c; }
+/* archive: close button in the window's corner */
+.modal.archive .m-box { position: relative; }
+.m-x { position: absolute; top: 10px; right: 10px; z-index: 6; width: 40px; height: 40px; border: 0; cursor: pointer; display: grid; place-items: center;
+  font: 300 28px/1 var(--f-body); color: #fff; background: rgba(4, 10, 18, .85); box-shadow: inset 0 0 0 1px rgba(115, 207, 255, .45);
+  clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px); }
+.m-x:hover { color: var(--amber-hi); box-shadow: inset 0 0 0 1px var(--amber); }
+.modal.archive .arch-page { padding-right: 46px; }

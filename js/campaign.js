@@ -383,13 +383,15 @@ const CURVE = [0.14, 0.2, 0.2, 0.16, 0.12, 0.09, 0.09];
 const bucketOf = id => { const c = D(id).cost; return c <= 1 ? 0 : Math.min(6, c - 1); };
 
 // Fill the deck up to `size` with strong owned cards along a sensible curve (or trim it).
-function autoFillDeck(save, size) {
+// `score` (card id -> number) replaces the usual rating; the mission tuner uses it.
+function autoFillDeck(save, size, score) {
+  const rate = score || cardRating;
   const have = {}; const deck = [];
   save.deck.forEach(id => { if ((have[id] || 0) < Math.min(save.coll[id] || 0, maxCopies(D(id)))) { deck.push(id); have[id] = (have[id] || 0) + 1; } });
   const avail = [];
   Object.entries(save.coll).forEach(([id, n]) => { for (let k = have[id] || 0; k < Math.min(n, maxCopies(D(id))); k++) avail.push(id); });
-  const jitter = {}; avail.forEach(id => { if (jitter[id] == null) jitter[id] = Math.random() * 0.4; });
-  avail.sort((a, b) => (cardRating(b) + jitter[b]) - (cardRating(a) + jitter[a]));
+  const val = {}; avail.forEach(id => { if (val[id] == null) val[id] = rate(id) + (score ? 0 : Math.random() * 0.4); });
+  avail.sort((a, b) => val[b] - val[a]);
   const inBucket = b => deck.filter(id => bucketOf(id) === b).length;
   const spells = () => deck.filter(id => D(id).type !== 'unit').length;
   // pass 1: respect the curve and keep at least ~60% units
@@ -404,7 +406,7 @@ function autoFillDeck(save, size) {
   while (deck.length < size && avail.length) deck.push(avail.shift());
   while (deck.length > size) {
     let worst = 0, ws = 1e9;
-    deck.forEach((id, i) => { const b = bucketOf(id); const over = inBucket(b) > Math.ceil(CURVE[b] * size) ? -1.5 : 0; const r = cardRating(id) + over; if (r < ws) { ws = r; worst = i; } });
+    deck.forEach((id, i) => { const b = bucketOf(id); const over = inBucket(b) > Math.ceil(CURVE[b] * size) ? -1.5 : 0; const r = rate(id) + over; if (r < ws) { ws = r; worst = i; } });
     deck.splice(worst, 1);
   }
   save.deck = deck;

@@ -47,6 +47,7 @@ const Store = {
 let persistTimer = null;
 function persist() {
   if (!App.save) return;
+  if (typeof syncDecks === 'function') syncDecks(App.save);
   const now = Date.now();
   App.save.stats.playMs = (App.save.stats.playMs || 0) + Math.min(now - App.sessionStart, 10 * 60000);
   App.sessionStart = now;
@@ -62,6 +63,7 @@ function migrate(save) {
   if (save.scrap == null) save.scrap = 0;
   save.packs = save.packs || {}; save.pity = save.pity || {}; save.contracts = (save.contracts || []).filter(c => CONTRACTS[c.id]);
   ensureStation(save);
+  ensureDecks(save);
   // campaigns from before cutscenes existed: unlock the ones already earned for replay in the Archive
   save.seenCine = save.seenCine || [];
   if (Object.keys(save.cleared).length && !save.seenCine.includes('opening')) save.seenCine.push('opening');

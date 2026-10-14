@@ -23,7 +23,7 @@ const STATION = {
     observatory: { name: 'Deep-Scan Observatory', icon: 'scope', pos: [12, 63], max: 3, cost: [30, 70, 120],
       levels: ['Mission briefings show the enemy\'s key cards.', 'Mission briefings show the enemy\'s full deck list.', 'In battle, you can see the cost of every card in the enemy\'s hand.'] },
     armory:      { name: 'Armory', icon: 'blade', pos: [29, 81], max: 3, cost: [30, 70, 120],
-      levels: ['Deck loadouts: save and swap up to 3 decks in the Hangar.', 'Signature card: one card you choose always starts in your opening hand.', 'Your signature card costs 1 less, and you get 6 loadout slots.'] },
+      levels: ['Deck slots: keep up to 3 decks in the Hangar and switch between them.', 'Signature card: one card you choose always starts in your opening hand.', 'Your signature card costs 1 less, and you can keep up to 6 decks.'] },
     archive:     { name: 'Archive', icon: 'book', pos: [71, 81], max: 3, cost: [30, 70, 120],
       levels: ['Recovers the first block of lost records.', 'Recovers the second block of records.', 'Recovers the final, deepest records.'] },
   },

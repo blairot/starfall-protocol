@@ -207,7 +207,8 @@ function startBattle(enc, resumeState) {
     return;
   }
   const easy = UI.easyRetry === enc.id; UI.easyRetry = null; UI.easyRun = easy;
-  const s = newGame(buildBattle(easy ? Object.assign({}, App.save, { diff: 'cadet' }) : App.save, enc));
+  const ov = UI.deckOverride && UI.deckOverride.id === enc.id ? { deck: UI.deckOverride.deck.slice() } : null;
+  const s = newGame(buildBattle(easy || ov ? Object.assign({}, App.save, ov, easy ? { diff: 'cadet' } : null) : App.save, enc));
   UI.s = s;
   aiMulligan(s, 1);
   renderBattle();
@@ -996,15 +997,21 @@ function intelHTML(save, e) {
   return `<div class="intel"><div class="ph">Deep-scan intel <span class="meta">${obs < 2 ? 'Key cards' : e.deck.length + ' cards'}</span></div><div class="intel-cards">${ids.map(id => `<span class="chip" data-card="${id}">${esc(D(id).name)}${obs >= 2 && counts[id] > 1 ? ' ×' + counts[id] : ''}</span>`).join('')}</div></div>`;
 }
 
+// Briefing state that survives re-rendering the popup (deck switch, tuner progress).
+const Brief = { id: null, run: null, result: null, use: false, cancel: null, delArm: false };
+
 function openBriefing(enc) {
   const save = App.save, e = enc.enemy, diff = DIFFICULTY[save.diff];
+  if (Brief.id !== enc.id) { if (Brief.cancel) Brief.cancel(); Object.assign(Brief, { id: enc.id, run: null, result: null, use: false, cancel: null }); }
+  ensureDecks(save);
   const teach = [...(enc.teaches || []), ...(enc.teachesAlso || [])];
   const fresh = teach.filter(k => !save.codex.includes(k));
   const hp = Math.round(e.hp * diff.hp);
   const power = e.power ? HEROPOWERS[e.power] : null;
   const rewardTxt = save.cleared[enc.id] ? (economyOpen(save) ? `${Math.round(ECON.replayCredits[encKind(enc)] * creditMultOf(save))} Credits + ${ECON.alloyReplay[encKind(enc)]} Alloy (replay)` : 'Training replay') : [describeEncReward(enc, save), enc.unlockPowers ? 'a new commander power' : '', enc.grant ? 'a supply crate of new cards' : ''].filter(Boolean).join(' + ') || 'Training credit';
   const size = deckSizeFor(save);
-  const deckOk = enc.fixedDeck || save.deck.length === size;
+  const tunedOn = !enc.fixedDeck && Brief.use && Brief.result && Brief.result.best.label !== 'Your deck';
+  const deckOk = enc.fixedDeck || tunedOn || save.deck.length === size;
   const m = modal(`<div class="m-eyebrow">${esc(SECTORS[enc.sector].name)} · ${enc.boss ? 'Boss' : enc.elite ? 'Elite (optional)' : 'Mission ' + enc.id}</div>
     <h2>${esc(enc.name)}</h2>
     <div class="brief">
@@ -1016,15 +1023,75 @@ function openBriefing(enc) {
       <p class="story">${esc(enc.story)}</p>
       ${fresh.map(k => `<div class="newmech"><span class="pill new">New</span> <b>${esc(KEYWORDS[k].name)}</b> ${esc(KEYWORDS[k].text)}</div>`).join('')}
       <div class="brief-foot"><span class="muted">Reward:</span> ${rewardTxt}${save.cleared[enc.id] ? ' <span class="pill">Cleared</span>' : ''}</div>
-      ${enc.fixedDeck ? '<div class="brief-foot muted">This simulation uses a standard training deck.</div>' : `<div class="brief-foot ${deckOk ? '' : 'warn'}"><span class="muted">Your deck:</span> ${save.deck.length}/${size} cards${save.power && !enc.noPower ? ` · Power: ${esc(HEROPOWERS[save.power].name)}` : ''}${deckOk ? '' : ' (fix it in the Hangar)'}</div>`}
+      ${enc.fixedDeck ? '<div class="brief-foot muted">This simulation uses a standard training deck.</div>' : briefDeckHTML(save, enc, size, deckOk, tunedOn)}
     </div>
     <div class="m-actions"><button class="btn ghost" data-a="back">Back</button>${enc.fixedDeck ? '' : '<button class="btn" data-a="hangar">Hangar</button>'}<button class="btn primary" data-a="go" ${deckOk ? '' : 'disabled'}>Launch</button></div>`, 'brief-modal');
-  m.onclick = ev => {
-    const a = ev.target.dataset.a; if (!a) return;
-    if (a === 'back') closeModal();
-    if (a === 'hangar') { closeModal(); openHangar(() => { openMap(); openBriefing(enc); }); }
-    if (a === 'go') { SFX.init(); teach.forEach(k => { if (!save.codex.includes(k)) save.codex.push(k); }); persist(); startBattle(enc); }
+  m.onchange = ev => {
+    const t = ev.target;
+    if (t.matches('[data-brief-deck]')) { if (switchDeck(save, +t.value, size)) toast('That deck was short of cards, so it was topped up.'); persist(); Brief.result = null; Brief.use = false; openBriefing(enc); }
+    if (t.matches('[data-tune-use]')) { Brief.use = t.checked; openBriefing(enc); }
   };
+  m.onclick = ev => {
+    const a = ev.target.closest('[data-a]') && ev.target.closest('[data-a]').dataset.a; if (!a) return;
+    if (a === 'back') { if (Brief.cancel) Brief.cancel(); Brief.run = null; Brief.cancel = null; closeModal(); }
+    if (a === 'hangar') { if (Brief.cancel) Brief.cancel(); Brief.run = null; Brief.id = null; closeModal(); openHangar(() => { openMap(); openBriefing(enc); }); }
+    if (a === 'tune') {
+      SFX.init(); Brief.run = { done: 0, total: 1 }; Brief.result = null; openBriefing(enc);
+      Brief.cancel = tuneDeck(save, enc, (done, total) => {
+        Brief.run = { done, total };
+        const bar = $('#tune-bar'); if (bar) { bar.style.width = (done / total * 100).toFixed(0) + '%'; $('#tune-n').textContent = `${done} of ${total} simulated battles`; }
+      }, res => { Brief.run = null; Brief.cancel = null; Brief.result = res; Brief.use = res.best.label !== 'Your deck'; if (Brief.id === enc.id && !$('#modal').hidden) openBriefing(enc); });
+    }
+    if (a === 'tune-stop') { if (Brief.cancel) Brief.cancel(); Brief.run = null; Brief.cancel = null; openBriefing(enc); }
+    if (a === 'tune-save' || a === 'tune-replace') {
+      const best = Brief.result.best.deck;
+      if (a === 'tune-save') addDeck(save, enc.name, best, size);
+      else { save.deck = best.slice(); syncDecks(save); }
+      persist(); toast(a === 'tune-save' ? `Saved as a new deck: ${esc(activeDeck(save).name)}.` : `Updated ${esc(activeDeck(save).name)} with the tuned deck.`);
+      Brief.result = null; Brief.use = false; openBriefing(enc);
+    }
+    if (a === 'go') {
+      SFX.init(); teach.forEach(k => { if (!save.codex.includes(k)) save.codex.push(k); });
+      UI.deckOverride = tunedOn ? { id: enc.id, deck: Brief.result.best.deck.slice() } : null;
+      if (tunedOn) save.stats.tuned = (save.stats.tuned || 0) + 1;
+      persist(); startBattle(enc);
+    }
+  };
+}
+
+// Briefing: which deck you're taking, and the optional mission-tuned deck.
+function briefDeckHTML(save, enc, size, deckOk, tunedOn) {
+  const decks = save.decks, cur = activeDeck(save);
+  const pick = decks.length > 1
+    ? `<select class="brief-deck" data-brief-deck aria-label="Deck for this battle">${decks.map((d, i) => `<option value="${i}" ${i === save.activeDeck ? 'selected' : ''}>${esc(d.name)}</option>`).join('')}</select>`
+    : `<b>${esc(cur.name)}</b>`;
+  const pw = save.power && !enc.noPower ? ` · Power: ${esc(HEROPOWERS[save.power].name)}` : '';
+  const line = tunedOn
+    ? `<div class="brief-foot"><span class="muted">Deck:</span> <b>Mission-tuned deck</b> · ${size} cards${pw} <span class="pill">Assist</span></div>`
+    : `<div class="brief-foot ${deckOk ? '' : 'warn'}"><span class="muted">Deck:</span> ${pick} ${save.deck.length}/${size} cards${pw}${deckOk ? '' : ' (fix it in the Hangar)'}</div>`;
+  let body;
+  if (Brief.run) {
+    const pc = Brief.run.done / Brief.run.total * 100;
+    body = `<div class="tune-prog"><i id="tune-bar" style="width:${pc.toFixed(0)}%"></i></div>
+      <div class="tune-row"><span class="muted small" id="tune-n">${Brief.run.done} of ${Brief.run.total} simulated battles</span><button class="btn small ghost" data-a="tune-stop">Cancel</button></div>`;
+  } else if (Brief.result) {
+    const r = Brief.result, pct = c => Math.round(c.wins / Math.max(1, c.games) * 100) + '%';
+    if (r.best.label === 'Your deck') {
+      body = `<p>Your current deck did best in simulated battles against ${esc(enc.enemy.name)} (won ${pct(r.best)}). No changes needed.</p>`;
+    } else {
+      const dd = deckDiff(save.deck, r.best.deck), n = dd.add.reduce((a, x) => a + x.n, 0);
+      const chip = (x, sign) => `<span class="chip ${sign === '+' ? 'add' : 'rem'}" data-card="${x.id}">${sign}${x.n > 1 ? x.n + ' ' : ''}${esc(D(x.id).name)}</span>`;
+      const room = save.decks.length < deckSlots(save);
+      body = `<p>Simulated battles against ${esc(enc.enemy.name)}: <b>${esc(cur.name)}</b> won ${r.base ? pct(r.base) : 'n/a'}, the tuned deck won <b>${pct(r.best)}</b>.</p>
+        <details class="tune-diff"><summary>${n} card${n === 1 ? '' : 's'} swapped</summary><div class="chips">${dd.add.map(x => chip(x, '+')).join(' ')} ${dd.rem.map(x => chip(x, '−')).join(' ')}</div></details>
+        <label class="tune-use"><input type="checkbox" data-tune-use ${Brief.use ? 'checked' : ''}> Use the tuned deck for this mission</label>
+        <div class="tune-row">${room ? '<button class="btn small" data-a="tune-save">Save as a new deck</button>' : `<button class="btn small" data-a="tune-replace">Replace ${esc(cur.name)} with it</button>`}<span class="muted small">Win rates are rough: the simulations use an AI pilot.</span></div>`;
+    }
+  } else {
+    body = `<p class="muted small">Builds a deck from your collection with the best chance against this enemy, by playing quick simulated battles. Using it makes the mission easier.</p>
+      <button class="btn small" data-a="tune">Build a tuned deck</button>`;
+  }
+  return line + `<div class="tune"><div class="tune-h"><b>Mission-tuned deck</b> <span class="pill">Assist</span></div>${body}</div>`;
 }
 
 // ============================================================================
@@ -1039,6 +1106,7 @@ function openHangar(back) {
 
 function renderHangar() {
   const save = App.save, size = deckSizeFor(save);
+  ensureDecks(save);
   const inDeck = {}; save.deck.forEach(id => inDeck[id] = (inDeck[id] || 0) + 1);
   if (!economyOpen(save)) Hangar.mode = 'deck';
   const craft = Hangar.mode === 'craft';
@@ -1074,14 +1142,15 @@ function renderHangar() {
           <input id="h-q" type="search" placeholder="Search cards" value="${esc(Hangar.q)}" aria-label="Search cards"></div>
         <div class="coll-grid">${grid}</div>
       </section>
-      <button class="deck-fab" id="h-jump" aria-label="Show your deck">Deck <b>${save.deck.length}/${size}</b></button>
+      <button class="deck-fab" id="h-jump" aria-label="Show your deck">${esc(activeDeck(save).name)} <b>${save.deck.length}/${size}</b></button>
       <aside class="deckpanel">
-        <div class="dp-head"><h3>Deck</h3><div class="dp-count ${save.deck.length === size ? 'ok' : 'bad'}"><b>${save.deck.length}</b>/${size}</div></div>
+        ${deckBarHTML(save)}
+        <div class="dp-head"><h3>Cards</h3><div class="dp-count ${save.deck.length === size ? 'ok' : 'bad'}"><b>${save.deck.length}</b>/${size}</div></div>
         <div class="curve">${curve.map((n, i) => `<div class="bar"><i style="height:${(n / cmax) * 100}%"></i><span>${i >= 7 ? '7+' : i}</span><em>${n || ''}</em></div>`).join('')}</div>
         <div class="muted small">${types.unit} units · ${types.spell} protocols${types.gear ? ` · ${types.gear} gear` : ''}${types.trap ? ` · ${types.trap} traps` : ''}</div>
         <div class="deck-list">${rows || '<p class="muted">Empty deck.</p>'}</div>
         <div class="dp-btns"><button class="btn small" id="h-auto">Auto-fill</button><button class="btn small ghost" id="h-clear">Clear</button></div>
-        ${loadoutsHTML(save)}
+        ${signatureHTML(save)}
         <h3>Commander Power</h3><div class="powers">${powers}</div>
       </aside>
     </div></div>`;
@@ -1090,9 +1159,17 @@ function renderHangar() {
     if (cmdBarClick(e, Hangar.back)) return;
     const t = e.target;
     const add = t.closest('[data-add]'), rm = t.closest('[data-rm]'), f = t.closest('[data-f]'), c = t.closest('[data-c]'), pw = t.closest('[data-pw]');
-    const cr = t.closest('[data-craft]'), md = t.closest('[data-mode]'), lo = t.closest('[data-lo]'), los = t.closest('[data-lo-save]');
-    if (los) { const i = +los.dataset.loSave; save.loadouts = save.loadouts || []; save.loadouts[i] = { deck: save.deck.slice(), power: save.power, name: 'Deck ' + (i + 1) }; persist(); toast(`Saved your current deck to slot ${i + 1}.`); renderHangar(); return; }
-    if (lo) { const L = (save.loadouts || [])[+lo.dataset.lo]; if (L) { const own = {}; save.deck = L.deck.filter(id => { own[id] = (own[id] || 0) + 1; return own[id] <= (save.coll[id] || 0); }).slice(0, size); if (L.power && save.powers.includes(L.power)) save.power = L.power; if (save.deck.length < size) autoFillDeck(save, size); persist(); SFX.click(); toast(`Loaded ${esc(L.name)}.`); renderHangar(); } return; }
+    const cr = t.closest('[data-craft]'), md = t.closest('[data-mode]'), dk = t.closest('[data-dk]');
+    if (!t.closest('[data-dk-del]')) Brief.delArm = false;
+    if (dk) { const i = +dk.dataset.dk; if (i !== save.activeDeck) { const short = switchDeck(save, i, size); persist(); SFX.click(); toast(`Switched to ${esc(activeDeck(save).name)}.${short ? ' It was short of cards, so it was topped up.' : ''}`); } renderHangar(); return; }
+    if (t.closest('[data-dk-new]')) { const tmp = { coll: save.coll, deck: [] }; autoFillDeck(tmp, size); if (addDeck(save, 'New deck', tmp.deck, size)) { persist(); SFX.click(); toast('New deck created from your best cards. Rename it below.'); } renderHangar(); return; }
+    if (t.closest('[data-dk-dup]')) { if (addDeck(save, activeDeck(save).name + ' copy', save.deck, size)) { persist(); SFX.click(); toast('Deck copied. You are now editing the copy.'); } renderHangar(); return; }
+    if (t.closest('[data-dk-del]')) {
+      if (!Brief.delArm) { Brief.delArm = true; renderHangar(); return; }
+      const name = activeDeck(save).name; Brief.delArm = false;
+      if (deleteDeck(save, save.activeDeck, size)) { persist(); toast(`Deleted ${esc(name)}.`); }
+      renderHangar(); return;
+    }
     if (md) { Hangar.mode = md.dataset.mode; Hangar.filter = 'all'; renderHangar(); return; }
     if (cr) { craftDialog(cr.dataset.craft, renderHangar); return; }
     if (t.id === 'h-shop') { openShop(Hangar.back); return; } // Done in the Depot returns to where the Hangar was opened from
@@ -1115,20 +1192,33 @@ function renderHangar() {
       Hangar.back();
     }
   };
+  const dn = $('#dk-name');
+  if (dn) {
+    dn.onchange = () => { renameDeck(save, save.activeDeck, dn.value); persist(); renderHangar(); };
+    dn.onkeydown = ev => { if (ev.key === 'Enter') dn.blur(); };
+  }
   const q = $('#h-q');
   q.oninput = () => { Hangar.q = q.value; const pos = q.selectionStart; renderHangar(); const q2 = $('#h-q'); q2.focus(); q2.setSelectionRange(pos, pos); };
 }
 
-function loadoutsHTML(save) {
-  const n = loadoutSlots(save), sig = stationLv(save, 'armory') >= 2;
-  if (!n) return '';
-  const L = save.loadouts || [];
-  const slots = Array.from({ length: n }, (_, i) => L[i]
-    ? `<div class="lo-wrap"><button class="lo" data-lo="${i}" title="Load this deck"><b>${esc(L[i].name)}</b><span>${L[i].deck.length} cards · load</span></button><button class="lo-save" data-lo-save="${i}" title="Overwrite with your current deck">Save here</button></div>`
-    : `<button class="lo empty" data-lo-save="${i}"><b>Empty slot</b><span>Save current deck</span></button>`).join('');
+// The deck switcher at the top of the Hangar's deck panel.
+function deckBarHTML(save) {
+  const decks = save.decks, slots = deckSlots(save), cur = save.activeDeck, room = decks.length < slots;
+  const tabs = decks.map((d, i) => `<button class="dk-tab ${i === cur ? 'on' : ''}" data-dk="${i}" ${i === cur ? 'aria-current="true"' : ''} title="${i === cur ? 'You are editing this deck' : 'Switch to this deck'}"><span>${esc(d.name)}</span>${i === cur ? '<i>Editing</i>' : ''}</button>`).join('');
+  const hint = slots < 3 && economyOpen(save) ? '<p class="muted small">Repair the Armory at Anchorage to keep up to 3 decks.</p>' : '';
+  return `<div class="dk-bar">
+    <div class="dk-h"><h3>Your decks</h3>${slots > 1 ? `<span class="muted small">${decks.length} of ${slots} slots</span>` : ''}</div>
+    ${slots > 1 ? `<div class="dk-tabs">${tabs}${room ? '<button class="dk-tab add" data-dk-new>+ New deck</button>' : ''}</div>` : ''}
+    <label class="dk-name"><span class="muted small">Deck name</span><input id="dk-name" value="${esc(decks[cur].name)}" maxlength="${DECK_NAME_MAX}" autocomplete="off"></label>
+    <div class="dk-foot"><span class="dk-saved">${ico('check')} Changes save automatically</span>
+      <span class="dk-acts">${room ? '<button class="linkbtn" data-dk-dup>Duplicate</button>' : ''}${decks.length > 1 ? `<button class="linkbtn ${Brief.delArm ? 'danger' : ''}" data-dk-del>${Brief.delArm ? 'Tap again to delete' : 'Delete'}</button>` : ''}</span></div>
+    ${hint}</div>`;
+}
+
+function signatureHTML(save) {
+  const sig = stationLv(save, 'armory') >= 2;
   const sd = sig && save.signature ? D(save.signature) : null;
-  return `<h3>Loadouts</h3><div class="loadouts">${slots}</div>
-    ${sig ? `<h3>Signature card</h3>${sd ? `<div class="sig-slot"><span class="dr-icon" style='background-image:${artPlate(save.signature)}'></span><span><b>${esc(sd.name)}</b><br><span class="muted small">${save.deck.includes(save.signature) ? 'Always in your opening hand' + (stationLv(save, 'armory') >= 3 ? ', 1 cheaper' : '') + '.' : 'Not in this deck, so it has no effect.'}</span></span></div>` : `<p class="muted small">${TOUCH.on ? 'Press and hold' : 'Right-click'} a card in your deck and choose "Make signature card".</p>`}` : ''}`;
+  return `${sig ? `<h3>Signature card</h3>${sd ? `<div class="sig-slot"><span class="dr-icon" style='background-image:${artPlate(save.signature)}'></span><span><b>${esc(sd.name)}</b><br><span class="muted small">${save.deck.includes(save.signature) ? 'Always in your opening hand' + (stationLv(save, 'armory') >= 3 ? ', 1 cheaper' : '') + '.' : 'Not in this deck, so it has no effect.'}</span></span></div>` : `<p class="muted small">${TOUCH.on ? 'Press and hold' : 'Right-click'} a card in your deck and choose "Make signature card".</p>`}` : ''}`;
 }
 
 // ============================================================================
