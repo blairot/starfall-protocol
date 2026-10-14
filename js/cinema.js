@@ -56,7 +56,10 @@ const Cinema = (() => {
 
   // ---------------------------------------------------------------- visuals
   const hueOf = si => (SECTORS[si] || SECTORS[0]).hue;
-  const bdUrl = si => `url(${Scene.backdrop(si, hueOf(si))})`;
+  // the sector's painted vista when it exists, else the code-drawn backdrop
+  const bdUrl = si => extraArt('sector-' + (SECTORS[si] || SECTORS[0]).id) || `url(${Scene.backdrop(si, hueOf(si))})`;
+  // painted images get the "pt" treatment: a sharp layer plus a blurred fill, so phones in portrait don't crop them to a sliver
+  const bgDiv = (cls, img) => /^url\("/.test(img) ? `<div class="cin-bg pt ${cls}" style='--img:${img}'></div>` : `<div class="cin-bg ${cls}" style="background-image:${img}"></div>`;
   function portraitCss(p) {
     if (!p) return '';
     if (p.card) return artPlate(p.card);
@@ -83,13 +86,13 @@ const Cinema = (() => {
 
   function shotHTML(cid, cine, sh, si) {
     const sec = sh.sector != null ? sh.sector : cine.sector, cam = sh.cam || 'drift';
-    const bg = `<div class="cin-bg cam-${cam}" style="background-image:${bdUrl(sec)}"></div>`;
+    const bg = `${bgDiv(`cam-${cam}`, bdUrl(sec))}`;
     const ov = sh.title ? `<div class="cin-over">${sh.kicker ? `<div class="cin-kick">${esc(sh.kicker)}</div>` : ''}<div class="cin-big">${esc(sh.title)}</div></div>` : '';
-    if (sh.type === 'title') return `<div class="cin-bg cam-push dim" style="background-image:${bdUrl(sec)}"></div><div class="cin-titlecard"><div class="cin-kick">${esc(sh.kicker || cine.kicker || '')}</div><div class="cin-big">${esc(sh.title || cine.title)}</div></div>`;
+    if (sh.type === 'title') return `${bgDiv(`cam-push dim`, bdUrl(sec))}<div class="cin-titlecard"><div class="cin-kick">${esc(sh.kicker || cine.kicker || '')}</div><div class="cin-big">${esc(sh.title || cine.title)}</div></div>`;
     if (sh.type === 'space') return bg + ov;
     if (sh.type === 'ship') {
       const still = extraArt(`still-${cid}-${si}`);
-      if (still) return `<div class="cin-bg cam-${cam}" style='background-image:${still}'></div>` + ov;
+      if (still) return `${bgDiv(`cam-${cam}`, still)}` + ov;
       const kind = sh.ship || 'meridian', act = sh.action || 'pass';
       let ships = ship(kind, 'act-' + act);
       if (act === 'battle') ships = ship(kind, 'act-battle a') + ship(kind, 'act-battle b') + ship(kind === 'meridian' || kind === 'fleet' ? 'raiders' : 'fleet', 'act-battle c foe') + '<div class="cin-tracers"></div>';
@@ -99,18 +102,18 @@ const Cinema = (() => {
     if (sh.type === 'transmission') {
       const who = (sh.lines && sh.lines[0] && sh.lines[0].who) || sh.who;
       const c = CAST[who] || {}, p = portraitCss(sh.portrait || c.portrait);
-      return `<div class="cin-bg cam-drift dim" style="background-image:${bdUrl(sec)}"></div>
+      return `${bgDiv(`cam-drift dim`, bdUrl(sec))}
         <div class="cin-comm fx-${c.fx || 'none'}"><div class="cc-portrait" style='background-image:${p}'><i class="cc-scan"></i></div>
           <div class="cc-side"><div class="cc-h">Incoming transmission</div><div class="cc-name">${esc(c.name || who || '')}</div>
           <div class="cc-wave">${Array.from({ length: 28 }, (_, i) => `<i style="--d:${(i * 0.05).toFixed(2)}s"></i>`).join('')}</div></div></div>`;
     }
-    if (sh.type === 'card') return `<div class="cin-bg cin-card cam-${cam}" style='background-image:${artPlate(sh.card)}'></div><div class="cin-cardname">${esc(D(sh.card).name)}</div>` + ov;
+    if (sh.type === 'card') return `${bgDiv(`cin-card cam-${cam}`, artPlate(sh.card))}<div class="cin-cardname">${esc(D(sh.card).name)}</div>` + ov;
     if (sh.type === 'log') {
       const L = sh.log || {};
-      return `<div class="cin-bg cam-drift dim" style="background-image:${bdUrl(sec)}"></div><div class="cin-log"><div class="cl-h">${esc(L.header || 'Recovered record')}</div><div class="cl-body" data-type="${esc(L.body || '')}"></div></div>`;
+      return `${bgDiv(`cam-drift dim`, bdUrl(sec))}<div class="cin-log"><div class="cl-h">${esc(L.header || 'Recovered record')}</div><div class="cl-body" data-type="${esc(L.body || '')}"></div></div>`;
     }
     if (sh.type === 'impact') return bg + `<div class="cin-flash"></div><div class="cin-ring"></div><div class="cin-ring r2"></div>`;
-    if (sh.type === 'warp') return `<div class="cin-bg cam-push" style="background-image:${bdUrl(sec)}"></div><div class="cin-warp"></div>`;
+    if (sh.type === 'warp') return `${bgDiv(`cam-push`, bdUrl(sec))}<div class="cin-warp"></div>`;
     return bg;
   }
 
@@ -195,7 +198,16 @@ const Cinema = (() => {
   function shakeEl(el) { if (!Settings.get('shake') || REDUCED) return; try { el.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-8px,5px)' }, { transform: 'translate(7px,-4px)' }, { transform: 'translate(-4px,2px)' }, { transform: 'translate(0,0)' }], { duration: 500 }); } catch (e) { /* decoration */ } }
   function stop(silent) { if (run && !run.done) { const r = run; r.onDone = silent ? null : r.onDone; r.el.querySelector('.cin-skip').click(); } }
 
-  return { play, stop, plan, hashText, playing: () => !!run };
+  // dev preview (tools/preview.html#still-<cid>-<shot>): one shot, frozen, with its first subtitle
+  function still(cid, si) {
+    const cine = CINEMATICS[cid], sh = cine && cine.shots[si]; if (!sh) return;
+    const el = document.createElement('div'); el.id = 'cinema';
+    const ln = (sh.lines || [])[0], c = ln ? CAST[ln.who] || {} : {};
+    el.innerHTML = `<div class="cin-stage"><div class="cin-shot t-${sh.type} on" style="--dur:9s">${shotHTML(cid, cine, sh, si)}</div></div><div class="cin-bars"></div>
+      <div class="cin-sub ${ln ? 'show' : ''}"><b>${esc(c.name || (ln && ln.who) || '')}</b><span>${esc(ln ? ln.text : '')}</span></div><button class="cin-skip" type="button">Skip <span aria-hidden="true">›</span></button>`;
+    document.body.appendChild(el);
+  }
+  return { play, stop, plan, hashText, still, playing: () => !!run };
 })();
 
 // Which cutscene follows which boss, and the gate for the opening.

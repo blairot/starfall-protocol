@@ -70,6 +70,8 @@ if (view === 'records') { openMap(); openArchive('records'); }
 if (view === 'inspect') { openHangar(openMap); openInspect('okonkwo'); }
 if (view === 'binspect') setTimeout(() => { const m = UI.s.players[1].board[0]; openInspect(m.id, { uid: m.uid }); }, 300);
 if (view === 'packopen') { openShop(openMap); openPackFlow(3); setTimeout(() => { document.getElementById('po-pack').click(); setTimeout(() => document.querySelector('[data-a="all"]').click(), 900); }, 300); }
+if (view.startsWith('still-')) { const m = view.slice(6).match(/^(.*)-(\d+)$/); Cinema.still(m[1], +m[2]); }
+if (view.startsWith('cine-')) { SFX.init(); Cinema.play(view.slice(5), () => {}); }
 if (view === 'packfront') { openShop(openMap); openPackFlow(3); }
 if (view === 'packbacks') { openShop(openMap); openPackFlow(3); setTimeout(() => document.getElementById('po-pack').click(), 300); }
 if (view.startsWith('sheet')) {
