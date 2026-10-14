@@ -32,3 +32,4 @@ tools/voice/cache/
 
 # built playtest dashboard (publish target is the claude.ai artifact)
 dashboard.html
+dashboard-mock.html
