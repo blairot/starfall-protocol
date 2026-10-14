@@ -4,9 +4,9 @@
 // Network first, so a new build shows up as soon as you're online; the cache
 // is the fallback when you're not. Bump VERSION to drop old caches.
 // ============================================================================
-const VERSION = 'starfall-b35';
+const VERSION = 'starfall-b36';
 const SHELL = [
-  './', 'index.html', 'manifest.webmanifest', 'css/style.css', 'js/build.js', 'audio/silence.mp3',
+  './', 'index.html', 'manifest.webmanifest', 'css/style.css', 'js/build.js', 'js/playtest.js', 'audio/silence.mp3',
   'js/engine.js', 'js/audio.js', 'js/cards.js', 'js/ai.js', 'js/campaign.js', 'js/economy.js', 'js/station.js', 'js/decks.js', 'js/lore.js', 'js/cinematics.js', 'js/vo.js',
   'js/art.js', 'js/painted.js', 'js/illustrations.js', 'js/icons.js', 'js/ui.js', 'js/shop.js', 'js/inspect.js', 'js/cinema.js', 'js/scene.js', 'js/main.js',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png', 'icons/favicon-32.png',

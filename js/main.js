@@ -45,6 +45,9 @@ const Store = {
 };
 
 let persistTimer = null;
+// developer shortcut button (only when ?dev=1 was used on this device)
+document.addEventListener('DOMContentLoaded', () => { if (typeof devButtonHTML === 'function') document.body.insertAdjacentHTML('beforeend', devButtonHTML()); });
+
 function persist() {
   if (!App.save) return;
   if (typeof syncDecks === 'function') syncDecks(App.save);

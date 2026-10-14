@@ -29,3 +29,6 @@ art/BRIEF3.md
 
 # voice: per-line render cache (the shipped files are audio/vo/<cutscene>.mp3)
 tools/voice/cache/
+
+# built playtest dashboard (publish target is the claude.ai artifact)
+dashboard.html

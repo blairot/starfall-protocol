@@ -209,7 +209,8 @@ function startBattle(enc, resumeState) {
   const easy = UI.easyRetry === enc.id; UI.easyRetry = null; UI.easyRun = easy;
   const ov = UI.deckOverride && UI.deckOverride.id === enc.id ? { deck: UI.deckOverride.deck.slice() } : null;
   const s = newGame(buildBattle(easy || ov ? Object.assign({}, App.save, ov, easy ? { diff: 'cadet' } : null) : App.save, enc));
-  UI.s = s;
+  UI.s = s; UI.retreat = false;
+  Playtest.start(enc, enc.fixedDeck || (ov ? ov.deck : App.save.deck), { tuned: !!ov, easy });
   aiMulligan(s, 1);
   renderBattle();
   if (enc.noMulligan) { launchPlay(); return; }
@@ -654,7 +655,8 @@ function factionColor(id) { const f = FACTIONS[D(id).faction] || FACTIONS.neutra
 function countEvent(e) {
   if ((e.t === 'summon' || e.t === 'death') && e.id && !UI.names[e.uid]) UI.names[e.uid] = D(e.id).name;
   const t = UI.tally || (UI.tally = {}); const inc = (k, n) => { t[k] = (t[k] || 0) + (n == null ? 1 : n); };
-  if (e.t === 'play' && e.pi === 0) { const d = D(e.id); if (d.type === 'unit') inc('units'); if (d.type === 'spell' && !d.token) inc('spells'); inc('f_' + d.faction); }
+  if (e.t === 'play' || e.t === 'attack' || e.t === 'power') Playtest.act(e.t + ':' + (e.pi != null ? e.pi : '') + ':' + (e.id || e.from || ''));
+  if (e.t === 'play' && e.pi === 0) { Playtest.played(e.id); const d = D(e.id); if (d.type === 'unit') inc('units'); if (d.type === 'spell' && !d.token) inc('spells'); inc('f_' + d.faction); }
   else if (e.t === 'death' && e.pi === 1) inc('kills');
   else if (e.t === 'dmg' && e.uid === 'H1') inc('face', e.n);
   else if (e.t === 'power' && e.pi === 0) inc('powers');
@@ -738,7 +740,7 @@ function battleMenu() {
     if (a === 'resume') closeModal();
     if (a === 'codex') openArchive('manual', battleMenu);
     if (a === 'settings') showSettings(battleMenu);
-    if (a === 'concede') { closeModal(); UI.s.over = true; UI.s.winner = 1; endBattle(); }
+    if (a === 'concede') { closeModal(); UI.retreat = true; UI.s.over = true; UI.s.winner = 1; endBattle(); }
   };
 }
 
@@ -751,6 +753,7 @@ function endBattle() {
   if (UI.ended === s) return; UI.ended = s;
   Tip.hide();
   const won = s.winner === 0;
+  Playtest.end(s, won ? 'win' : UI.retreat ? 'retreat' : 'loss'); UI.retreat = false;
   const tally = Object.assign({}, UI.tally);
   // consecutive losses on the same mission, for the easier-retry offer
   save.streak = won ? null : { id: enc.id, n: save.streak && save.streak.id === enc.id ? save.streak.n + 1 : 1 };
@@ -764,7 +767,9 @@ function endBattle() {
       ${done.length ? `<div class="rewards">${contractLines(done)}</div>` : ''}
       ${(enc.tips || []).length ? `<div class="advisor inline"><div class="adv-h">Advisor</div><div class="adv-t">${pick(enc.tips)}</div></div>` : ''}
       ${offerEasy ? `<p class="muted">That's ${save.streak.n} losses in a row here. <b>Retry on Cadet</b> runs this one battle with weaker enemies and doesn't change your difficulty setting.</p>` : save.diff !== 'cadet' && save.stats.losses >= 3 ? '<p class="muted">Struggling? You can switch to Cadet difficulty in Settings at any time.</p>' : ''}
+      ${rateHTML()}
       <div class="m-actions"><button class="btn" data-a="map">Back to Star Map</button><button class="btn" data-a="hangar">Hangar</button>${offerEasy ? '<button class="btn" data-a="easy">Retry on Cadet</button>' : ''}<button class="btn primary" data-a="retry">Retry</button></div>`);
+    wireRate(m);
     m.onclick = e => { const a = e.target.dataset.a; if (!a) return; UI.s = null; if (a === 'easy') { UI.easyRetry = enc.id; startBattle(enc); } else if (a === 'retry') startBattle(enc); else if (a === 'hangar') { closeModal(); openHangar(() => openBriefing(enc)); } else { closeModal(); openMap(); } };
     return;
   }
@@ -813,8 +818,10 @@ function endBattle() {
     ${chips.length || done.length ? `<div class="rewards">${chips.join('')}${contractLines(done)}</div>` : ''}
     ${economyOpen(save) ? `<div class="wallet-line"><span>${ico('credits')} <b>${save.credits}</b> Credits</span><span>${ico('scrap')} <b>${save.scrap}</b> Scrap</span><span>${ico('alloy')} <b>${ensureStation(save).alloy}</b> Alloy</span>${unopened ? `<span>${ico('pack')} <b>${unopened}</b> unopened pack${unopened > 1 ? 's' : ''}</span>` : ''}</div>` : ''}
     ${bits.join('')}
+    ${rateHTML()}
     <div class="m-actions">${unopened ? `<button class="btn" data-a="open">Open packs (${unopened})</button>` : ''}<button class="btn" data-a="hangar">Hangar</button>${upgradesAvailable(save) ? `<button class="btn" data-a="station">Anchorage (${upgradesAvailable(save)} ready)</button>` : ''}<button class="btn primary" data-a="go">${enc.final ? 'Continue' : 'Star Map'}</button></div>`, 'wide');
   const cine = firstClear && CINE_AFTER[enc.id];
+  wireRate(m);
   m.onclick = e => {
     const a = e.target.dataset.a; if (!a) return; closeModal();
     if (cine) return Cinema.play(cine, () => afterVictory(a, enc));
@@ -1260,8 +1267,8 @@ function showSettings(back) {
     + (REDUCED ? '<p class="muted small">Your system asks for reduced motion, so animations are kept short.</p>' : '');
   const buildLine = typeof BUILD !== 'undefined' ? `<p class="muted small">Build ${BUILD.n} · ${BUILD.date}</p>` : '';
   if (tab === 'data') body = buildLine + (save ? `<p class="muted small">${Store.db ? 'Progress saves automatically to your account and this browser.' : 'Progress saves automatically in this browser. Copy a backup code to move it to another device.'}</p>
-    <div class="m-actions left"><button class="btn" data-a="export">Copy backup code</button><button class="btn" data-a="import">Restore from code</button><button class="btn danger" data-a="reset">Erase campaign</button></div><div id="set-extra"></div>`
-    : '<p class="muted">No campaign yet.</p><div class="m-actions left"><button class="btn" data-a="import">Restore from code</button></div><div id="set-extra"></div>');
+    <div class="m-actions left"><button class="btn" data-a="export">Copy backup code</button><button class="btn" data-a="import">Restore from code</button><button class="btn danger" data-a="reset">Erase campaign</button></div><div id="set-extra"></div>${playtestHTML()}`
+    : '<p class="muted">No campaign yet.</p><div class="m-actions left"><button class="btn" data-a="import">Restore from code</button></div><div id="set-extra"></div>' + playtestHTML());
   const tabs = [['audio', 'Audio'], ['gameplay', 'Gameplay'], ['display', 'Display'], ['data', 'Save Data']];
   const m = modal(`<h2>Settings</h2><div class="tabs" role="tablist">${tabs.map(([k, l]) => `<button role="tab" aria-selected="${tab === k}" class="${tab === k ? 'on' : ''}" data-tab="${k}">${l}</button>`).join('')}</div>
     <div class="set-body">${body}</div><div class="m-actions"><button class="btn primary" data-a="close">Done</button></div>`, 'settings-modal');
@@ -1275,6 +1282,7 @@ function showSettings(back) {
     if (t.dataset.seg) { Settings.set(t.dataset.seg, t.dataset.v); SFX.click(); return showSettings(back); }
     if (t.dataset.d) { save.diff = t.dataset.d; persist(); toast(`Difficulty: ${DIFFICULTY[save.diff].name}. Applies from your next battle.`); return showSettings(back); }
     const a = t.dataset.a;
+    if (a.startsWith('pt-')) return playtestClick(a, m);
     if (a === 'close') { closeModal(); if (back) back(); else if (App.screen === 'map') openMap(); else if (App.screen === 'title') openTitle(); }
     if (a === 'fullscreen') { try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); } catch (err) { toast('Fullscreen is not available here.'); } }
     if (a === 'export') {

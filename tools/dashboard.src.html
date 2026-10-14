@@ -1,0 +1,347 @@
+<title>Starfall Playtest Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=Titillium+Web:wght@400;600;700&family=Saira+Semi+Condensed:wght@500;600;700&display=swap">
+<style>
+/* Layout: one column of instrument panels under a fleet-console header; summary first, detail below. Single dark look, matching the game. */
+:root {
+  --bg: #070b11; --panel: #0e1621; --panel-2: #131e2c; --line: #23344a;
+  --fg: #e7eef7; --muted: #8a9bb0; --faint: #5a6b80;
+  --amber: #f2a93b; --cyan: #4fd2ec;
+  --ok: #5fd68a; --warn: #f2c14e; --bad: #ff7a6b;
+  --f-hero: "Michroma", "Titillium Web", system-ui, sans-serif;
+  --f-body: "Titillium Web", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-data: "Saira Semi Condensed", "Titillium Web", system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.5 var(--f-body); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 48px; display: grid; gap: 18px; }
+header.top { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 10px 20px; border-bottom: 1px solid var(--line); padding-bottom: 14px; }
+.eyebrow { font: 600 11px var(--f-data); letter-spacing: .24em; text-transform: uppercase; color: var(--amber); }
+h1 { margin: 2px 0 0; font: 400 clamp(20px, 3.4vw, 28px)/1.15 var(--f-hero); letter-spacing: .08em; text-transform: uppercase; text-wrap: balance; }
+h2 { margin: 0; font: 700 13px var(--f-data); letter-spacing: .2em; text-transform: uppercase; color: var(--cyan); }
+.store { font: 600 12px var(--f-data); letter-spacing: .08em; color: var(--muted); }
+.store b { color: var(--fg); }
+.panel { background: var(--panel); border: 1px solid var(--line); padding: 16px; display: grid; gap: 12px; min-width: 0;
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
+.panel-h { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 14px; }
+.hint { color: var(--muted); font-size: 13px; margin: 0; max-width: 70ch; }
+textarea { width: 100%; min-height: 76px; resize: vertical; font: 13px/1.4 ui-monospace, "Cascadia Mono", Consolas, monospace; color: var(--fg); background: var(--bg); border: 1px solid var(--line); padding: 10px; }
+textarea:focus, select:focus, button:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+button { font: 700 12px var(--f-data); letter-spacing: .14em; text-transform: uppercase; cursor: pointer; border: 1px solid var(--line); background: var(--panel-2); color: var(--fg); padding: 9px 14px; min-height: 38px; }
+button:hover { border-color: var(--cyan); }
+button.primary { background: var(--amber); color: #1b1100; border-color: var(--amber); }
+button.danger { color: var(--bad); }
+button.linky { background: none; border: 0; padding: 4px 0; min-height: 0; color: var(--muted); }
+button.linky:hover { color: var(--bad); }
+select, label.chk { font: 600 13px var(--f-data); color: var(--fg); }
+select { background: var(--bg); border: 1px solid var(--line); padding: 7px 8px; }
+label.chk { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+.msg { font-size: 13px; min-height: 1.4em; margin: 0; }
+.msg.ok { color: var(--ok); } .msg.bad { color: var(--bad); }
+.example { border: 1px dashed var(--warn); color: var(--warn); padding: 8px 12px; font-size: 13px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.tile { background: var(--panel-2); border: 1px solid var(--line); padding: 10px 12px; display: grid; gap: 2px; }
+.tile b { font: 700 26px/1.1 var(--f-data); font-variant-numeric: tabular-nums; }
+.tile span { font: 600 11px var(--f-data); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: 18px; }
+.tbl { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font: 14px var(--f-data); font-variant-numeric: tabular-nums; }
+th { text-align: left; font: 600 11px var(--f-data); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 6px 8px; border-bottom: 1px solid rgba(35, 52, 74, .6); vertical-align: top; }
+td.n, th.n { text-align: right; }
+tr.sub td { color: var(--muted); }
+.chip { display: inline-block; font: 700 10px var(--f-data); letter-spacing: .12em; text-transform: uppercase; padding: 2px 7px; border: 1px solid currentColor; white-space: nowrap; }
+.chip.ok { color: var(--ok); } .chip.warn { color: var(--warn); } .chip.bad { color: var(--bad); } .chip.na { color: var(--faint); }
+/* target band chart: band = target range, tick = actual */
+.band { position: relative; height: 14px; min-width: 120px; background: rgba(138, 155, 176, .12); }
+.band i { position: absolute; top: 0; bottom: 0; background: rgba(95, 214, 138, .22); border-left: 1px solid rgba(95, 214, 138, .6); border-right: 1px solid rgba(95, 214, 138, .6); }
+.band em { position: absolute; top: -3px; bottom: -3px; width: 3px; margin-left: -1px; background: var(--amber); }
+.feed { display: grid; gap: 8px; max-height: 420px; overflow-y: auto; }
+.item { background: var(--panel-2); border-left: 2px solid var(--line); padding: 8px 10px; display: grid; gap: 2px; min-width: 0; }
+.item.err { border-left-color: var(--bad); }
+.item .meta { font: 600 11px var(--f-data); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.item p { margin: 0; overflow-wrap: anywhere; }
+.item code { font: 12px ui-monospace, Consolas, monospace; color: var(--muted); overflow-wrap: anywhere; }
+.stars { color: var(--amber); letter-spacing: .1em; }
+.empty { color: var(--faint); font-size: 13px; }
+.confirm { display: inline-flex; gap: 8px; align-items: center; color: var(--bad); font-size: 13px; }
+@media (prefers-reduced-motion: no-preference) { button { transition: border-color .15s, background .15s; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div><div class="eyebrow">Starfall Protocol · playtest</div><h1>Playtest Console</h1></div>
+    <div class="store" id="store">Connecting to storage…</div>
+  </header>
+
+  <section class="panel" aria-labelledby="add-h">
+    <div class="panel-h"><h2 id="add-h">Add feedback</h2><span class="hint">Testers find their code in Settings, Save Data, Copy feedback code.</span></div>
+    <textarea id="codes" placeholder="Paste one or more feedback codes (they start with SF1.)" aria-label="Feedback codes"></textarea>
+    <div class="row"><button class="primary" id="add">Add feedback</button><p class="msg" id="msg" role="status"></p></div>
+  </section>
+
+  <div id="example" class="example" hidden>Showing example data so you can see the layout. It disappears when you add a real feedback code.</div>
+
+  <section class="panel" aria-labelledby="sum-h">
+    <div class="panel-h"><h2 id="sum-h">Overview</h2>
+      <div class="row"><label class="chk"><input type="checkbox" id="incdev"> Include dev battles</label>
+        <label class="chk">Builds <select id="build"></select></label></div></div>
+    <div class="tiles" id="tiles"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="tgt-h">
+    <div class="panel-h"><h2 id="tgt-h">Targets</h2><span class="hint">First-try win rate counts each tester's first attempt at each mission. Green band is the target; amber tick is the result.</span></div>
+    <div class="tbl"><table id="targets"></table></div>
+  </section>
+
+  <div class="grid2">
+    <section class="panel" aria-labelledby="sec-h"><div class="panel-h"><h2 id="sec-h">By sector</h2></div><div class="tbl"><table id="sectors"></table></div></section>
+    <section class="panel" aria-labelledby="tst-h"><div class="panel-h"><h2 id="tst-h">Testers</h2></div><div class="tbl"><table id="testers"></table></div></section>
+  </div>
+
+  <section class="panel" aria-labelledby="mis-h">
+    <div class="panel-h"><h2 id="mis-h">Missions</h2><span class="hint">Sorted by campaign order. Flags compare first-try win rate with the target for that mission type (5 or more first tries needed).</span></div>
+    <div class="tbl"><table id="missions"></table></div>
+  </section>
+
+  <div class="grid2">
+    <section class="panel" aria-labelledby="fb-h"><div class="panel-h"><h2 id="fb-h">Notes and ratings</h2></div><div class="feed" id="notes"></div></section>
+    <section class="panel" aria-labelledby="err-h"><div class="panel-h"><h2 id="err-h">Errors</h2></div><div class="feed" id="errors"></div></section>
+  </div>
+
+  <section class="panel" aria-labelledby="card-h">
+    <div class="panel-h"><h2 id="card-h">Cards</h2><span class="hint">How often players actually cast each card.</span></div>
+    <div class="grid2"><div class="tbl"><table id="topcards"></table></div><div class="tbl"><table id="coldcards"></table></div></div>
+  </section>
+</div>
+
+<script>
+'use strict';
+// Game data baked in by tools/make_dashboard.js
+const GAME = /*GAME_DATA*/null;
+const TARGETS = { normal: [70, 85], elite: [45, 65], boss: [35, 55], final: [20, 40] };
+const KIND_NAME = { normal: 'Normal missions', elite: 'Optional missions', boss: 'Sector bosses', final: 'Final boss' };
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const pct = (a, b) => b ? Math.round(a / b * 100) : null;
+const median = a => { if (!a.length) return null; const s = a.slice().sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+const ago = t => { const m = Math.round((Date.now() - t) / 60000); return m < 60 ? m + ' min ago' : m < 2880 ? Math.round(m / 60) + ' h ago' : Math.round(m / 1440) + ' days ago'; };
+const when = t => new Date(t).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+// ---------------------------------------------------------------- decoding feedback codes
+async function decode(code) {
+  code = code.trim();
+  const m = /^SF1(u?)\.([A-Za-z0-9_-]+)$/.exec(code);
+  if (!m) throw new Error('That is not a feedback code. Codes start with SF1.');
+  const b = m[2].replace(/-/g, '+').replace(/_/g, '/'), bin = Uint8Array.from(atob(b + '==='.slice((b.length + 3) % 4)), c => c.charCodeAt(0));
+  let json;
+  if (m[1]) json = new TextDecoder().decode(bin);
+  else json = await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
+  const p = JSON.parse(json);
+  if (!p || p.v !== 1 || !p.tester || !Array.isArray(p.battles)) throw new Error('The code was cut short or damaged. Ask the tester to copy it again.');
+  return p;
+}
+const splitCodes = text => (text.match(/SF1u?\.[A-Za-z0-9_-]+/g) || []);
+
+// ---------------------------------------------------------------- storage: artifact database, browser storage as fallback
+const Store = {
+  db: null, mode: 'local', subs: {},
+  async init() {
+    try { const c = window.claude && await window.claude.use('db'); if (c) { this.db = c; this.mode = 'db'; } } catch (e) { this.db = null; }
+    if (this.db) {
+      this.db.collection('submissions').onSnapshot(snap => {
+        const next = {}; snap.docs.forEach(d => { const v = d.data(); if (v && v.code) next[d.id] = v; });
+        this.subs = next; refresh();
+      }, () => setStore('Storage unavailable right now. Showing what this browser remembers.'));
+    } else {
+      try { this.subs = JSON.parse(localStorage.getItem('sf_console_subs') || '{}') || {}; } catch (e) { this.subs = {}; }
+    }
+  },
+  async put(p, code) {
+    const id = String(p.tester.id).replace(/[^a-z0-9]/gi, '').slice(0, 40) || 'unknown';
+    const prev = this.subs[id];
+    if (prev && prev.at >= p.at) return 'older';
+    const doc = { code, at: p.at, build: p.build, battles: p.battles.length, added: Date.now() };
+    if (this.db) await this.db.collection('submissions').doc(id).set(doc);
+    this.subs[id] = doc; this.saveLocal();
+    return prev ? 'updated' : 'new';
+  },
+  async remove(id) {
+    if (this.db) await this.db.collection('submissions').doc(id).delete();
+    delete this.subs[id]; this.saveLocal();
+  },
+  saveLocal() { if (this.db) return; try { localStorage.setItem('sf_console_subs', JSON.stringify(this.subs)); } catch (e) { /* storage blocked */ } },
+};
+function setStore(text) { $('#store').innerHTML = text; }
+
+// decoded payloads, cached by tester id + export time
+const decoded = {};
+async function payloads() {
+  const out = [];
+  for (const [id, s] of Object.entries(Store.subs)) {
+    const k = id + ':' + s.at;
+    if (!decoded[k]) { try { decoded[k] = await decode(s.code); } catch (e) { continue; } }
+    out.push(Object.assign({ _id: id }, decoded[k]));
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------- example data (shown only while nothing has been added)
+function exampleData() {
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const names = ['Example tester A', 'Example tester B', 'Example tester C'];
+  return names.map((name, ti) => {
+    const reach = [2, 3, 1][ti], battles = [];
+    let t = Date.now() - 6 * 864e5;
+    GAME.missions.filter(m => m.sector <= reach).forEach(m => {
+      const p = { normal: .78, elite: .55, boss: .45, final: .3 }[m.kind] - (ti === 2 ? .15 : 0);
+      for (let retry = 0; retry < 4; retry++) {
+        const win = rnd() < p; t += 9e5;
+        battles.push({ m: m.id, r: win ? 'win' : 'loss', retry, first: true, d: 'officer', min: Math.round((7 + rnd() * 9) * 10) / 10, turns: 7 + Math.round(rnd() * 8), hp: [win ? Math.round(rnd() * 20) + 1 : 0, win ? 0 : Math.round(rnd() * 20) + 1], b: 35, t, played: { [GAME.cardIds[Math.floor(rnd() * 40)]]: 2, [GAME.cardIds[Math.floor(rnd() * 60)]]: 1 }, rate: rnd() < .3 ? 3 + Math.round(rnd() * 2) : undefined, note: rnd() < .06 ? 'Example note: the enemy turn felt long here.' : undefined });
+        if (win) break;
+      }
+    });
+    return { _id: 'ex' + ti, example: true, v: 1, at: Date.now() - ti * 36e5, build: 35, tester: { id: 'ex' + ti, name }, device: { touch: ti !== 1, standalone: ti === 0, w: ti === 1 ? 1440 : 390 },
+      campaign: { diff: 'officer', cleared: battles.filter(b => b.r === 'win').length, sector: reach + 1, playMin: Math.round(battles.reduce((a, b) => a + b.min, 0) * 1.25) }, battles,
+      errors: ti === 2 ? [{ t: Date.now() - 2 * 864e5, b: 35, m: '2-3', screen: 'battle', msg: 'Example error: cannot read properties of undefined', stack: '', last: ['play:0:marine', 'attack:1:'] }] : [], notes: ti === 0 ? [{ t: Date.now() - 864e5, b: 35, screen: 'map', text: 'Example note: I did not realise I could repair Anchorage until Sector 3.' }] : [], decks: {} };
+  });
+}
+
+// ---------------------------------------------------------------- rendering
+const M = {}; let CARD = {};
+function kindOf(id) { return (M[id] || {}).kind || 'normal'; }
+function status(v, kind, n) {
+  if (v == null || n < 5) return '<span class="chip na">Not enough data</span>';
+  const [lo, hi] = TARGETS[kind];
+  return v > hi ? '<span class="chip warn">Too easy</span>' : v < lo ? '<span class="chip bad">Too hard</span>' : '<span class="chip ok">On target</span>';
+}
+function bandHTML(v, kind) {
+  const [lo, hi] = TARGETS[kind];
+  return `<div class="band" aria-label="Target ${lo} to ${hi} percent${v == null ? '' : ', result ' + v + ' percent'}"><i style="left:${lo}%;width:${hi - lo}%"></i>${v == null ? '' : `<em style="left:${v}%"></em>`}</div>`;
+}
+
+async function refresh() {
+  const real = await payloads(), useEx = real.length === 0, all = useEx ? exampleData() : real;
+  $('#example').hidden = !useEx;
+  const n = Object.keys(Store.subs).length;
+  setStore(Store.mode === 'db' ? `Saved to this console's database · <b>${n}</b> tester${n === 1 ? '' : 's'}` : `Saved in this browser only · <b>${n}</b> tester${n === 1 ? '' : 's'}`);
+
+  // build filter options
+  const builds = [...new Set(all.flatMap(p => p.battles.map(b => b.b)))].filter(Boolean).sort((a, b) => b - a);
+  const sel = $('#build'), cur = sel.value;
+  sel.innerHTML = `<option value="0">All</option>` + builds.map(b => `<option value="${b}">${b} and newer</option>`).join('');
+  if ([...sel.options].some(o => o.value === cur)) sel.value = cur;
+  const minB = +sel.value || 0, incDev = $('#incdev').checked;
+  const keep = b => (incDev || !b.dev) && (b.b || 0) >= minB;
+
+  const rows = []; all.forEach(p => p.battles.filter(keep).forEach(b => rows.push(Object.assign({ who: p._id }, b))));
+  const firsts = rows.filter(b => b.first && b.retry === 0);
+
+  // overview tiles
+  const minutes = rows.reduce((a, b) => a + (b.min || 0), 0);
+  const errs = all.reduce((a, p) => a + (p.errors || []).length, 0);
+  const academy = all.filter(p => p.battles.some(b => b.m === GAME.graduation && b.r === 'win')).length;
+  const lenH = median(all.map(p => (p.campaign && p.campaign.playMin) || 0).filter(Boolean)) ;
+  $('#tiles').innerHTML = [
+    [all.length, 'Testers'], [rows.length, 'Battles'], [(minutes / 60).toFixed(1), 'Hours in battle'],
+    [median(rows.map(b => b.min).filter(x => x != null)) ?? '–', 'Median minutes per battle'],
+    [all.length ? academy + '/' + all.length : '–', 'Finished the Academy'], [errs, 'Errors caught'],
+  ].map(([v, l]) => `<div class="tile"><b>${v}</b><span>${l}</span></div>`).join('');
+
+  // targets
+  const tRows = Object.keys(TARGETS).map(k => {
+    const f = firsts.filter(b => kindOf(b.m) === k), v = pct(f.filter(b => b.r === 'win').length, f.length);
+    return `<tr><td>${KIND_NAME[k]}</td><td class="n">${v == null ? '–' : v + '%'}</td><td class="n">${f.length}</td><td>${TARGETS[k][0]}–${TARGETS[k][1]}%</td><td style="min-width:140px">${bandHTML(v, k)}</td><td>${status(v, k, f.length)}</td></tr>`;
+  });
+  const medMin = median(rows.map(b => b.min).filter(x => x != null));
+  tRows.push(`<tr><td>Minutes per battle (median)</td><td class="n">${medMin ?? '–'}</td><td class="n">${rows.length}</td><td>8–14</td><td></td><td>${medMin == null ? '<span class="chip na">No data</span>' : medMin < 8 ? '<span class="chip warn">Short</span>' : medMin > 14 ? '<span class="chip warn">Long</span>' : '<span class="chip ok">On target</span>'}</td></tr>`);
+  const doneLen = all.filter(p => p.battles.some(b => (M[b.m] || {}).kind === 'final' && b.r === 'win')).map(p => (p.campaign && p.campaign.playMin) || 0).filter(Boolean);
+  const lenShow = lenH != null ? (lenH / 60).toFixed(1) + ' h' : '–';
+  tRows.push(`<tr><td>Time played (median${doneLen.length ? ', finished campaigns: ' + (median(doneLen) / 60).toFixed(1) + ' h' : ', nobody has finished yet'})</td><td class="n">${lenShow}</td><td class="n">${all.length}</td><td>10–20 h to finish</td><td></td><td>${doneLen.length < 3 ? '<span class="chip na">Not enough data</span>' : median(doneLen) < 600 ? '<span class="chip warn">Short</span>' : median(doneLen) > 1200 ? '<span class="chip warn">Long</span>' : '<span class="chip ok">On target</span>'}</td></tr>`);
+  const acPct = pct(academy, all.length);
+  tRows.push(`<tr><td>Academy completion</td><td class="n">${acPct == null ? '–' : acPct + '%'}</td><td class="n">${all.length}</td><td>90% or more</td><td></td><td>${acPct == null ? '<span class="chip na">No data</span>' : acPct >= 90 ? '<span class="chip ok">On target</span>' : '<span class="chip bad">Below target</span>'}</td></tr>`);
+  $('#targets').innerHTML = `<thead><tr><th>Measure</th><th class="n">Result</th><th class="n">Sample</th><th>Target</th><th>Range</th><th>Status</th></tr></thead><tbody>${tRows.join('')}</tbody>`;
+
+  // by sector
+  $('#sectors').innerHTML = `<thead><tr><th>Sector</th><th class="n">Battles</th><th class="n">First-try wins</th><th class="n">Median min</th><th class="n">Rating</th></tr></thead><tbody>` + GAME.sectors.map((name, si) => {
+    const r = rows.filter(b => (M[b.m] || {}).sector === si); if (!r.length) return '';
+    const f = r.filter(b => b.first && b.retry === 0), rated = r.filter(b => b.rate);
+    return `<tr><td>${si + 1}. ${esc(name)}</td><td class="n">${r.length}</td><td class="n">${f.length ? pct(f.filter(b => b.r === 'win').length, f.length) + '%' : '–'}</td><td class="n">${median(r.map(b => b.min)) ?? '–'}</td><td class="n">${rated.length ? (rated.reduce((a, b) => a + b.rate, 0) / rated.length).toFixed(1) : '–'}</td></tr>`;
+  }).join('') + '</tbody>';
+
+  // testers
+  $('#testers').innerHTML = `<thead><tr><th>Tester</th><th>Device</th><th class="n">Sector</th><th class="n">Played</th><th>Sent</th><th></th></tr></thead><tbody>` + all.map(p => {
+    const dev = p.device ? (p.device.touch ? (p.device.standalone ? 'Phone app' : 'Phone browser') : 'Desktop') : '–';
+    const c = p.campaign || {};
+    return `<tr><td>${esc(p.tester.name || 'Unnamed ' + p._id.slice(0, 4))}</td><td>${dev}</td><td class="n">${c.sector ?? '–'}</td><td class="n">${c.playMin != null ? (c.playMin / 60).toFixed(1) + ' h' : '–'}</td><td>${ago(p.at)} · build ${p.build}</td>
+      <td>${p.example ? '' : `<span data-rm-wrap="${esc(p._id)}"><button class="linky" data-rm="${esc(p._id)}">Remove</button></span>`}</td></tr>`;
+  }).join('') + '</tbody>';
+
+  // missions
+  $('#missions').innerHTML = `<thead><tr><th>Mission</th><th>Type</th><th class="n">Battles</th><th class="n">Players</th><th class="n">First-try wins</th><th class="n">Avg tries to win</th><th class="n">Median min</th><th class="n">Rating</th><th>Flag</th></tr></thead><tbody>` + GAME.missions.map(m => {
+    const r = rows.filter(b => b.m === m.id); if (!r.length) return '';
+    const f = r.filter(b => b.first && b.retry === 0), fv = pct(f.filter(b => b.r === 'win').length, f.length);
+    const wins = r.filter(b => b.r === 'win' && b.first), tries = wins.length ? (wins.reduce((a, b) => a + b.retry + 1, 0) / wins.length).toFixed(1) : '–';
+    const rated = r.filter(b => b.rate), players = new Set(r.map(b => b.who)).size;
+    return `<tr><td>${esc(m.id)} · ${esc(m.name)}</td><td>${m.kind === 'normal' ? 'Mission' : m.kind === 'elite' ? 'Optional' : m.kind === 'final' ? 'Final boss' : 'Boss'}</td><td class="n">${r.length}</td><td class="n">${players}</td><td class="n">${fv == null ? '–' : fv + '%'}</td><td class="n">${tries}</td><td class="n">${median(r.map(b => b.min)) ?? '–'}</td><td class="n">${rated.length ? (rated.reduce((a, b) => a + b.rate, 0) / rated.length).toFixed(1) : '–'}</td><td>${status(fv, m.kind, f.length)}</td></tr>`;
+  }).join('') + '</tbody>';
+
+  // notes and ratings
+  const nameOf = id => { const p = all.find(x => x._id === id); return p ? (p.tester.name || 'Unnamed ' + id.slice(0, 4)) : id; };
+  const feed = [];
+  all.forEach(p => (p.notes || []).forEach(nt => feed.push({ t: nt.t, html: `<div class="meta">${esc(nameOf(p._id))} · ${when(nt.t)} · ${esc(nt.screen || '')}</div><p>${esc(nt.text)}</p>` })));
+  rows.filter(b => b.note || b.rate).forEach(b => feed.push({ t: b.t, html: `<div class="meta">${esc(nameOf(b.who))} · ${when(b.t)} · ${esc(b.m)} ${esc((M[b.m] || {}).name || '')} · ${b.r}</div>${b.rate ? `<p class="stars" aria-label="${b.rate} of 5">${'★'.repeat(b.rate)}${'☆'.repeat(5 - b.rate)}</p>` : ''}${b.note ? `<p>${esc(b.note)}</p>` : ''}` }));
+  feed.sort((a, b) => b.t - a.t);
+  $('#notes').innerHTML = feed.slice(0, 120).map(f => `<div class="item">${f.html}</div>`).join('') || '<p class="empty">No notes or ratings yet. Testers rate a battle on the result screen, or add a note in Settings.</p>';
+
+  // errors grouped by message
+  const groups = {};
+  all.forEach(p => (p.errors || []).forEach(e => { const k = e.msg; (groups[k] = groups[k] || { msg: e.msg, n: 0, who: new Set(), last: e }).n++; groups[k].who.add(p._id); if (e.t > groups[k].last.t) groups[k].last = e; }));
+  $('#errors').innerHTML = Object.values(groups).sort((a, b) => b.n - a.n).map(g => `<div class="item err"><div class="meta">${g.n}× · ${g.who.size} tester${g.who.size > 1 ? 's' : ''} · last ${when(g.last.t)} · build ${g.last.b} · ${esc(g.last.screen || '')} ${esc(g.last.m || '')}</div><p>${esc(g.msg)}</p>${g.last.stack ? `<code>${esc(g.last.stack)}</code>` : ''}${g.last.last && g.last.last.length ? `<code>Last actions: ${esc(g.last.last.join(' → '))}</code>` : ''}</div>`).join('') || '<p class="empty">No errors caught. Script errors on testers\' devices appear here.</p>';
+
+  // cards
+  const plays = {}; rows.forEach(b => Object.entries(b.played || {}).forEach(([id, n]) => plays[id] = (plays[id] || 0) + n));
+  const top = Object.entries(plays).sort((a, b) => b[1] - a[1]).slice(0, 15);
+  $('#topcards').innerHTML = `<thead><tr><th>Most played</th><th class="n">Times</th></tr></thead><tbody>${top.map(([id, n]) => `<tr><td>${esc(CARD[id] || id)}</td><td class="n">${n}</td></tr>`).join('') || '<tr><td class="empty" colspan="2">No cards played yet.</td></tr>'}</tbody>`;
+  const cold = GAME.cardIds.filter(id => !plays[id]);
+  $('#coldcards').innerHTML = `<thead><tr><th>Never played (${cold.length} of ${GAME.cardIds.length})</th></tr></thead><tbody><tr><td>${cold.map(id => esc(CARD[id] || id)).join(', ') || 'Every card has been played at least once.'}</td></tr></tbody>`;
+}
+
+// ---------------------------------------------------------------- events
+$('#add').addEventListener('click', async () => {
+  const msg = $('#msg'), codes = splitCodes($('#codes').value);
+  msg.className = 'msg';
+  if (!codes.length) { msg.className = 'msg bad'; msg.textContent = 'Paste a feedback code first. Codes start with SF1.'; return; }
+  let added = 0, updated = 0, older = 0, bad = 0, lastErr = '';
+  for (const c of codes) {
+    try { const p = await decode(c); const r = await Store.put(p, c); if (r === 'new') added++; else if (r === 'updated') updated++; else older++; }
+    catch (e) { bad++; lastErr = e.message || 'That code could not be read.'; }
+  }
+  const parts = [];
+  if (added) parts.push(`Added ${added} tester${added > 1 ? 's' : ''}`);
+  if (updated) parts.push(`updated ${updated}`);
+  if (older) parts.push(`${older} older code${older > 1 ? 's' : ''} skipped (a newer one is already saved)`);
+  if (bad) parts.push(`${bad} could not be read: ${lastErr}`);
+  msg.className = 'msg ' + (bad && !added && !updated ? 'bad' : 'ok'); msg.textContent = parts.join(', ') + '.';
+  if (added || updated) $('#codes').value = '';
+  refresh();
+});
+$('#incdev').addEventListener('change', refresh);
+$('#build').addEventListener('change', refresh);
+document.addEventListener('click', async e => {
+  const rm = e.target.closest('[data-rm]'), yes = e.target.closest('[data-rm-yes]'), no = e.target.closest('[data-rm-no]');
+  if (rm) { const w = rm.parentElement; w.innerHTML = `<span class="confirm">Remove this tester's data? <button class="danger" data-rm-yes="${esc(rm.dataset.rm)}">Remove</button><button data-rm-no>Keep</button></span>`; }
+  if (no) refresh();
+  if (yes) { try { await Store.remove(yes.dataset.rmYes); } catch (err) { $('#msg').className = 'msg bad'; $('#msg').textContent = 'Could not remove that tester. Try again.'; } refresh(); }
+});
+
+GAME.missions.forEach(m => { M[m.id] = m; });
+CARD = Object.fromEntries(GAME.cards.map(c => [c[0], c[1]]));
+GAME.cardIds = GAME.cards.map(c => c[0]);
+refresh();
+Store.init().then(refresh);
+</script>
