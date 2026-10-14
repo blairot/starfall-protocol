@@ -110,6 +110,13 @@ const ENCOUNTERS = [
     ],
     grant: { shock_baton: 2, plasma_cutlass: 1, harpoon_gun: 1 } },
 
+  { id: '2-E2', sector: 1, name: 'Salvage Rights', elite: true, after: '2-1',
+    enemy: { name: 'Breaker Jun', hp: 28, ai: 2, power: 'drone', passives: ['rapid_deploy'], deck: dk('scrap_rat:2 boarding_crew:2 det_bot:2 mine_layer:2 salvage_crew:2 cargo_hauler:2 scrap_golem:2 shipbreaker:1 harpoon_gun:2 shock_baton:1 echo_protocol:2 black_market:1') },
+    story: 'Breaker Jun runs the biggest salvage crew in the Belt, and Jun\'s people are the ones who pulled the reactor injectors out of Anchorage. Now they want the rest of the station. Jun: "Nobody\'s lived on that wreck in seventy years, Fleet. Salvage law says it\'s ours." Mox: "Salvage law says whoever\'s still standing. Jun starts every fight with extra power and a lot of junk. Clear the junk first."',
+    victory: 'Jun\'s crew pulls back to their cutters and leaves the stolen parts behind, including two reactor injectors with Anchorage\'s serial numbers. Mox: "Keep the shipbreaker too. Call it back rent."',
+    tips: ['Jun starts with an extra Energy crystal, so expect bigger plays a turn early.', 'Salvage units do something when they die. Sometimes it is better to leave a weak one alive than to trigger it.'],
+    grant: { shipbreaker: 1, cluster_cannon: 1 } },
+
   { id: '2-2', sector: 1, name: 'Armed and Dangerous', teaches: ['gear'],
     enemy: { name: 'Gunsmith Rourke', hp: 28, ai: 1, power: 'blade', deck: dk('shock_baton:2 plasma_cutlass:1 harpoon_gun:2 gunrunner:2 quartermaster:2 boarding_crew:2 marine:2 cadet:2 rifle_squad:2 heavy_trooper:2 sapper:1') },
     story: 'Gunsmith Rourke sells weapons to every raider crew in the Belt, and he wants the Meridian for parts. Rourke: "Lovely little frigate, Commander. I\'ll give you a fair price for her. Well. I\'ll give you a price." Okonkwo: "Rourke arms half of Vex\'s crews. Put him out of business and the rest get harder to supply."',
@@ -166,6 +173,13 @@ const ENCOUNTERS = [
     ],
     grant: { venom_stinger: 2, acid_spitter: 1, larva: 2 } },
 
+  { id: '3-E2', sector: 2, name: 'Spore Garden', elite: true, after: '3-1',
+    enemy: { name: 'Spore Mother', hp: 30, ai: 2, power: 'mutagen', startBoard: ['spore_carrier', 'spore_carrier'], deck: dk('spore_carrier:2 venom_stinger:2 acid_spitter:2 toxic_spitter:2 blood_leech:2 larva:2 broodmother:1 lamprey:2 life_drain:2 rapid_mutation:2 acid_rain:1 hive_surge:1') },
+    story: 'A Spore Mother is a Swarm creature the size of a frigate that seeds the nebula with spores. The spores grow into food for the brood, and this one has filled a whole asteroid field. Okonkwo: "Burn the garden and the brood goes hungry. It already has two spore carriers out when you arrive, and almost everything it grows is Toxic. Don\'t let your big units take hits from small ones."',
+    victory: 'The garden burns, and the brood in this part of the nebula loses its food supply. Okonkwo\'s biologists want samples. You send them the acid rain glands, sealed in three layers of containment.',
+    tips: ['The Spore Mother starts with two Spore Carriers on the board. Clear them early.', 'Toxic units destroy anything they damage. Trade them with cheap units, not your best ones.'],
+    grant: { hive_reaper: 1, acid_rain: 1 } },
+
   { id: '3-2', sector: 2, name: 'Bloodline', teaches: ['siphon'],
     enemy: { name: 'Leech Matron', hp: 30, ai: 2, power: 'spawn_brood', deck: dk('blood_leech:3 lamprey:2 venom_stinger:2 larva:2 chitin_guard:2 spore_carrier:2 broodmother:2 rapid_mutation:2 life_drain:2 marine:2 heavy_trooper:2 hover_tank:2') },
     story: 'A Leech Matron nests here, breeding Swarm organisms whose bites heal their own side. Okonkwo: "Every bite they land patches them up. Don\'t leave anything half dead out there, Commander. Finish what you start, or they will."',
@@ -214,6 +228,13 @@ const ENCOUNTERS = [
     tips: ['<b>EMP</b> wipes a unit back to its basic card: no keywords, no buffs, no text. Great against Toxic, Guardian or big buffed units.', 'Don\'t stack buffs on one unit while EMP is around.'],
     grant: { emp_trooper: 2, disruptor: 2, fortify: 1 } },
 
+  { id: '4-E2', sector: 3, name: 'Recall Order', elite: true, after: '4-2',
+    enemy: { name: 'Recall Foreman', hp: 30, ai: 2, power: 'reconfigure', passives: ['thick_hull'], startBoard: ['repair_drone'], deck: dk('shield_drone:2 plating_tech:2 repair_drone:2 assembler:2 nanoforge:2 aegis_sentinel:2 reactor_core:1 gatling_drone:2 emp_trooper:2 fortify:2 deflector_grid:1 war_walker:1 overdrive:2') },
+    story: 'The Forge has issued a "recall" for every Fleet ship it built, and a Recall Foreman has seized the frigate FS Kittiwake for "maintenance". Its crew is still aboard. Okonkwo: "That foreman has heavy armour and a repair drone already working. Kill the drone first, or you will be shooting at the same hull plates all day."',
+    victory: 'The Kittiwake\'s crew retake their ship and limp toward Fleet space. Her captain sends over the Forge war walker that was guarding their hangar, with a note: "We don\'t have room for it. You do."',
+    tips: ['The Foreman starts with 8 Armor and a Repair Drone on the board.', 'EMP and Disruptor remove Guardian and healing effects. Save them for the Aegis Sentinels and Repair Drones.'],
+    grant: { war_walker: 1, deflector_grid: 1 } },
+
   { id: '4-3', sector: 3, name: 'Assembly Line', teaches: ['twin'],
     enemy: { name: 'Line Supervisor', hp: 34, ai: 2, power: 'reconfigure', deck: dk('gatling_drone:3 war_walker:1 assembler:2 overdrive:2 shield_drone:2 nanoforge:2 aegis_sentinel:2 emp_trooper:2 plating_tech:2 repair_drone:2 heavy_trooper:2 hover_tank:2 lightning_arc:0 disruptor:2 deflector_grid:1 fortify:1 railgun:2') },
     story: 'The Line Supervisor runs a drone factory that has not stopped since the Forge went silent, and it has added you to its quality checks. Line Supervisor: "Defect detected. Organic commander, Fleet origin. Scheduling removal." Okonkwo: "Its gun drones fire twice a turn. Don\'t let them pile up."',
@@ -249,6 +270,13 @@ const ENCOUNTERS = [
     story: 'The first Psionic outpost is held by acolytes, novice psionics who focus their minds together to make their spells hit harder. Okonkwo: "They\'ve called themselves a choir for generations, long before the real one turned up. They don\'t find it funny anymore. Most of them have never met Nyra, but they\'re still in your way."',
     tips: ['<b>Amplify +N</b>: while this unit is alive, its owner\'s spells deal N extra damage. Kill Amplify units before the big spell lands.'],
     grant: { void_initiate: 2, psi_adept: 1, void_shards: 2 } },
+
+  { id: '5-E2', sector: 4, name: 'The Kept Lamp', elite: true, after: '5-1',
+    enemy: { name: 'Lampkeeper Sorrel', hp: 33, ai: 2, power: 'corrupt', startTraps: ['mirror_field', 'kinetic_barrier'], deck: dk('void_initiate:2 cryo_sentry:2 mind_seer:2 telepath:2 psi_adept:2 void_oracle:1 glacial_titan:1 frost_lance:2 cryo_nova:2 mind_blast:2 foresight:2 kinetic_barrier:1 mirror_field:1') },
+    story: 'Lampkeeper Sorrel is one of Nyra\'s oldest followers. She guards a Lamp the Orders switched back on last year, and every day it stays lit makes the road to the Choir a little easier. Okonkwo: "Shut that Lamp down. Sorrel fights with ice and two Traps already armed, and she weakens your best unit every turn. Play your cheap cards into the Traps first."',
+    victory: 'The Lamp goes dark again. Sorrel surrenders and asks only to be allowed to watch it cool. Her guards leave behind a crate of their best Protocols.',
+    tips: ['Sorrel starts with two Traps armed. Spring them with cheap units before you commit your strong ones.', 'Corrupt gives one of your units -1 Attack every turn. Spread your threats out.'],
+    grant: { glacial_titan: 1, psionic_storm: 1 } },
 
   { id: '5-2', sector: 4, name: 'Frozen Moon', teaches: ['cryo'],
     enemy: { name: 'Cryomancer Vel', hp: 30, ai: 2, power: 'mind_spike', deck: dk('cryo_sentry:3 frost_lance:3 cryo_nova:2 glacial_titan:1 void_initiate:2 psi_adept:2 shield_trooper:2 bulwark_mech:2 heavy_trooper:2 recon_officer:2 void_shards:2 supply_drop:2 railgun:2 star_cruiser:1 marine:2') },
@@ -302,6 +330,13 @@ const ENCOUNTERS = [
     story: 'The Choir has rebuilt Calculus Prime as Calculus Omega, a machine mind built entirely around its song. Calculus Omega: "Recalculating. The error has been corrected. Only you remain." Unit Zero: "Commander, this is Unit Zero, the Forge\'s first machine mind. Calculus was copied from me, and that is a copy of Calculus. I would consider it a personal favour if you deleted it."',
     tips: ['It starts with 10 Armor and gains 2 more every turn. You need a fast, aggressive plan or overwhelming late-game power.'] },
 
+  { id: '6-E2', sector: 5, name: 'The Lost Fleet', elite: true, after: '6-3',
+    enemy: { name: 'Echo of the Lost Fleet', hp: 32, ai: 3, power: 'void_lash', passives: ['singularity'], deck: dk('marine:2 heavy_trooper:2 rifle_squad:2 siege_gunner:2 patrol_frigate:2 star_cruiser:2 battlecruiser:1 interceptor:2 hover_tank:2 fleet_captain:1 flak_barrage:2 orbital_strike:1 railgun:2 kill_order:1') },
+    story: 'During the Starfall, the Choir took more than a thousand ships out of the lanes. Here at the core it has rebuilt some of them as echoes in black glass, flying their old Fleet formations with nobody aboard. Okonkwo: "Those are our ships, Commander. Some of those names are on the memorial at Concord. Put them to rest. They fight like a Fleet battle group, and the Choir makes every one of them a little tougher."',
+    victory: 'The echo ships break apart, and their black glass drifts back into the dark. The Meridian logs every hull number it can read. Okonkwo: "Send me the list. Their families have waited long enough."',
+    tips: ['Every unit this echo summons gets +0/+1, so damage spells need to hit a little harder.', 'Void Lash deals 2 damage to a random target each turn. Keep your key units above 2 Health.'],
+    grant: { orbital_strike: 1, dominate: 1 } },
+
   { id: '6-4', sector: 5, name: 'Nyra Unbound',
     enemy: { name: 'Nyra Unbound', hp: 30, ai: 2, power: 'mind_spike', passives: ['singularity'], startTraps: ['psionic_null', 'sniper_mine'], deck: dk('void_oracle:1 psi_adept:2 void_initiate:2 psionic_horror:2 glacial_titan:1 phase_stalker:2 telepath:2 frost_lance:2 void_shards:2 mind_blast:1 psionic_storm:1 grav_snare:1 mirror_field:1 kinetic_barrier:1 cryo_nova:1 mind_seer:2 nyra:1 star_cruiser:1 marine:2 heavy_trooper:1') },
     story: 'The Choir has rebuilt Nyra as an echo and speaks through her in her own voice. Nyra Unbound: "She wanted rest for everyone, Commander. We gave it to her. Let us give it to you." Okonkwo: "Nyra is gone. Whatever is talking, don\'t answer it."',
@@ -323,6 +358,8 @@ const ENC = {}; ENCOUNTERS.forEach(e => ENC[e.id] = e);
 
 // Portrait subjects for every enemy commander (see illustrations.js for kinds).
 const ENEMY_ART = {
+  'Breaker Jun': ['bust', { goggles: 1, cyber: 1, straps: 1, skin: 2 }], 'Spore Mother': ['pod', {}], 'Recall Foreman': ['mech', {}],
+  'Lampkeeper Sorrel': ['psion', { pose: 'meditate' }], 'Echo of the Lost Fleet': ['fighter', {}],
   'Sim Drone Pilot': ['drone', { plan: 'gunship', gun: 1 }], 'Sim Gunnery Officer': ['bust', { helm: 1 }], 'Sim Fortress': ['structure', { type: 'wall' }], 'Sim Commander Vale': ['bust', { cap: 1, boards: 1, skin: 2, hair: 'short' }],
   'Sim Bastion': ['mech', { heavy: 1 }], 'Sim Strike Wing': ['fighter', {}], 'HALCYON': ['structure', { type: 'core' }],
   'Belt Tollmaster': ['bust', { beard: 1, straps: 1, hair: 'none', skin: 1 }], 'Gunsmith Rourke': ['bust', { goggles: 1, gogglesUp: 1, cyber: 1, straps: 1, skin: 0 }], 'Scrapper King Ott': ['bust', { hat: 1, beard: 1, straps: 1, skin: 2 }], 'Sable, Smuggler Queen': ['bust', { hood: 1, bandana: 1, hair: 'none', skin: 1 }],

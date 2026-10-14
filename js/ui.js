@@ -1008,7 +1008,7 @@ function openBriefing(enc) {
   const fresh = teach.filter(k => !save.codex.includes(k));
   const hp = Math.round(e.hp * diff.hp);
   const power = e.power ? HEROPOWERS[e.power] : null;
-  const rewardTxt = save.cleared[enc.id] ? (economyOpen(save) ? `${Math.round(ECON.replayCredits[encKind(enc)] * creditMultOf(save))} Credits + ${ECON.alloyReplay[encKind(enc)]} Alloy (replay)` : 'Training replay') : [describeEncReward(enc, save), enc.unlockPowers ? 'a new commander power' : '', enc.grant ? 'a supply crate of new cards' : ''].filter(Boolean).join(' + ') || 'Training credit';
+  const rewardTxt = save.cleared[enc.id] ? (economyOpen(save) ? `${Math.round(ECON.replayCredits[encKind(enc)] * creditMultOf(save))} Credits + ${ECON.alloyReplay[encKind(enc)]} Alloy (replay)` : 'Training replay') : [describeEncReward(enc, save), enc.unlockPowers ? 'a new commander power' : '', enc.grant ? (enc.elite ? Object.keys(enc.grant).map(id => esc(D(id).name)).join(' + ') : 'a supply crate of new cards') : ''].filter(Boolean).join(' + ') || 'Training credit';
   const size = deckSizeFor(save);
   const tunedOn = !enc.fixedDeck && Brief.use && Brief.result && Brief.result.best.label !== 'Your deck';
   const deckOk = enc.fixedDeck || tunedOn || save.deck.length === size;
@@ -1045,7 +1045,7 @@ function openBriefing(enc) {
     if (a === 'tune-stop') { if (Brief.cancel) Brief.cancel(); Brief.run = null; Brief.cancel = null; openBriefing(enc); }
     if (a === 'tune-save' || a === 'tune-replace') {
       const best = Brief.result.best.deck;
-      if (a === 'tune-save') addDeck(save, enc.name, best, size);
+      if (a === 'tune-save') addSavedDeck(save, enc.name, best, size);
       else { save.deck = best.slice(); syncDecks(save); }
       persist(); toast(a === 'tune-save' ? `Saved as a new deck: ${esc(activeDeck(save).name)}.` : `Updated ${esc(activeDeck(save).name)} with the tuned deck.`);
       Brief.result = null; Brief.use = false; openBriefing(enc);
@@ -1162,8 +1162,8 @@ function renderHangar() {
     const cr = t.closest('[data-craft]'), md = t.closest('[data-mode]'), dk = t.closest('[data-dk]');
     if (!t.closest('[data-dk-del]')) Brief.delArm = false;
     if (dk) { const i = +dk.dataset.dk; if (i !== save.activeDeck) { const short = switchDeck(save, i, size); persist(); SFX.click(); toast(`Switched to ${esc(activeDeck(save).name)}.${short ? ' It was short of cards, so it was topped up.' : ''}`); } renderHangar(); return; }
-    if (t.closest('[data-dk-new]')) { const tmp = { coll: save.coll, deck: [] }; autoFillDeck(tmp, size); if (addDeck(save, 'New deck', tmp.deck, size)) { persist(); SFX.click(); toast('New deck created from your best cards. Rename it below.'); } renderHangar(); return; }
-    if (t.closest('[data-dk-dup]')) { if (addDeck(save, activeDeck(save).name + ' copy', save.deck, size)) { persist(); SFX.click(); toast('Deck copied. You are now editing the copy.'); } renderHangar(); return; }
+    if (t.closest('[data-dk-new]')) { const tmp = { coll: save.coll, deck: [] }; autoFillDeck(tmp, size); if (addSavedDeck(save, 'New deck', tmp.deck, size)) { persist(); SFX.click(); toast('New deck created from your best cards. Rename it below.'); } renderHangar(); return; }
+    if (t.closest('[data-dk-dup]')) { if (addSavedDeck(save, activeDeck(save).name + ' copy', save.deck, size)) { persist(); SFX.click(); toast('Deck copied. You are now editing the copy.'); } renderHangar(); return; }
     if (t.closest('[data-dk-del]')) {
       if (!Brief.delArm) { Brief.delArm = true; renderHangar(); return; }
       const name = activeDeck(save).name; Brief.delArm = false;

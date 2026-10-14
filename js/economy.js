@@ -16,12 +16,12 @@ const ECON = {
   scrapValue: { common: 5, rare: 20, epic: 100, legendary: 400 },
   craftCost: { common: 40, rare: 100, epic: 400, legendary: 1600 },
   winCredits: { normal: 20, elite: 50, boss: 100 },
-  replayCredits: { normal: 5, elite: 10, boss: 15 },
+  replayCredits: { normal: 15, elite: 30, boss: 45 },
   winPacks: { normal: 0, elite: 1, boss: 2 },
   contractSlots: 2,
   // Alloy repairs Anchorage station modules (station.js)
   alloyWin: { normal: 30, elite: 50, boss: 100 },
-  alloyReplay: { normal: 5, elite: 10, boss: 15 },
+  alloyReplay: { normal: 10, elite: 20, boss: 30 },
   alloyGraduation: 60,
 };
 

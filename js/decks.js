@@ -62,7 +62,7 @@ function uniqueDeckName(save, base) {
 }
 
 // Adds a deck and makes it active. `cards` defaults to a copy of the current deck.
-function addDeck(save, name, cards, size) {
+function addSavedDeck(save, name, cards, size) {
   ensureDecks(save); syncDecks(save);
   if (save.decks.length >= deckSlots(save)) return false;
   save.decks.push({ name: uniqueDeckName(save, (name || 'New deck').slice(0, DECK_NAME_MAX)), deck: (cards || save.deck).slice(), power: save.power });
