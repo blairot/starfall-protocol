@@ -1305,7 +1305,6 @@ function openTitle() {
       <nav class="tmenu">
         ${save ? `<button class="tm primary" id="t-cont"><span class="tm-k">Continue</span><span class="tm-s">${next ? `${esc(SECTORS[next.sector].name)} · ${esc(next.name)}` : 'Campaign complete'}</span></button>` : ''}
         <button class="tm ${save ? '' : 'primary'}" id="t-new"><span class="tm-k">New campaign</span><span class="tm-s">${save ? 'Start over with a new commander' : 'Enlist and begin training'}</span></button>
-        <button class="tm" id="t-codex"><span class="tm-k">Archive</span><span class="tm-s">The universe, factions, card lore and rules</span></button>
         <button class="tm" id="t-set"><span class="tm-k">Settings</span><span class="tm-s">Audio, speed, display, saves</span></button>
       </nav>
     </div>
@@ -1321,7 +1320,6 @@ function openTitle() {
     const b = e.target.closest('.tm'); if (b) SFX.click();
     if (e.target.closest('#t-cont')) openMap();
     if (e.target.closest('#t-new')) newCampaignDialog();
-    if (e.target.closest('#t-codex')) openArchive('universe', null);
     if (e.target.closest('#t-set')) showSettings();
   };
 }
