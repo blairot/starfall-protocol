@@ -85,7 +85,16 @@ function start(data) {
   if (data && data.save) App.save = migrate(data.save) || App.save;
   if (data && data.battle && data.enc && ENC[data.enc] && App.save) startBattle(ENC[data.enc], data.battle);
   else openTitle();
-  setTimeout(prewarmAllArt, 1200);
+  // Crash guard: if the last launch never finished booting (e.g. the phone ran out of
+  // memory), start in safe mode and skip the background art preparation this time.
+  let lastBootFailed = false;
+  try { lastBootFailed = localStorage.getItem('sf_booting') === '1'; localStorage.setItem('sf_booting', '1'); } catch (e) { /* storage blocked */ }
+  const bootDone = () => { try { localStorage.removeItem('sf_booting'); } catch (e) { /* storage blocked */ } };
+  setTimeout(bootDone, 15000);
+  window.addEventListener('pagehide', bootDone);   // a normal reload or navigation is not a crash
+  App.safeMode = lastBootFailed;
+  if (lastBootFailed) setTimeout(() => toast('Safe graphics mode: the last launch didn\'t finish loading.', 3500), 800);
+  else setTimeout(prewarmAllArt, 1500);
   // Installed web app (GitHub Pages): cache the game for offline play. Not inside claude.ai.
   if ('serviceWorker' in navigator && location.protocol === 'https:' && window.top === window.self && !window.claude) {
     navigator.serviceWorker.register('sw.js').then(r => r.update()).catch(() => { /* offline play is optional */ });

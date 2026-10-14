@@ -1492,23 +1492,42 @@ ${globalThis.ART_NO_HUD ? '' : `<g stroke="${ch(P.light, 10)}" stroke-width=".5"
 // Vector art with lighting and grain filters is expensive to repaint, so each
 // plate is rasterized once (in idle time) and the bitmap is used from then on.
 const RASTER = {};
+// Phones (iPhone especially) have far less memory for decoding images. There the
+// code-drawn art skips its heavy SVG filters, painted art uses half-size files,
+// and only one plate is rasterized at a time.
+const ART_LITE = typeof window !== 'undefined' && !!(window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches);
+const liteSvg = svg => ART_LITE ? svg.replace(/\sfilter="url\(#[^)]*\)"/g, '') : svg;
+
+// Rasterize SVG plates through a small queue so dozens never decode at once.
+const RQ = []; let rBusy = 0;
+const R_MAX = ART_LITE ? 1 : 3;
 function rasterize(key, svgUrl) {
   if (key in RASTER || typeof document === 'undefined') return;
   RASTER[key] = null;
-  const img = new Image();
-  img.onload = () => {
-    try {
-      const c = document.createElement('canvas'); c.width = 480; c.height = 300;
-      c.getContext('2d').drawImage(img, 0, 0, 480, 300);
-      c.toBlob(b => { if (b) RASTER[key] = `url("${URL.createObjectURL(b)}")`; }, 'image/webp', 0.92);
-    } catch (e) { /* tainted or unsupported: keep the vector version */ }
-  };
-  img.src = svgUrl.slice(5, -2);
+  RQ.push([key, svgUrl]); pumpRaster();
 }
-const idle = window.requestIdleCallback || (fn => setTimeout(() => fn({ timeRemaining: () => 8 }), 30));
+function pumpRaster() {
+  while (rBusy < R_MAX && RQ.length) {
+    const [key, svgUrl] = RQ.shift(); rBusy++;
+    const img = new Image();
+    const done = () => { rBusy--; img.onload = img.onerror = null; setTimeout(pumpRaster, ART_LITE ? 40 : 0); };
+    img.onload = () => {
+      try {
+        const c = document.createElement('canvas'); c.width = 480; c.height = 300;
+        c.getContext('2d').drawImage(img, 0, 0, 480, 300);
+        c.toBlob(b => { if (b) RASTER[key] = `url("${URL.createObjectURL(b)}")`; c.width = c.height = 0; done(); }, 'image/webp', 0.9);
+      } catch (e) { done(); /* tainted or unsupported: keep the vector version */ }
+    };
+    img.onerror = done;
+    img.src = svgUrl.slice(5, -2);
+  }
+}
+// Safari has no requestIdleCallback: the fallback gives a real ~8 ms budget per slice.
+const idle = window.requestIdleCallback || (fn => setTimeout(() => { const t0 = performance.now(); fn({ timeRemaining: () => Math.max(0, 8 - (performance.now() - t0)) }); }, 50));
 function prewarmArt(keysAndMakers) {
   const queue = keysAndMakers.slice();
-  const step = dl => { while (queue.length && dl.timeRemaining() > 4) queue.shift()(); if (queue.length) idle(step); };
+  // only top up the raster queue a little at a time
+  const step = dl => { while (queue.length && dl.timeRemaining() > 4 && RQ.length < 2) queue.shift()(); if (queue.length) idle(step); };
   idle(step);
 }
 
@@ -1518,13 +1537,14 @@ const PAINTED_CARDS = new Set(typeof PAINTED !== 'undefined' ? PAINTED.cards : [
 const PAINTED_PORTRAITS = typeof PAINTED !== 'undefined' ? PAINTED.portraits : {};
 // resolved from this script's own URL, so pages in subfolders (tools/) find the art too
 const ART_BASE = typeof document !== 'undefined' && document.currentScript ? new URL('../art/', document.currentScript.src).href : 'art/';
+const CARD_DIR = ART_LITE ? 'cards-sm' : 'cards';
 
 function artPlate(id) {
-  if (PAINTED_CARDS.has(id)) return `url("${ART_BASE}cards/${id}.webp")`;
+  if (PAINTED_CARDS.has(id)) return `url("${ART_BASE}${CARD_DIR}/${id}.webp")`;
   if (RASTER[id]) return RASTER[id];
   if (!ART_CACHE[id]) {
     const d = D(id); const [kind, opts] = artFor(d);
-    ART_CACHE[id] = `url("data:image/svg+xml,${encodeURIComponent(composeArt(id, kind, opts, d.faction))}")`;
+    ART_CACHE[id] = `url("data:image/svg+xml,${encodeURIComponent(liteSvg(composeArt(id, kind, opts, d.faction)))}")`;
   }
   rasterize(id, ART_CACHE[id]);
   return ART_CACHE[id];
@@ -1537,7 +1557,7 @@ function portraitPlate(key, faction, spec) {
   if (RASTER[k]) return RASTER[k];
   if (!ART_CACHE[k]) {
     const [kind, opts] = spec || ['bust', { cap: 1 }];
-    ART_CACHE[k] = `url("data:image/svg+xml,${encodeURIComponent(composeArt(key, kind, opts || {}, faction || 'fleet'))}")`;
+    ART_CACHE[k] = `url("data:image/svg+xml,${encodeURIComponent(liteSvg(composeArt(key, kind, opts || {}, faction || 'fleet')))}")`;
   }
   rasterize(k, ART_CACHE[k]);
   return ART_CACHE[k];

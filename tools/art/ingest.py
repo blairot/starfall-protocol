@@ -27,7 +27,7 @@ def main():
     manifest = json.load(open(os.path.join(ART, 'manifest.json'), encoding='utf8'))
     incoming = os.path.join(ART, 'incoming')
     files = {f.lower(): f for f in os.listdir(incoming)} if os.path.isdir(incoming) else {}
-    os.makedirs(os.path.join(ART, 'cards'), exist_ok=True); os.makedirs(os.path.join(ART, 'portraits'), exist_ok=True)
+    os.makedirs(os.path.join(ART, 'cards'), exist_ok=True); os.makedirs(os.path.join(ART, 'portraits'), exist_ok=True); os.makedirs(os.path.join(ART, 'cards-sm'), exist_ok=True)
     cards, portraits, missing, made = [], {}, [], 0
     for e in manifest:
         stem = os.path.splitext(e['file'])[0]
@@ -40,7 +40,12 @@ def main():
                 img = Image.open(sp).convert('RGB')
                 img = crop_to(img, size[0] / size[1]).resize(size, Image.LANCZOS)
                 img.save(out, 'WEBP', quality=82, method=6)
+                if e['kind'] == 'card':   # half-size copy for phones (a quarter of the decode memory)
+                    img.resize((480, 300), Image.LANCZOS).save(os.path.join(ART, 'cards-sm', stem + '.webp'), 'WEBP', quality=80, method=6)
                 made += 1
+        sm = os.path.join(ART, 'cards-sm', stem + '.webp')
+        if e['kind'] == 'card' and os.path.exists(out) and not os.path.exists(sm):
+            Image.open(out).resize((480, 300), Image.LANCZOS).save(sm, 'WEBP', quality=80, method=6)
         if os.path.exists(out):
             if e['kind'] == 'card': cards.append(e['id'])
             else: portraits[e['id']] = stem
