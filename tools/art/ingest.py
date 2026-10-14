@@ -76,7 +76,7 @@ def ingest_extra(files, incoming):
         if e['kind'] == 'icon':
             if src:
                 img = crop_to(Image.open(os.path.join(incoming, src)).convert('RGB'), 1)
-                for name, px in (('icon-512', 512), ('icon-192', 192), ('apple-touch-icon', 180), ('favicon-32', 32)):
+                for name, px in (('icon-512', 512), ('maskable-512', 512), ('icon-192', 192), ('apple-touch-icon', 180), ('favicon-32', 32)):
                     img.resize((px, px), Image.LANCZOS).save(os.path.join(ROOT, 'icons', name + '.png'), 'PNG', optimize=True)
                 have.append(stem)
             continue
