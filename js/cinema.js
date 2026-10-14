@@ -29,16 +29,17 @@ const Cinema = (() => {
     voiceBus.gain.value = (Settings.get('voice') == null ? 90 : Settings.get('voice')) / 100;
     return voiceBus;
   }
+  // one decoded file per cutscene (audio/vo/<cid>.mp3); each line is a slice of it (VO[key].o, .d)
   const buffers = {};
-  async function load(key) {
-    if (buffers[key] !== undefined) return buffers[key];
-    buffers[key] = null;
+  async function load(cid) {
+    if (buffers[cid] !== undefined) return buffers[cid];
+    buffers[cid] = null;
     try {
       const c = AudioBus.ctx; if (!c) return null;
-      const res = await fetch(`audio/vo/${key}.mp3`); if (!res.ok) return null;
-      buffers[key] = await c.decodeAudioData(await res.arrayBuffer());
-    } catch (e) { buffers[key] = null; }
-    return buffers[key];
+      const res = await fetch(`audio/vo/${cid}.mp3`); if (!res.ok) return null;
+      buffers[cid] = await c.decodeAudioData(await res.arrayBuffer());
+    } catch (e) { buffers[cid] = null; }
+    return buffers[cid];
   }
   function duck(on) {
     const g = AudioBus.musicBus, c = AudioBus.ctx; if (!g || !c) return;
@@ -47,9 +48,9 @@ const Cinema = (() => {
     g.gain.cancelScheduledValues(c.currentTime);
     g.gain.setTargetAtTime(on ? base * 0.32 : base, c.currentTime, 0.25);
   }
-  function playLine(buf) {
+  function playLine(buf, from, dur) {
     const c = AudioBus.ctx, b = bus(); if (!c || !b || !buf) return null;
-    const src = c.createBufferSource(); src.buffer = buf; src.connect(b); src.start();
+    const src = c.createBufferSource(); src.buffer = buf; src.connect(b); src.start(0, from, dur);
     return src;
   }
 
@@ -116,7 +117,7 @@ const Cinema = (() => {
   // ---------------------------------------------------------------- timeline
   function plan(cid, cine) {
     return cine.shots.map((sh, si) => {
-      const lines = (sh.lines || []).map((ln, li) => { const v = voFor(cid, si, li, ln.text); return { who: ln.who, text: ln.text, key: v ? voKey(cid, si, li) : null, dur: v ? v.d : estimate(ln.text) }; });
+      const lines = (sh.lines || []).map((ln, li) => { const v = voFor(cid, si, li, ln.text); return { who: ln.who, text: ln.text, key: v ? voKey(cid, si, li) : null, from: v ? v.o : 0, dur: v ? v.d : estimate(ln.text) }; });
       const speech = lines.reduce((a, l) => a + l.dur + 0.35, 0);
       const dur = lines.length ? 0.6 + speech + (sh.hold != null ? sh.hold : 0.8) : (sh.dur || 3);
       return { sh, lines, dur };
@@ -139,7 +140,7 @@ const Cinema = (() => {
     document.addEventListener('keydown', me.key);
     if (typeof Music !== 'undefined') { if (Music.setTheme) Music.setTheme(cine.sector); Music.setMood(cine.music || 'menu'); if (Music.setIntensity) Music.setIntensity(0.25); }
     // decode this cutscene's voice while the title card shows
-    const loads = Promise.all(shots.flatMap(s => s.lines.filter(l => l.key).map(l => load(l.key))));
+    const loads = shots.some(s => s.lines.some(l => l.key)) ? load(cid) : Promise.resolve(null);
     const stage = el.querySelector('.cin-stage'), sub = el.querySelector('.cin-sub');
     const wait = ms => new Promise(r => { const t = setTimeout(r, ms); me.timers.push(t); });
     for (let i = 0; i < shots.length && !me.done; i++) {
@@ -164,9 +165,9 @@ const Cinema = (() => {
         sub.querySelector('span').textContent = ln.text;
         sub.classList.toggle('show', Settings.get('subs') !== false);
         div.classList.add('talking');
-        const buf = ln.key ? buffers[ln.key] : null;
-        if (buf) { duck(true); const s = playLine(buf); if (s) me.srcs.push(s); }
-        await wait((buf ? buf.duration : ln.dur) * 1000);
+        const buf = ln.key ? buffers[cid] : null;
+        if (buf) { duck(true); const s = playLine(buf, ln.from, ln.dur); if (s) me.srcs.push(s); }
+        await wait(ln.dur * 1000);
         div.classList.remove('talking');
         await wait(350);
       }

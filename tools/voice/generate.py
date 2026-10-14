@@ -1,9 +1,11 @@
 """Render cutscene voice lines with Kokoro (free, local TTS) and ffmpeg.
 
-Reads CAST and CINEMATICS from js/cinematics.js, renders every line to
-audio/vo/<cinematic>-<shot>-<line>.mp3 with the character's voice and effect,
-and writes js/vo.js (duration + text hash per line, so the game can tell when a
-line's text changed and its audio is stale).
+Reads CAST and CINEMATICS from js/cinematics.js and renders every line with the
+character's voice and effect into a local cache (tools/voice/cache/, not
+committed). Then joins each cutscene's lines into one file, audio/vo/<cinematic>.mp3,
+with a short gap between lines, and writes js/vo.js: each line's start offset,
+duration and text hash (so the game can tell when a line's text changed and its
+audio is stale). One file per cutscene means one download and one decode.
 
 Usage (from the repo root, with the Kokoro virtualenv's Python):
     <kokoro-venv>\\Scripts\\python tools/voice/generate.py [--force] [--only opening,s1]
@@ -16,6 +18,8 @@ import soundfile as sf
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 OUT = os.path.join(ROOT, 'audio', 'vo')
+CACHE = os.path.join(ROOT, 'tools', 'voice', 'cache')
+GAP = 0.3   # seconds of silence between lines in a cutscene file
 SR = 24000
 
 # Voice archetypes used by the script -> Kokoro voice id (first letter: a = US, b = UK English)
@@ -109,13 +113,48 @@ def encode(raw, chain, out):
     return round(dur, 2)
 
 
+def pcm(path):
+    """Decode an mp3 to mono float32 at 44.1 kHz (ffmpeg trims the encoder delay)."""
+    out = subprocess.run(['ffmpeg', '-v', 'error', '-i', path, '-f', 'f32le', '-ac', '1', '-ar', '44100', '-'], capture_output=True, check=True).stdout
+    return np.frombuffer(out, np.float32)
+
+
+def build_sprites(cines, keep):
+    """One mp3 per cutscene: its lines in order with a short gap. Returns {key: (start, duration)} in seconds."""
+    rate, offsets = 44100, {}
+    for cid, cine in cines.items():
+        parts, pos = [np.zeros(int(0.1 * rate), np.float32)], int(0.1 * rate)
+        for si, shot in enumerate(cine['shots']):
+            for li, _ in enumerate(shot.get('lines') or []):
+                key = f'{cid}-{si}-{li}'
+                if key not in keep: continue
+                x = pcm(os.path.join(CACHE, key + '.mp3'))
+                offsets[key] = (round(pos / rate, 3), round(len(x) / rate, 3))
+                gap = np.zeros(int(GAP * rate), np.float32)
+                parts += [x, gap]; pos += len(x) + len(gap)
+        out = os.path.join(OUT, cid + '.mp3')
+        if len(parts) == 1:
+            if os.path.exists(out): os.remove(out)
+            continue
+        with tempfile.TemporaryDirectory() as tmp:
+            wav = os.path.join(tmp, 'all.wav'); sf.write(wav, np.concatenate(parts), rate)
+            subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', wav, '-ac', '1', '-c:a', 'libmp3lame', '-b:a', '64k', out], check=True)
+        print(f'{cid}.mp3  {pos / rate:6.1f}s')
+    # old one-file-per-line audio and files for cutscenes that no longer exist
+    for f in os.listdir(OUT):
+        if f.endswith('.mp3') and f[:-4] not in cines: os.remove(os.path.join(OUT, f))
+    old = os.path.join(OUT, 'manifest.json')
+    if os.path.exists(old): os.remove(old)
+    return offsets
+
+
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--force', action='store_true'); ap.add_argument('--only', default='')
     args = ap.parse_args()
     data = load_script(); cast, cines = data['cast'], data['cines']
     only = set(filter(None, args.only.split(',')))
-    os.makedirs(OUT, exist_ok=True)
-    manifest_path = os.path.join(OUT, 'manifest.json')
+    os.makedirs(OUT, exist_ok=True); os.makedirs(CACHE, exist_ok=True)
+    manifest_path = os.path.join(CACHE, 'manifest.json')
     manifest = json.load(open(manifest_path, encoding='utf8')) if os.path.exists(manifest_path) else {}
     keep, made, skipped = {}, 0, 0
     with tempfile.TemporaryDirectory() as tmp:
@@ -123,7 +162,7 @@ def main():
             for si, shot in enumerate(cine['shots']):
                 for li, line in enumerate(shot.get('lines') or []):
                     key, text = f'{cid}-{si}-{li}', line['text']
-                    h, out = hash_text(text), os.path.join(OUT, f'{cid}-{si}-{li}.mp3')
+                    h, out = hash_text(text), os.path.join(CACHE, f'{cid}-{si}-{li}.mp3')
                     member = cast.get(line['who'], {})
                     sig = f"{h}|{member.get('voice')}|{member.get('fx')}"
                     old = manifest.get(key)
@@ -134,13 +173,14 @@ def main():
                     keep[key] = {'d': encode(raw, chain, out), 'h': h, 'sig': sig}
                     made += 1
                     print(f'{key:14} {keep[key]["d"]:5.2f}s  {member.get("name", line["who"])}: {text[:60]}')
-    # remove audio for lines that no longer exist
-    for f in os.listdir(OUT):
-        if f.endswith('.mp3') and f[:-4] not in keep: os.remove(os.path.join(OUT, f))
+    # remove cached audio for lines that no longer exist
+    for f in os.listdir(CACHE):
+        if f.endswith('.mp3') and f[:-4] not in keep: os.remove(os.path.join(CACHE, f))
     json.dump(keep, open(manifest_path, 'w', encoding='utf8'), indent=0)
+    offsets = build_sprites(cines, keep)
     with open(os.path.join(ROOT, 'js', 'vo.js'), 'w', encoding='utf8') as fp:
-        fp.write("'use strict';\n// Generated by tools/voice/generate.py: duration (s) and text hash per voice line.\n")
-        fp.write('const VO = ' + json.dumps({k: {'d': v['d'], 'h': v['h']} for k, v in sorted(keep.items())}, separators=(',', ':')) + ';\n')
+        fp.write("'use strict';\n// Generated by tools/voice/generate.py: per voice line, its start (o) in audio/vo/<cutscene>.mp3, duration (d) and text hash (h).\n")
+        fp.write('const VO = ' + json.dumps({k: {'o': offsets[k][0], 'd': offsets[k][1], 'h': v['h']} for k, v in sorted(keep.items()) if k in offsets}, separators=(',', ':')) + ';\n')
     total = sum(v['d'] for v in keep.values())
     print(f'\n{made} rendered, {skipped} unchanged, {len(keep)} lines, {total / 60:.1f} min of voice')
 

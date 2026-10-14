@@ -3,8 +3,8 @@
 Cards:     centre-crop to 16:10, 960x600 WebP  -> art/cards/<id>.webp
 Portraits: centre-crop to square, 512x512 WebP -> art/portraits/<file>.webp
 Part 2 (art/manifest2.json): packs 640x960, card back 400x600, wide scenes
-1440x960 -> art/extra/ (one size: phones show these one at a time); the app
-icon -> icons/*.png.
+1440x960 -> art/extra/, plus half-size copies for phones -> art/extra-sm/; the
+app icon -> icons/*.png.
 Then rewrites js/painted.js, which tells illustrations.js which plates have
 painted art (everything else keeps its code-drawn art).
 
@@ -68,7 +68,7 @@ def ingest_extra(files, incoming):
     """Second pass: packs, cutscene stills, station, sectors, screens, card back, app icon."""
     mp = os.path.join(ART, 'manifest2.json')
     if not os.path.exists(mp): return []
-    os.makedirs(os.path.join(ART, 'extra'), exist_ok=True)
+    for d in ('extra', 'extra-sm'): os.makedirs(os.path.join(ART, d), exist_ok=True)
     have = []
     for e in json.load(open(mp, encoding='utf8')):
         stem = e['id']
@@ -81,12 +81,15 @@ def ingest_extra(files, incoming):
                 have.append(stem)
             continue
         size = EXTRA_SIZE.get(e['kind'], (1440, 960))
-        out = os.path.join(ART, 'extra', stem + '.webp')
+        out = os.path.join(ART, 'extra', stem + '.webp'); sm = os.path.join(ART, 'extra-sm', stem + '.webp')
         if src:
             sp = os.path.join(incoming, src)
             if not os.path.exists(out) or os.path.getmtime(sp) > os.path.getmtime(out):
                 img = crop_to(Image.open(sp).convert('RGB'), size[0] / size[1]).resize(size, Image.LANCZOS)
                 img.save(out, 'WEBP', quality=80, method=6)
+                img.resize((size[0] // 2, size[1] // 2), Image.LANCZOS).save(sm, 'WEBP', quality=78, method=6)
+        if os.path.exists(out) and not os.path.exists(sm):   # phone copy for art converted before extra-sm existed
+            im = Image.open(out); im.resize((im.width // 2, im.height // 2), Image.LANCZOS).save(sm, 'WEBP', quality=78, method=6)
         if os.path.exists(out): have.append(stem)
     return have
 
