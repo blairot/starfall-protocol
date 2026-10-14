@@ -1541,7 +1541,8 @@ const CARD_DIR = ART_LITE ? 'cards-sm' : 'cards';
 
 // second art pass (packs, stills, station, sectors, screens, card back): CSS url or '' when not painted yet
 const PAINTED_EXTRA = new Set(typeof PAINTED !== 'undefined' ? PAINTED.extra || [] : []);
-function extraArt(id) { return PAINTED_EXTRA.has(id) ? `url("${ART_BASE}${ART_LITE ? 'extra-sm' : 'extra'}/${id}.webp")` : ''; }
+// one size for phones and desktop: these show one or two at a time, unlike card art
+function extraArt(id) { return PAINTED_EXTRA.has(id) ? `url("${ART_BASE}extra/${id}.webp")` : ''; }
 // a painted banner for a modal or panel, or nothing
 function paintedBanner(id, cls) { const u = extraArt(id); return u ? `<div class="m-hero ${cls || ''}" style='background-image:${u}'></div>` : ''; }
 if (typeof document !== 'undefined' && PAINTED_EXTRA.has('card-back')) document.documentElement.style.setProperty('--cardback', extraArt('card-back'));
