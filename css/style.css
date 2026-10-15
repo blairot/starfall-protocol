@@ -1544,3 +1544,15 @@ body.touch .inspect-hint { color: var(--t-3); }
 .strat-banner p { margin: 0; max-width: 70ch; }
 .ins-strat { display: grid; gap: 6px; }
 .ins-strat p { margin: 0; }
+
+/* ===== 24. Supply crate: choose one card */
+.crate { display: grid; gap: 8px; margin-top: 14px; padding: 14px; background: rgba(4, 12, 20, .55); box-shadow: inset 0 0 0 1px rgba(125, 255, 168, .3); }
+.crate h3 { margin: 0; color: #fff; letter-spacing: .1em; }
+.crate-row { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; padding: 6px 0; }
+.crate-card { position: relative; width: 138px; height: 192px; padding: 0; border: 0; background: none; cursor: pointer; transition: transform .2s, opacity .4s, filter .4s; }
+.crate-card:hover:not(:disabled) { transform: translateY(-6px) scale(1.03); }
+.crate-card .card { width: 100%; height: 100%; }
+.crate-own { position: absolute; left: 50%; bottom: -10px; transform: translateX(-50%); font: 700 10px var(--f-label); letter-spacing: .14em; text-transform: uppercase; padding: 2px 8px; color: #1a1204; background: var(--amber); white-space: nowrap; }
+.crate-card.kept { transform: translateY(-8px) scale(1.06); filter: drop-shadow(0 0 16px rgba(125, 255, 168, .7)); }
+.crate-card.gone { opacity: .25; filter: grayscale(1); transform: scale(.94); }
+@media (max-width: 640px) { .crate-card { width: 104px; height: 145px; } .crate-card .card { font-size: 8.4px; } .crate-row { gap: 8px; } }

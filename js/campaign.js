@@ -39,7 +39,7 @@ const ENCOUNTERS = [
       'You gain 1 more Energy each turn, up to 10, so bigger cards become playable later. Try to spend it all every turn.',
       'Bring the enemy commander to 0 Health to win. Hover over any card to read it.',
     ],
-    grant: { plasma_bolt: 2, rifle_squad: 2, recon_officer: 2, medic_bot: 2 } },
+    grant: { plasma_bolt: 1, rifle_squad: 1, recon_officer: 1, medic_bot: 1 } },
 
   { id: '1-2', sector: 0, name: 'Fire Protocols', teaches: ['spells', 'deploy'],
     enemy: { name: 'Sim Gunnery Officer', hp: 16, ai: 0, deck: dk('scout_drone:2 cadet:2 marine:3 ion_lancer:2 rifle_squad:2 plasma_bolt:2 heavy_trooper:2') },
@@ -51,7 +51,7 @@ const ENCOUNTERS = [
       'Use spells on enemy units that your own units can\'t beat in a fair fight.',
       'Recon Officer draws a card. An empty hand means no options.',
     ],
-    grant: { shield_trooper: 2, barricade: 2 } },
+    grant: { shield_trooper: 1, barricade: 1 } },
 
   { id: '1-3', sector: 0, name: 'Hold the Line', teaches: ['guardian'],
     enemy: { name: 'Sim Fortress', hp: 18, ai: 1, deck: dk('barricade:2 shield_trooper:3 marine:2 cadet:3 scout_drone:1 bulwark_mech:1 heavy_trooper:2 field_engineer:1') },
@@ -62,7 +62,7 @@ const ENCOUNTERS = [
       'Spells ignore Guardian. A Plasma Bolt can still hit the commander directly.',
       'Your own Guardians protect you the same way. Use them to shield your fragile units.',
     ],
-    grant: { field_engineer: 2, sapper: 1, dig_in: 1 }, unlockPowers: ['repair', 'pulse'] },
+    grant: { field_engineer: 1, sapper: 1, dig_in: 1 }, unlockPowers: ['repair', 'pulse'] },
 
   { id: '1-4', sector: 0, name: 'Command Authority', teaches: ['power'],
     enemy: { name: 'Sim Commander Vale', hp: 20, ai: 1, power: 'pulse', deck: dk('cadet:2 marine:2 shield_trooper:2 rifle_squad:2 recon_officer:1 ion_lancer:2 heavy_trooper:2 plasma_bolt:1 patrol_frigate:1') },
@@ -73,7 +73,7 @@ const ENCOUNTERS = [
       'Pulse Laser finishes off damaged units. Nanite Repair keeps your units and commander alive.',
       'At the start of a battle you can swap cards out of your opening hand. Send back expensive cards to find early plays.',
     ],
-    grant: { interceptor: 2, hover_tank: 2, strike_fighter: 1 }, teachesAlso: ['mulligan'] },
+    grant: { interceptor: 1, hover_tank: 1, strike_fighter: 1 }, teachesAlso: ['mulligan'] },
 
   { id: '1-E', sector: 0, name: 'Sim: Iron Wall', elite: true, after: '1-4',
     enemy: { name: 'Sim Bastion', hp: 24, ai: 1, passives: ['thick_hull'], power: 'repair', deck: dk('barricade:2 shield_trooper:2 bulwark_mech:2 heavy_trooper:2 medic_bot:2 marine:2 dreadnought:1 field_repair:1 dig_in:1') },

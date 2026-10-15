@@ -7,17 +7,19 @@
 // ============================================================================
 
 const ECON = {
-  packPrice: 100,
+  packPrice: 125,
   packSize: 5,
   // chance per card slot
-  odds: { common: 0.715, rare: 0.23, epic: 0.045, legendary: 0.01 },
-  pityEpic: 10,        // an Epic is guaranteed at least once every 10 packs
-  pityLegendary: 25,   // a Legendary at least once every 25 packs
+  odds: { common: 0.735, rare: 0.23, epic: 0.028, legendary: 0.007 },
+  pityEpic: 15,        // an Epic is guaranteed at least once every 15 packs
+  pityLegendary: 35,   // a Legendary at least once every 35 packs
+  freshChance: 0,      // chance a Common/Rare/Epic slot avoids cards you already own (Legendaries always avoid duplicates); duplicates become Scrap for crafting
   scrapValue: { common: 5, rare: 20, epic: 100, legendary: 400 },
   craftCost: { common: 40, rare: 100, epic: 400, legendary: 1600 },
-  winCredits: { normal: 20, elite: 50, boss: 100 },
+  winCredits: { normal: 10, elite: 40, boss: 60 },
   replayCredits: { normal: 15, elite: 30, boss: 45 },
-  winPacks: { normal: 0, elite: 1, boss: 2 },
+  winPacks: { normal: 0, elite: 1, boss: 1 },
+  gradPacks: 1,        // packs for finishing the Academy
   contractSlots: 2,
   // Alloy repairs Anchorage station modules (station.js)
   alloyWin: { normal: 30, elite: 50, boss: 100 },
@@ -29,7 +31,7 @@ const ECON = {
 // Module data and the station screen live in station.js; the numbers that
 // touch the economy and battles live here so the headless sim sees them.
 function stationLv(save, id) { return (save && save.station && save.station.mods[id]) || 0; }
-function packPriceOf(save) { return stationLv(save, 'dock') >= 3 ? 90 : ECON.packPrice; }
+function packPriceOf(save) { return stationLv(save, 'dock') >= 3 ? Math.round(ECON.packPrice * 0.9 / 5) * 5 : ECON.packPrice; }
 function craftCostOf(save, rarity) { return Math.round(ECON.craftCost[rarity] * (1 - 0.1 * stationLv(save, 'fabricator')) / 5) * 5; }
 function contractSlotsOf(save) { const c = stationLv(save, 'comms'); return ECON.contractSlots + (c >= 1 ? 1 : 0) + (c >= 3 ? 1 : 0); }
 function contractRewardOf(save, id) { return Math.round(CONTRACTS[id].reward * (stationLv(save, 'comms') >= 2 ? 1.5 : 1)); }
@@ -92,7 +94,7 @@ function openPack(save, tier) {
     // no duplicate Legendaries (or any card already maxed) while unowned ones remain at that rarity
     const fresh = pool.filter(d => (save.coll[d.id] || 0) < maxCopies(d) && !out.some(o => o.id === d.id && d.rarity === 'legendary'));
     if (r === 'legendary' && fresh.length) pool = fresh;
-    else if (fresh.length && Math.random() < 0.5) pool = fresh; // soft duplicate protection for the rest
+    else if (fresh.length && Math.random() < (ECON.freshChance || 0)) pool = fresh; // soft duplicate protection for the rest
     const d = pick(pool);
     const wasNew = !(save.coll[d.id] > 0);
     const scrap = gainCard(save, d.id);
@@ -174,16 +176,22 @@ function economyOpen(save) { return save.codex.includes('packs'); }
 function battleRewards(save, enc, firstClear) {
   const kind = encKind(enc);
   const r = { credits: 0, packs: 0, packTier: packTierFor(enc), legendary: firstClear && enc.bossCard ? enc.bossCard : null };
-  if (enc.graduation && firstClear) { r.credits = 100; r.packs = 3; r.alloy = ECON.alloyGraduation; return r; }
+  if (enc.graduation && firstClear) { r.credits = 100; r.packs = ECON.gradPacks; r.alloy = ECON.alloyGraduation; return r; }
   if (!economyOpen(save)) return r;
   r.credits = Math.round((firstClear ? ECON.winCredits[kind] : ECON.replayCredits[kind]) * creditMultOf(save));
   r.alloy = firstClear ? ECON.alloyWin[kind] : ECON.alloyReplay[kind];
   if (firstClear) { r.packs = ECON.winPacks[kind]; if (enc.final) r.scrap = 1600; }
   return r;
 }
+// Missions from Sector 2 on offer a choice: keep one of up to three cards from the supply crate.
+// Academy missions hand out their teaching cards; optional missions give their named cards.
+function crateChoice(enc) { return enc.grant && enc.sector >= 1 && !enc.elite ? Object.keys(enc.grant).slice(0, 3) : null; }
+// A Common from the crate comes as a full pair for your deck; anything rarer is a single copy.
+function crateCopies(id) { return D(id).rarity === 'common' ? 2 : 1; }
+
 function describeEncReward(enc, save) {
   const bits = [];
-  if (enc.graduation && !save.cleared[enc.id]) bits.push('Supply Depot and Anchorage station unlocked: 3 Academy Packs + 100 Credits + 60 Alloy');
+  if (enc.graduation && !save.cleared[enc.id]) bits.push(`Supply Depot and Anchorage station unlocked: ${ECON.gradPacks} Academy Pack${ECON.gradPacks > 1 ? 's' : ''} + 100 Credits + 60 Alloy`);
   else if (economyOpen(save)) {
     const k = encKind(enc);
     bits.push(`${Math.round(ECON.winCredits[k] * creditMultOf(save))} Credits`, `${ECON.alloyWin[k]} Alloy`);

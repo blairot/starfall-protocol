@@ -74,6 +74,7 @@ if (view === 'packopen') { openShop(openMap); openPackFlow(3); setTimeout(() => 
 if (view.startsWith('still-')) { const m = view.slice(6).match(/^(.*)-(\d+)$/); Cinema.still(m[1], +m[2]); }
 if (view.startsWith('cine-')) { SFX.init(); Cinema.play(view.slice(5), () => {}); }
 if (view === 'hangar-venom') { openHangar(openMap); Hangar.strat = 'venom'; renderHangar(); }
+if (view === 'crate') { App.save.streak = null; const enc = ENCOUNTERS.find(e => e.id === '2-2'); delete App.save.cleared['2-2']; UI.enc = enc; UI.s = { winner: 0, turnNo: 9, players: [{ hp: 20, phases: [] }, { hp: 0, phases: [] }], over: true }; UI.ended = null; UI.tally = {}; endBattle(); }
 if (view === 'packfront') { openShop(openMap); openPackFlow(3); }
 // frozen tear states for screenshots: packrip (rip half way), packout (strip gone, cards out)
 if (view === 'packrip' || view === 'packout') { openShop(openMap); openPackFlow(2); const pk = document.getElementById('po-pack');

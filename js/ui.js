@@ -787,14 +787,13 @@ function endBattle() {
   if (rw.alloy) ensureStation(save).alloy += rw.alloy;
   if (rw.scrap) save.scrap += rw.scrap;
   const legendScrap = rw.legendary ? gainCard(save, rw.legendary) : 0;
-  const granted = [];
-  if (firstClear && enc.grant) Object.entries(enc.grant).forEach(([id, n]) => { grantCard(save, id, n); for (let k = 0; k < n; k++) granted.push(id); });
+  const granted = [], crate = firstClear ? crateChoice(enc) : null;
+  if (firstClear && enc.grant && !crate) Object.entries(enc.grant).forEach(([id, n]) => { grantCard(save, id, n); for (let k = 0; k < n; k++) granted.push(id); });
   const unlocked = [];
   if (firstClear && enc.unlockPowers) enc.unlockPowers.forEach(p => { if (!save.powers.includes(p)) { save.powers.push(p); unlocked.push(p); } });
   if (!save.power && save.powers.length) save.power = save.powers[0];
   const newSector = highestSector(save) > prevSector;
-  if (granted.length) integrateGrants(save, granted, deckSizeFor(save));
-  if (newSector) { autoFillDeck(save, deckSizeFor(save)); refillContracts(save); }
+  if (newSector) refillContracts(save);
   persist();
   UI.s = null;
 
@@ -807,10 +806,13 @@ function endBattle() {
   if (rw.legendary) bits.push(`<div class="legend-reveal"><div class="lr-card">${cardHTML(rw.legendary, { cls: 'big' })}</div><div><div class="m-eyebrow">Legendary acquired</div><h3 class="lr-name">${esc(D(rw.legendary).name)} joins your fleet</h3><p class="muted">${legendScrap ? `You already owned this card, so it became ${legendScrap} Scrap.` : 'Add it to your deck in the Hangar.'}</p></div></div>`);
   if (granted.length) {
     const c = {}; granted.forEach(id => c[id] = (c[id] || 0) + 1);
-    bits.push(`<div class="got"><b>Supply crate:</b> ${Object.entries(c).map(([id, n]) => `<span class="chip" data-card="${id}">${esc(D(id).name)}${n > 1 ? ' ×' + n : ''}</span>`).join(' ')}<div class="muted">New cards were slotted into your deck so you can try them next battle.</div></div>`);
+    bits.push(`<div class="got"><b>New cards:</b> ${Object.entries(c).map(([id, n]) => `<span class="chip" data-card="${id}">${esc(D(id).name)}${n > 1 ? ' ×' + n : ''}</span>`).join(' ')}<div class="muted">They're in your collection. Add them to a deck in the Hangar.</div></div>`);
   }
+  if (crate) bits.push(`<div class="crate" id="crate"><div class="m-eyebrow">Supply crate</div><h3>Choose one card to keep</h3>
+    <div class="crate-row">${crate.map(id => `<button class="crate-card" data-crate="${id}" aria-label="Keep ${esc(D(id).name)}">${cardHTML(id)}<span class="crate-own">${crateCopies(id) > 1 ? '×' + crateCopies(id) + ' · ' : ''}${save.coll[id] ? 'You have ' + save.coll[id] : 'New'}</span></button>`).join('')}</div>
+    <p class="muted small">${TOUCH.on ? 'Press and hold' : 'Right-click'} a card to read it first. The other two go back to the quartermaster.</p></div>`);
   unlocked.forEach(p => bits.push(`<div class="got power-got"><b>New commander power:</b> ${powerIco(p)} ${esc(HEROPOWERS[p].name)}: ${esc(HEROPOWERS[p].text)} <span class="muted">Equip it in the Hangar.</span></div>`));
-  if (newSector) bits.push(`<div class="got"><b>Deck size increased to ${deckSizeFor(save)}.</b> <span class="muted">Your deck was topped up automatically. A new pack set is available at the Supply Depot.</span></div>`);
+  if (newSector) bits.push(`<div class="got"><b>Deck size increased to ${deckSizeFor(save)}.</b> <span class="muted">Add ${Math.max(0, deckSizeFor(save) - save.deck.length)} cards in the Hangar before your next battle. A new pack set is available at the Supply Depot.</span></div>`);
   if (graduated) bits.push('<div class="got"><b>Training complete: Supply Depot and Anchorage unlocked.</b> <span class="muted">Battles and contracts now earn Credits for Supply Packs at the Depot, and Alloy to repair Anchorage, your new forward base. Craft the cards you want with Scrap in the Hangar.</span></div>');
   const unopened = unopenedPacks(save);
   const m = modal(`${paintedBanner('screen-victory')}<div class="m-eyebrow ok">Victory</div><h2>${esc(enc.name)}</h2>
@@ -822,8 +824,21 @@ function endBattle() {
     <div class="m-actions">${unopened ? `<button class="btn" data-a="open">Open packs (${unopened})</button>` : ''}<button class="btn" data-a="hangar">Hangar</button>${upgradesAvailable(save) ? `<button class="btn" data-a="station">Anchorage (${upgradesAvailable(save)} ready)</button>` : ''}<button class="btn primary" data-a="go">${enc.final ? 'Continue' : 'Star Map'}</button></div>`, 'wide');
   const cine = firstClear && CINE_AFTER[enc.id];
   wireRate(m);
+  // the crate must be opened before leaving
+  let picked = !crate;
+  const acts = m.querySelectorAll('.m-actions .btn');
+  if (!picked) acts.forEach(b => { b.disabled = true; b.title = 'Choose a card from the supply crate first'; });
+  m.addEventListener('click', e => {
+    const c = e.target.closest('[data-crate]'); if (!c || picked) return;
+    picked = true; const id = c.dataset.crate;
+    const copies = crateCopies(id); grantCard(save, id, copies); persist(); SFX.heal();
+    m.querySelectorAll('.crate-card').forEach(b => { b.disabled = true; b.classList.toggle('kept', b === c); b.classList.toggle('gone', b !== c); });
+    m.querySelector('.crate h3').textContent = `${D(id).name}${copies > 1 ? ' ×' + copies : ''} added to your collection`;
+    acts.forEach(b => { b.disabled = false; b.title = ''; });
+    burstAt(c.getBoundingClientRect(), '#7dffa8', 24);
+  });
   m.onclick = e => {
-    const a = e.target.dataset.a; if (!a) return; closeModal();
+    const a = e.target.dataset.a; if (!a || !picked) return; closeModal();
     if (cine) return Cinema.play(cine, () => afterVictory(a, enc));
     afterVictory(a, enc);
   };
@@ -836,21 +851,6 @@ function afterVictory(a, enc) {
   else if (a === 'hangar') openHangar(openMap);
   else if (a === 'station') openStation(openMap);
   else openMap();
-}
-
-function integrateGrants(save, ids, size) {
-  const fresh = ids.slice();
-  const deck = save.deck.slice();
-  fresh.forEach(id => { if (deck.filter(x => x === id).length < Math.min(save.coll[id] || 0, maxCopies(D(id)))) deck.push(id); });
-  const protectedIds = new Set(fresh);
-  while (deck.length > size) {
-    let worst = -1, ws = 1e9;
-    deck.forEach((id, i) => { if (protectedIds.has(id)) return; const r = cardRating(id); if (r < ws) { ws = r; worst = i; } });
-    if (worst < 0) worst = 0;
-    deck.splice(worst, 1);
-  }
-  save.deck = deck;
-  if (deck.length < size) autoFillDeck(save, size);
 }
 
 function showEnding() {
@@ -1035,7 +1035,7 @@ function openBriefing(enc) {
     <div class="m-actions"><button class="btn ghost" data-a="back">Back</button>${enc.fixedDeck ? '' : '<button class="btn" data-a="hangar">Hangar</button>'}<button class="btn primary" data-a="go" ${deckOk ? '' : 'disabled'}>Launch</button></div>`, 'brief-modal');
   m.onchange = ev => {
     const t = ev.target;
-    if (t.matches('[data-brief-deck]')) { if (switchDeck(save, +t.value, size)) toast('That deck was short of cards, so it was topped up.'); persist(); Brief.result = null; Brief.use = false; openBriefing(enc); }
+    if (t.matches('[data-brief-deck]')) { if (switchDeck(save, +t.value, size)) toast(`That deck needs ${size - save.deck.length} more cards.`); persist(); Brief.result = null; Brief.use = false; openBriefing(enc); }
     if (t.matches('[data-tune-use]')) { Brief.use = t.checked; openBriefing(enc); }
   };
   m.onclick = ev => {
@@ -1049,6 +1049,7 @@ function openBriefing(enc) {
         const bar = $('#tune-bar'); if (bar) { bar.style.width = (done / total * 100).toFixed(0) + '%'; $('#tune-n').textContent = `${done} of ${total} simulated battles`; }
       }, res => { Brief.run = null; Brief.cancel = null; Brief.result = res; Brief.use = res.best.label !== 'Your deck'; if (Brief.id === enc.id && !$('#modal').hidden) openBriefing(enc); });
     }
+    if (a === 'fill') { autoFillDeck(save, size); persist(); toast('Filled the empty slots. Your own picks were kept.'); openBriefing(enc); return; }
     if (a === 'tune-stop') { if (Brief.cancel) Brief.cancel(); Brief.run = null; Brief.cancel = null; openBriefing(enc); }
     if (a === 'tune-save' || a === 'tune-replace') {
       const best = Brief.result.best.deck;
@@ -1075,7 +1076,7 @@ function briefDeckHTML(save, enc, size, deckOk, tunedOn) {
   const pw = save.power && !enc.noPower ? ` · Power: ${esc(HEROPOWERS[save.power].name)}` : '';
   const line = tunedOn
     ? `<div class="brief-foot"><span class="muted">Deck:</span> <b>Mission-tuned deck</b> · ${size} cards${pw} <span class="pill">Assist</span></div>`
-    : `<div class="brief-foot ${deckOk ? '' : 'warn'}"><span class="muted">Deck:</span> ${pick} ${save.deck.length}/${size} cards${pw}${deckOk ? '' : ' (fix it in the Hangar)'}</div>`;
+    : `<div class="brief-foot ${deckOk ? '' : 'warn'}"><span class="muted">Deck:</span> ${pick} ${save.deck.length}/${size} cards${pw}${deckOk ? '' : ` · needs ${size - save.deck.length} more <button class="btn small" data-a="fill">Fill empty slots</button>`}</div>`;
   let body;
   if (Brief.run) {
     const pc = Brief.run.done / Brief.run.total * 100;
@@ -1159,7 +1160,7 @@ function renderHangar() {
         <div class="muted small">${types.unit} units · ${types.spell} protocols${types.gear ? ` · ${types.gear} gear` : ''}${types.trap ? ` · ${types.trap} traps` : ''}</div>
         ${deckStratHTML(save)}
         <div class="deck-list">${rows || '<p class="muted">Empty deck.</p>'}</div>
-        <div class="dp-btns"><button class="btn small" id="h-auto">Auto-fill</button><button class="btn small ghost" id="h-clear">Clear</button></div>
+        <div class="dp-btns"><button class="btn small" id="h-auto" ${save.deck.length >= size ? 'disabled title="Your deck is full"' : ''}>Fill empty slots</button><button class="btn small ghost" id="h-clear">Clear</button></div>
         ${signatureHTML(save)}
         <h3>Commander Power</h3><div class="powers">${powers}</div>
       </aside>
@@ -1173,7 +1174,7 @@ function renderHangar() {
     if (!t.closest('[data-dk-del]')) Brief.delArm = false;
     const st = t.closest('[data-strat]');
     if (st) { Hangar.strat = st.dataset.strat || null; Hangar.filter = 'all'; Hangar.cost = -1; Hangar.q = ''; SFX.click(); renderHangar(); const g = $('.coll'); if (g && TOUCH.on) g.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' }); return; }
-    if (dk) { const i = +dk.dataset.dk; if (i !== save.activeDeck) { const short = switchDeck(save, i, size); persist(); SFX.click(); toast(`Switched to ${esc(activeDeck(save).name)}.${short ? ' It was short of cards, so it was topped up.' : ''}`); } renderHangar(); return; }
+    if (dk) { const i = +dk.dataset.dk; if (i !== save.activeDeck) { const short = switchDeck(save, i, size); persist(); SFX.click(); toast(`Switched to ${esc(activeDeck(save).name)}.${short ? ` It needs ${size - save.deck.length} more cards.` : ''}`); } renderHangar(); return; }
     if (t.closest('[data-dk-new]')) { const tmp = { coll: save.coll, deck: [] }; autoFillDeck(tmp, size); if (addSavedDeck(save, 'New deck', tmp.deck, size)) { persist(); SFX.click(); toast('New deck created from your best cards. Rename it below.'); } renderHangar(); return; }
     if (t.closest('[data-dk-dup]')) { if (addSavedDeck(save, activeDeck(save).name + ' copy', save.deck, size)) { persist(); SFX.click(); toast('Deck copied. You are now editing the copy.'); } renderHangar(); return; }
     if (t.closest('[data-dk-del]')) {
@@ -1197,7 +1198,7 @@ function renderHangar() {
     if (c) { Hangar.cost = +c.dataset.c; renderHangar(); return; }
     if (pw) { save.power = pw.dataset.pw; persist(); renderHangar(); return; }
     if (t.closest('#h-jump')) { $('.deckpanel').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' }); return; }
-    if (t.id === 'h-auto') { autoFillDeck(save, size); persist(); renderHangar(); toast('Deck filled with your strongest available cards.'); }
+    if (t.id === 'h-auto') { const n = size - save.deck.length; if (n <= 0) return; autoFillDeck(save, size); persist(); renderHangar(); toast(`Filled ${n} empty slot${n > 1 ? 's' : ''}. Your own picks were kept.`); }
     if (t.id === 'h-clear') { save.deck = []; persist(); renderHangar(); }
     if (t.id === 'h-done') {
       if (save.deck.length !== size) toast(`Your deck needs exactly ${size} cards (currently ${save.deck.length}).`);

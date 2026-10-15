@@ -43,7 +43,7 @@ function loadDeck(save, size) {
   save.deck = ownedDeck(save, d.deck).slice(0, size);
   if (d.power && save.powers.includes(d.power)) save.power = d.power;
   const short = save.deck.length < size;
-  if (short) autoFillDeck(save, size);
+  // a short deck stays short: the Hangar and briefing show what's missing and offer Fill empty slots
   syncDecks(save);
   return short;
 }
