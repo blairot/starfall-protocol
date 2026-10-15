@@ -11,18 +11,87 @@
 
 const AI_NOISE = [6, 2.5, 0.4, 0];
 
+// ---------------------------------------------------------------- personas
+// Each enemy commander plays in its faction's style (campaign.js picks one per
+// encounter; s.players[i].persona holds the key). A persona is only a set of
+// weights for evaluate() plus two cheap rules in aiChoose(): no extra search.
+// The defaults below are the original evaluation, so `drill` (and any player
+// without a persona, including yours in the simulations) plays exactly as before.
+const AI_W0 = {
+  self: 0.85,       // own commander health (heroValue)
+  face: 1.0,        // enemy commander health (heroValue)
+  faceRace: 0,      // face weight instead of `face` when the damage race is close (0 = off)
+  faceLethal: 0,    // face weight instead of `face` when two-turn lethal is in sight (0 = off)
+  mine: 1.0,        // multiplier on own units' value
+  theirs: 1.1,      // multiplier on enemy units' value (higher = trades and clears more)
+  wide: 0,          // bonus per own unit on the battlefield
+  atk: 1.0, hp: 0.9, base: 0.6,   // unit value: Attack, Health, flat body
+  guardian: 1, barrier: 1, toxic: 1,  // keyword value multipliers
+  warp: 0, blitz: 0,                  // flat bonus for Warp / Blitz units
+  hand: 1, handCost: 0.12,          // card in hand: (0.6 + cost * handCost) * hand
+  gear: 0.5,        // own Gear: Attack * Durability * gear
+  gearOn: 0,        // flat bonus while Gear is equipped (wants it on, still happy to swing)
+  traps: 1.5,       // per armed Trap
+  armor: 0,         // extra per point of own Armor
+  danger: 1,        // multiplier on the "I could die next turn" penalty
+  ff: 0.5,          // focus fire must beat the best single action by this much
+  hold: 0, holdMin: 0,  // removal held for the best enemy unit: penalty, minimum target value
+  eager: 0,         // also plays cards and power when the result is up to this much worse than passing
+};
+const AI_PERSONAS = {
+  drill: { name: 'By the book', text: 'Plays the textbook line: trades when it should, attacks when it can.', w: {} },
+  raider: { name: 'Reckless', text: 'Races for your face whenever the fight looks close, loves Warp, Blitz and Gear, and throws units away for tempo.',
+    w: { face: 1.2, faceRace: 2.4, mine: 0.9, theirs: 1.0, warp: 1.5, blitz: 1.0, gearOn: 1.5, danger: 0.8, ff: 1.5 } },
+  swarm: { name: 'Swarming', text: 'Floods the battlefield with cheap units before big ones and sacrifices them freely. Area damage hurts it most.',
+    w: { wide: 1.6, mine: 0.85, theirs: 1.22, atk: 0.9, hp: 0.75, base: 1.2, guardian: 0.6, hand: 0.7, handCost: 0.3 } },
+  forge: { name: 'Methodical', text: 'Clears the board first, protects its Guardians and Barrier units, and rarely hits you until lethal is close.',
+    w: { face: 0.6, faceLethal: 1.2, self: 1.0, theirs: 1.3, guardian: 2.5, barrier: 2, armor: 0.3, danger: 1.3, ff: 0 } },
+  psionic: { name: 'Cunning', text: 'Saves its removal and mind control for your best unit, and values cards and Traps over tempo.',
+    w: { face: 0.95, theirs: 1.1, hand: 1.1, traps: 2.2, hold: 10, holdMin: 7 } },
+  choir: { name: 'Relentless', text: 'Balanced, but always pressing: it fights hard for the board and spends every card and power it can each turn.',
+    w: { face: 1.1, mine: 1.1, theirs: 1.35, hand: 0.75, danger: 0.8, eager: 4 } },
+};
+Object.values(AI_PERSONAS).forEach(p => { p.w = Object.assign({}, AI_W0, p.w); });
+
+function personaKey(s, pi) { const k = s.players[pi].persona; return AI_PERSONAS[k] ? k : 'drill'; }
+function aiWeights(s, pi) { return AI_PERSONAS[personaKey(s, pi)].w; }
+
+// Damage I could deal with what's on the battlefield now (units + Gear).
+function boardDamage(s, pi) {
+  const P = s.players[pi];
+  let n = P.weapon ? P.weapon.atk : 0;
+  for (const m of P.board) if (alive(m) && !m.frozen) n += atkOf(s, m) * (m.kw.twin ? 2 : 1);
+  return n;
+}
+
+// Per-decision weights: the race and lethal switches are read from the position
+// before the move, so a single action can't flip the scale it is judged on.
+function decisionWeights(s, pi) {
+  const W = aiWeights(s, pi);
+  if (!W.faceRace && !W.faceLethal) return W;
+  const P = s.players[pi], O = s.players[1 - pi];
+  const mine = boardDamage(s, pi), theirs = boardDamage(s, 1 - pi);
+  const oHp = O.hp + O.armor, pHp = P.hp + P.armor;
+  let face = W.face;
+  if (W.faceRace && Math.ceil(oHp / Math.max(1, mine)) <= Math.ceil(pHp / Math.max(1, theirs)) + 1) face = W.faceRace;
+  if (W.faceLethal && oHp <= mine * 2 + 3) face = W.faceLethal;
+  return face === W.face ? W : Object.assign({}, W, { face });
+}
+
 function cloneState(s) {
   const c = JSON.parse(JSON.stringify({ ...s, events: [] }));
   c.sim = true; return c;
 }
 
-function minionValue(s, m) {
+function minionValue(s, m, w = AI_W0) {
   if (!alive(m)) return 0;
   const a = atkOf(s, m), d = D(m.id);
-  let v = a * 1.0 + m.hp * 0.9 + 0.6;
-  if (m.kw.guardian) v += 0.8 + m.hp * 0.15;
-  if (m.kw.barrier) v += a * 0.6 + 1;
-  if (m.kw.toxic) v += 2.5;
+  let v = a * w.atk + m.hp * w.hp + w.base;
+  if (m.kw.guardian) v += (0.8 + m.hp * 0.15) * w.guardian;
+  if (m.kw.barrier) v += (a * 0.6 + 1) * w.barrier;
+  if (m.kw.toxic) v += 2.5 * w.toxic;
+  if (w.warp && m.kw.warp) v += w.warp;
+  if (w.blitz && m.kw.blitz) v += w.blitz;
   if (m.kw.twin) v += a * 0.6;
   if (m.kw.cloak) v += 0.8;
   if (m.kw.siphon) v += a * 0.4;
@@ -45,23 +114,43 @@ function lethalMargin(s, me) {
   return P.hp + P.armor - (danger - myGuard * 0.5);
 }
 
-function evaluate(s, me) {
+// w: the acting player's persona weights (aiChoose passes per-decision weights).
+function evaluate(s, me, w = aiWeights(s, me)) {
   const P = s.players[me], O = s.players[1 - me];
   if (P.hp <= 0) return -1e7;
   if (O.hp <= 0) return 1e7;
-  let v = heroValue(P.hp + P.armor) * 0.85 - heroValue(O.hp + O.armor);
+  let v = heroValue(P.hp + P.armor) * w.self - heroValue(O.hp + O.armor) * w.face;
   if (O.phases.length) v -= O.phases.length * 120;
-  for (const m of P.board) v += minionValue(s, m);
-  for (const m of O.board) v -= minionValue(s, m) * 1.1;
-  for (const c of P.hand) v += c.id === 'energy_cell' ? 1.6 : 0.6 + Math.min(D(c.id).cost, 6) * 0.12;
-  if (P.weapon) v += P.weapon.atk * P.weapon.dur * 0.5;
+  for (const m of P.board) v += minionValue(s, m, w) * w.mine;
+  if (w.wide) for (const m of P.board) if (alive(m)) v += w.wide;
+  for (const m of O.board) v -= minionValue(s, m, w) * w.theirs;
+  for (const c of P.hand) v += c.id === 'energy_cell' ? 1.6 : (0.6 + Math.min(D(c.id).cost, 6) * w.handCost) * w.hand;
+  if (P.weapon) v += P.weapon.atk * P.weapon.dur * w.gear;
+  if (w.gearOn && P.weapon) v += w.gearOn;
   if (O.weapon) v -= O.weapon.atk * O.weapon.dur * 0.5;
   v -= P.overload * 0.6;
-  v += P.traps.length * 1.5;
+  v += P.traps.length * w.traps;
+  if (w.armor) v += P.armor * w.armor;
   const margin = lethalMargin(s, me);
-  if (margin <= 0) v -= 45 + Math.min(20, -margin * 2);   // dead next turn unless something changes
-  else if (margin <= 4) v -= (5 - margin) * 3;            // uncomfortably close
+  if (margin <= 0) v -= (45 + Math.min(20, -margin * 2)) * w.danger;   // dead next turn unless something changes
+  else if (margin <= 4) v -= (5 - margin) * 3 * w.danger;              // uncomfortably close
   return v;
+}
+
+// Cunning: a removal or control spell aimed at anything but the best enemy unit
+// (or a weak one) is marked down, unless we're in danger or the hand is nearly full.
+function holdRemoval(s, pi, w, scored) {
+  const P = s.players[pi], O = s.players[1 - pi];
+  if (P.hand.length >= MAX_HAND - 1 || lethalMargin(s, pi) <= 2) return;
+  let best = -Infinity;
+  for (const m of O.board) if (alive(m)) best = Math.max(best, minionValue(s, m, w));
+  for (const x of scored) {
+    if (x.a.k !== 'play' || x.a.t == null || x.v >= 1e6) continue;
+    const t = getChar(s, x.a.t);
+    if (!t || isHero(t) || ownerOf(t) === pi || D(x.a.id).type !== 'spell') continue;
+    const tv = minionValue(s, t, w);
+    if (tv < w.holdMin || tv < best - 0.5) x.v -= w.hold;
+  }
 }
 
 function aiActions(s, pi) {
@@ -101,7 +190,7 @@ function subsets(arr, max) {
   rec(0, []); return out;
 }
 
-function focusFire(s, pi) {
+function focusFire(s, pi, w = aiWeights(s, pi)) {
   const P = s.players[pi], O = s.players[1 - pi];
   const attackers = [P, ...P.board].filter(c => canAttack(s, pi, c.uid)).map(c => c.uid);
   if (attackers.length < 2) return null;
@@ -121,7 +210,7 @@ function focusFire(s, pi) {
       const c = cloneState(s); let ok = true;
       for (const a of order) { if (!getChar(c, t.uid) || !alive(getChar(c, t.uid))) break; if (!canAttack(c, pi, a) || !attackTargets(c, a).includes(t.uid)) { ok = false; break; } attack(c, a, t.uid); }
       if (!ok || (getChar(c, t.uid) && alive(getChar(c, t.uid)))) continue;
-      const v = evaluate(c, pi);
+      const v = evaluate(c, pi, w);
       if (!best || v > best.v) best = { v, steps: order.map(a => ({ k: 'atk', a, t: t.uid })) };
     }
   }
@@ -137,32 +226,37 @@ function aiChoose(s, pi, level) {
     AI_PLAN = null;
   }
   AI_PLAN = null;
-  const base = evaluate(s, pi);
+  // Battles saved before personas existed: look the enemy commander up by name.
+  if (pi === 1 && s.players[1].persona === undefined && !s.sim && typeof personaOf === 'function') s.players[1].persona = personaOf(s.players[1]).key;
+  const w = decisionWeights(s, pi);
+  const base = evaluate(s, pi, w);
   const acts = aiActions(s, pi);
   if (!acts.length) return null;
   const noise = AI_NOISE[level];
-  let scored = acts.map(a => { const c = simulate(s, pi, a); return { a, v: evaluate(c, pi), c }; });
+  let scored = acts.map(a => { const c = simulate(s, pi, a); return { a, v: evaluate(c, pi, w), c }; });
   if (level >= 3) {
     scored.sort((x, y) => y.v - x.v);
     for (const sc of scored.slice(0, 5)) {
       if (sc.c.over) continue;
       let best2 = sc.v;
-      for (const a2 of aiActions(sc.c, pi).slice(0, 60)) best2 = Math.max(best2, evaluate(simulate(sc.c, pi, a2), pi));
+      for (const a2 of aiActions(sc.c, pi).slice(0, 60)) best2 = Math.max(best2, evaluate(simulate(sc.c, pi, a2), pi, w));
       sc.v = sc.v * 0.5 + best2 * 0.5;
     }
   }
+  if (w.hold) holdRemoval(s, pi, w, scored);
   scored.forEach(x => { if (x.v < 1e6) x.v += (Math.random() - 0.5) * noise; });
   scored.sort((x, y) => y.v - x.v);
   // Ganging up on a threat: veterans always consider it; pilots (tutorial level) only
   // when they're about to die; rookies never.
   if ((level >= 2 || (level === 1 && lethalMargin(s, pi) <= 0)) && !s.sim) {
-    const ff = focusFire(s, pi);
-    if (ff && ff.v > Math.max(base, scored[0].v) + 0.5) {
+    const ff = focusFire(s, pi, w);
+    if (ff && ff.v > Math.max(base, scored[0].v) + w.ff) {
       AI_PLAN = { pi, turn: s.turnNo, steps: ff.steps.slice(1) };
       return ff.steps[0];
     }
   }
-  const good = scored.filter(x => x.v > base + 0.05);
+  // Relentless: also spends cards and power on moves that look slightly worse than passing.
+  const good = scored.filter(x => x.v > base + 0.05 || (w.eager && x.a.k !== 'atk' && x.v > base - w.eager));
   if (!good.length) return null;
   if (level === 0 && good.length > 1 && Math.random() < 0.3 && good[0].v < 1e6) return pick(good).a;
   return good[0].a;

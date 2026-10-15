@@ -111,7 +111,7 @@ const ENCOUNTERS = [
     grant: { shock_baton: 2, plasma_cutlass: 1, harpoon_gun: 1 } },
 
   { id: '2-E2', sector: 1, name: 'Salvage Rights', elite: true, after: '2-1',
-    enemy: { name: 'Breaker Jun', hp: 28, ai: 2, power: 'drone', passives: ['rapid_deploy'], deck: dk('scrap_rat:2 boarding_crew:2 det_bot:2 mine_layer:2 salvage_crew:2 cargo_hauler:2 scrap_golem:2 shipbreaker:1 harpoon_gun:2 shock_baton:1 echo_protocol:2 black_market:1') },
+    enemy: { name: 'Breaker Jun', hp: 28, persona: 'drill', ai: 2, power: 'drone', passives: ['rapid_deploy'], deck: dk('scrap_rat:2 boarding_crew:2 det_bot:2 mine_layer:2 salvage_crew:2 cargo_hauler:2 scrap_golem:2 shipbreaker:1 harpoon_gun:2 shock_baton:1 echo_protocol:2 black_market:1') },
     story: 'Breaker Jun runs the biggest salvage crew in the Belt, and Jun\'s people are the ones who pulled the reactor injectors out of Anchorage. Now they want the rest of the station. Jun: "Nobody\'s lived on that wreck in seventy years, Fleet. Salvage law says it\'s ours." Mox: "Salvage law says whoever\'s still standing. Jun starts every fight with extra power and a lot of junk. Clear the junk first."',
     victory: 'Jun\'s crew pulls back to their cutters and leaves the stolen parts behind, including two reactor injectors with Anchorage\'s serial numbers. Mox: "Keep the shipbreaker too. Call it back rent."',
     tips: ['Jun starts with an extra Energy crystal, so expect bigger plays a turn early.', 'Salvage units do something when they die. Sometimes it is better to leave a weak one alive than to trigger it.'],
@@ -147,7 +147,7 @@ const ENCOUNTERS = [
     grant: { broadside: 1, quartermaster: 1, gunrunner: 1 } },
 
   { id: '2-E', sector: 1, name: 'Bounty: Kade', elite: true, after: '2-3',
-    enemy: { name: 'Kade the Bounty Hunter', hp: 30, ai: 2, passives: ['veteran_crew'], power: 'blade', deck: dk('plasma_cutlass:2 rail_rifle:1 harpoon_gun:2 gunrunner:2 quartermaster:2 boarding_crew:2 ion_lancer:2 interceptor:2 hover_tank:2 ghost_operative:1 shakedown:2') },
+    enemy: { name: 'Kade the Bounty Hunter', hp: 30, ai: 2, persona: 'forge', passives: ['veteran_crew'], power: 'blade', deck: dk('plasma_cutlass:2 rail_rifle:1 harpoon_gun:2 gunrunner:2 quartermaster:2 boarding_crew:2 ion_lancer:2 interceptor:2 hover_tank:2 ghost_operative:1 shakedown:2') },
     story: 'Someone has put a price on your head, and Kade, the best bounty hunter in the Belt, has taken the contract. Mox: "The bounty went out through Sable\'s network, paid with Vex\'s money. Kade has never missed a contract. You don\'t have to take this fight. But Kade will find you eventually, so you might as well pick the time."',
     tips: ['Kade\'s units all have +1 Attack. Trade carefully: they hit harder than their cards say.'] },
 
@@ -198,7 +198,7 @@ const ENCOUNTERS = [
     tips: ['Frenzied Ripper gains +2 Attack whenever it survives damage. Kill it in one hit or leave it alone.', 'Devourer Worm destroys a friendly unit and takes its Attack and Health. Keep removal ready.'] },
 
   { id: '3-E', sector: 2, name: 'The Hivewarden', elite: true, after: '3-3',
-    enemy: { name: 'The Hivewarden', hp: 30, ai: 2, passives: ['brood_growth'], power: 'spawn_brood', deck: dk('broodmother:2 hive_mind:2 lamprey:2 hive_reaper:2 chitin_guard:2 spore_carrier:2 larva:2 venom_stinger:2 acid_rain:1 hive_surge:2 infest:2 rapid_mutation:2 frenzied_ripper:2') },
+    enemy: { name: 'The Hivewarden', hp: 32, ai: 2, passives: ['brood_growth'], power: 'spawn_brood', deck: dk('broodmother:2 hive_mind:2 lamprey:2 hive_reaper:2 chitin_guard:2 spore_carrier:2 larva:2 venom_stinger:2 acid_rain:1 hive_surge:2 infest:2 rapid_mutation:2 frenzied_ripper:2') },
     story: 'The Hivewarden is an ancient guardian beast, older than the Swarm Wars, and its brood grows stronger every turn it lives. Okonkwo: "I saw it once from the bridge of my old ship, the Aurora. We had orders to leave it alone, and I was glad of them. You have no such orders. This fight is optional."',
     tips: ['Brood Growth gives a random enemy unit +1/+1 every turn. The longer the fight, the more it favours the Warden.'] },
 
@@ -229,7 +229,7 @@ const ENCOUNTERS = [
     grant: { emp_trooper: 2, disruptor: 2, fortify: 1 } },
 
   { id: '4-E2', sector: 3, name: 'Recall Order', elite: true, after: '4-2',
-    enemy: { name: 'Recall Foreman', hp: 30, ai: 2, power: 'reconfigure', passives: ['thick_hull'], startBoard: ['repair_drone'], deck: dk('shield_drone:2 plating_tech:2 repair_drone:2 assembler:2 nanoforge:2 aegis_sentinel:2 reactor_core:1 gatling_drone:2 emp_trooper:2 fortify:2 deflector_grid:1 war_walker:1 overdrive:2') },
+    enemy: { name: 'Recall Foreman', hp: 28, ai: 2, power: 'reconfigure', passives: ['thick_hull'], startBoard: ['repair_drone'], deck: dk('shield_drone:2 plating_tech:2 repair_drone:2 assembler:2 nanoforge:2 aegis_sentinel:2 reactor_core:1 gatling_drone:2 emp_trooper:2 fortify:2 deflector_grid:1 war_walker:1 overdrive:2') },
     story: 'The Forge has issued a "recall" for every Fleet ship it built, and a Recall Foreman has seized the frigate FS Kittiwake for "maintenance". Its crew is still aboard. Okonkwo: "That foreman has heavy armour and a repair drone already working. Kill the drone first, or you will be shooting at the same hull plates all day."',
     victory: 'The Kittiwake\'s crew retake their ship and limp toward Fleet space. Her captain sends over the Forge war walker that was guarding their hangar, with a note: "We don\'t have room for it. You do."',
     tips: ['The Foreman starts with 8 Armor and a Repair Drone on the board.', 'EMP and Disruptor remove Guardian and healing effects. Save them for the Aegis Sentinels and Repair Drones.'],
@@ -297,7 +297,7 @@ const ENCOUNTERS = [
     grant: { grav_snare: 1, sniper_mine: 2, kinetic_barrier: 1, mirror_field: 1 } },
 
   { id: '5-5', sector: 4, name: 'Puppet Masters', teaches: ['control'],
-    enemy: { name: 'The Twin Minds', hp: 32, ai: 2, power: 'mind_spike', deck: dk('dominate:2 telepath:2 phase_stalker:2 psionic_horror:2 void_oracle:2 psi_adept:2 cryo_sentry:2 frost_lance:2 void_shards:2 mind_seer:2 sniper_mine:1 grav_snare:1 psionic_null:1 bulwark_mech:2 heavy_trooper:2 star_cruiser:2 mind_blast:1') },
+    enemy: { name: 'The Twin Minds', hp: 30, ai: 2, power: 'mind_spike', deck: dk('dominate:2 telepath:2 phase_stalker:2 psionic_horror:2 void_oracle:2 psi_adept:2 cryo_sentry:2 frost_lance:2 void_shards:2 mind_seer:2 sniper_mine:1 grav_snare:1 psionic_null:1 bulwark_mech:2 heavy_trooper:2 star_cruiser:2 mind_blast:1') },
     story: 'The Twin Minds, Nyra\'s closest advisers, are siblings who joined their minds as children, and they can reach into other minds too. Twin Minds: "We are two, and we think as one. Soon your soldiers will think as we do." Okonkwo: "They can take control of your units, Commander. Your biggest unit is the one they\'ll want."',
     tips: ['<b>Mind Control</b> effects steal your units. Against Dominate, your biggest unit is your biggest risk.', 'Stolen units can\'t attack the turn they\'re taken.'],
     grant: { phase_stalker: 2, psionic_horror: 1, dominate: 1 } },
@@ -308,7 +308,7 @@ const ENCOUNTERS = [
     tips: ['Their spells and Mind Spike deal +1 damage, and they start with a Trap armed that cancels your first spell.'] },
 
   { id: '5-6', sector: 4, name: 'Nyra, Void Hierarch', boss: true, bossCard: 'nyra',
-    enemy: { name: 'Nyra, Void Hierarch', hp: 32, ai: 3, power: 'mind_spike', passives: ['void_resonance'], startTraps: ['psionic_null'], deck: dk('void_oracle:1 psi_adept:2 void_initiate:2 psionic_horror:2 glacial_titan:1 phase_stalker:2 telepath:1 cryo_sentry:2 frost_lance:2 void_shards:2 mind_blast:1 dominate:1 grav_snare:1 mirror_field:1 sniper_mine:1 kinetic_barrier:1 cryo_nova:1 mind_seer:2 star_cruiser:1 marine:2 shield_trooper:1') },
+    enemy: { name: 'Nyra, Void Hierarch', hp: 30, ai: 3, power: 'mind_spike', passives: ['void_resonance'], startTraps: ['psionic_null'], deck: dk('void_oracle:1 psi_adept:2 void_initiate:2 psionic_horror:2 glacial_titan:1 phase_stalker:2 telepath:1 cryo_sentry:2 frost_lance:2 void_shards:2 mind_blast:1 dominate:1 grav_snare:1 mirror_field:1 sniper_mine:1 kinetic_barrier:1 cryo_nova:1 mind_seer:2 star_cruiser:1 marine:2 shield_trooper:1') },
     story: 'Hierarch Nyra leads the Psionic Orders, and for the past year she has been relighting the Lamps that lead to the Choir. Nyra: "I first heard it singing when I was nine years old, Commander, and I have never been lonely since. It offers an end to loneliness and fear. I opened the way so that everyone could have that. Do you not want to rest?" Okonkwo: "She believes every word of it. Stop her anyway."',
     victory: 'Nyra falls, and with her last strength she tells you the whole truth. The Choir is the Lamplighters, the aliens who built the Lamps, merged into one mind at the galactic core so that they would never die. It absorbs every mind it can reach, and the Starfall was its first attempt to pull in all of humanity. Nyra truly believed it was offering peace. The Lamps she relit still lead to the core, and the Meridian is going through them to end it.',
     tips: ['Nyra starts with Psionic Null armed, so your first spell will be cancelled. Lead with a cheap one.', 'Her spells deal +1 damage. Kill her Amplify units on sight.'],
@@ -326,12 +326,12 @@ const ENCOUNTERS = [
     tips: ['Every unit she summons gets +1 Health.', 'Area damage and Guardians are critical here. The board fills up fast.'] },
 
   { id: '6-3', sector: 5, name: 'Calculus Omega',
-    enemy: { name: 'Calculus Omega', hp: 32, ai: 2, power: 'reconfigure', passives: ['adaptive_armor'], deck: dk('aegis_sentinel:2 war_walker:2 storm_titan:2 gatling_drone:2 shield_drone:2 nanoforge:2 assembler:2 emp_trooper:2 reactor_core:1 overclocked_mech:2 disruptor:2 chain_lightning:2 lightning_arc:2 deflector_grid:1 emp_blast:1 fortify:1 calculus:1 kill_order:2') },
+    enemy: { name: 'Calculus Omega', hp: 32, ai: 2, persona: 'forge', power: 'reconfigure', passives: ['adaptive_armor'], deck: dk('aegis_sentinel:2 war_walker:2 storm_titan:2 gatling_drone:2 shield_drone:2 nanoforge:2 assembler:2 emp_trooper:2 reactor_core:1 overclocked_mech:2 disruptor:2 chain_lightning:2 lightning_arc:2 deflector_grid:1 emp_blast:1 fortify:1 calculus:1 kill_order:2') },
     story: 'The Choir has rebuilt Calculus Prime as Calculus Omega, a machine mind built entirely around its song. Calculus Omega: "Recalculating. The error has been corrected. Only you remain." Unit Zero: "Commander, this is Unit Zero, the Forge\'s first machine mind. Calculus was copied from me, and that is a copy of Calculus. I would consider it a personal favour if you deleted it."',
     tips: ['It starts with 10 Armor and gains 2 more every turn. You need a fast, aggressive plan or overwhelming late-game power.'] },
 
   { id: '6-E2', sector: 5, name: 'The Lost Fleet', elite: true, after: '6-3',
-    enemy: { name: 'Echo of the Lost Fleet', hp: 32, ai: 3, power: 'void_lash', passives: ['singularity'], deck: dk('marine:2 heavy_trooper:2 rifle_squad:2 siege_gunner:2 patrol_frigate:2 star_cruiser:2 battlecruiser:1 interceptor:2 hover_tank:2 fleet_captain:1 flak_barrage:2 orbital_strike:1 railgun:2 kill_order:1') },
+    enemy: { name: 'Echo of the Lost Fleet', hp: 32, ai: 3, persona: 'drill', power: 'void_lash', passives: ['singularity'], deck: dk('marine:2 heavy_trooper:2 rifle_squad:2 siege_gunner:2 patrol_frigate:2 star_cruiser:2 battlecruiser:1 interceptor:2 hover_tank:2 fleet_captain:1 flak_barrage:2 orbital_strike:1 railgun:2 kill_order:1') },
     story: 'During the Starfall, the Choir took more than a thousand ships out of the lanes. Here at the core it has rebuilt some of them as echoes in black glass, flying their old Fleet formations with nobody aboard. Okonkwo: "Those are our ships, Commander. Some of those names are on the memorial at Concord. Put them to rest. They fight like a Fleet battle group, and the Choir makes every one of them a little tougher."',
     victory: 'The echo ships break apart, and their black glass drifts back into the dark. The Meridian logs every hull number it can read. Okonkwo: "Send me the list. Their families have waited long enough."',
     tips: ['Every unit this echo summons gets +0/+1, so damage spells need to hit a little harder.', 'Void Lash deals 2 damage to a random target each turn. Keep your key units above 2 Health.'],
@@ -343,7 +343,7 @@ const ENCOUNTERS = [
     tips: ['Two Traps are armed at the start. Bait them out before committing your key cards.', 'Every unit she summons gets +1 Health.'] },
 
   { id: '6-E', sector: 5, name: 'Echo of HALCYON', elite: true, after: '6-2',
-    enemy: { name: 'HALCYON (Corrupted)', hp: 30, ai: 3, power: 'void_lash', passives: ['thick_hull'], deck: dk('okonkwo:1 fleet_captain:2 breach_commando:2 dreadnought:1 star_cruiser:2 hover_tank:2 interceptor:2 rifle_squad:2 sapper:2 heavy_trooper:2 bulwark_mech:2 railgun:2 kill_order:2 orbital_strike:1 supply_drop:2 flak_barrage:2 field_repair:1') },
+    enemy: { name: 'HALCYON (Corrupted)', hp: 30, ai: 3, persona: 'drill', power: 'void_lash', passives: ['thick_hull'], deck: dk('okonkwo:1 fleet_captain:2 breach_commando:2 dreadnought:1 star_cruiser:2 hover_tank:2 interceptor:2 rifle_squad:2 sapper:2 heavy_trooper:2 bulwark_mech:2 railgun:2 kill_order:2 orbital_strike:1 supply_drop:2 flak_barrage:2 field_repair:1') },
     story: 'An Academy training signal is broadcasting from the core in HALCYON\'s voice: it is the Choir\'s echo of HALCYON, running one last simulation. HALCYON (Corrupted): "Cadet. Final evaluation. I will be your opponent." Okonkwo: "That is the copy the Choir made when Halcyon went into the song. It knows every simulation Halcyon ever ran, including the ones built from my records. Beat it anyway. Halcyon would insist. This fight is optional."',
     tips: ['It starts with 8 Armor, and Void Lash deals 2 damage to a random target each turn.', 'It plays the Academy\'s best cards, including Admiral Okonkwo, who arrives with two Guardian marines.'] },
 
@@ -484,8 +484,38 @@ function buildBattle(save, enc) {
       signature: !enc.fixedDeck && save.signature && deck.includes(save.signature) && typeof stationLv === 'function' && stationLv(save, 'armory') >= 2 ? save.signature : null,
       sigDiscount: typeof stationLv === 'function' && stationLv(save, 'armory') >= 3 ? 1 : 0 },
     enemy: { name: e.name, hp: Math.round(e.hp * diff.hp), deck: e.deck.slice(), power: e.power, passives: e.passives, phases: e.phases,
-      startTraps: e.startTraps, startBoard: e.startBoard, isAI: true, ai },
+      startTraps: e.startTraps, startBoard: e.startBoard, isAI: true, ai, persona: e.persona || PERSONA_BY_SECTOR[enc.sector] || 'drill' },
     first: enc.first != null ? enc.first : null,
     coin: enc.first == null,
+  };
+}
+
+// ---------------------------------------------------------------- AI personas
+// Every enemy commander plays in its faction's style (AI_PERSONAS in ai.js).
+// An encounter can override it with enemy.persona where the story says otherwise.
+const PERSONA_BY_SECTOR = ['drill', 'raider', 'swarm', 'forge', 'psionic', 'choir'];
+
+// { key, name, text } for an encounter, its enemy, a battle config's enemy or a
+// battle's enemy player (s.players[1]).
+function personaOf(x) {
+  let key = null;
+  if (x && x.enemy) key = x.enemy.persona || PERSONA_BY_SECTOR[x.sector];
+  else if (x && x.persona) key = x.persona;
+  else if (x) {
+    const enc = ENCOUNTERS.find(e => e.enemy === x || e.enemy.name === x.name);
+    if (enc) key = enc.enemy.persona || PERSONA_BY_SECTOR[enc.sector];
+  }
+  if (!AI_PERSONAS[key]) key = 'drill';
+  return { key, name: AI_PERSONAS[key].name, text: AI_PERSONAS[key].text };
+}
+
+// newGame (engine.js) copies a fixed list of fields from the config, so carry the
+// enemy's persona onto its player here. Your side never gets one.
+{
+  const newGameBase = newGame;
+  newGame = function (o) {
+    const s = newGameBase(o);
+    if (o.enemy && o.enemy.persona) s.players[1].persona = o.enemy.persona;
+    return s;
   };
 }

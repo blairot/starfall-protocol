@@ -1025,6 +1025,7 @@ function openBriefing(enc) {
       <div class="foe"><button class="foe-art" data-cmdr="${enc.id}" aria-label="${esc(e.name)} dossier" title="Commander dossier" style='background-image:${portraitPlate(e.name, ENEMY_FACTION[enc.sector], ENEMY_ART[e.name])}'></button><div><div class="foe-name">${esc(e.name)}</div><div class="muted">${hp} Health${e.phases ? ` · ${e.phases.length + 1} phases` : ''}</div>
         ${power ? `<div class="foe-line">${powerIco(e.power)} <b>${esc(power.name)}:</b> ${esc(power.text)}</div>` : ''}
         ${(e.passives || []).map(id => `<div class="foe-line">${passiveIco(id)} <b>${esc(PASSIVES[id].name)}:</b> ${esc(PASSIVES[id].text)}</div>`).join('')}
+        ${tacticsLine(enc)}
         ${e.startTraps ? `<div class="foe-line">${ico('trap')} <b>Starts with ${e.startTraps.length} Trap${e.startTraps.length > 1 ? 's' : ''} armed.</b></div>` : ''}
         ${intelHTML(save, e)}</div></div>
       <p class="story">${esc(enc.story)}</p>
@@ -1065,6 +1066,13 @@ function openBriefing(enc) {
       persist(); startBattle(enc);
     }
   };
+}
+
+// How this enemy plays (its AI personality), shown in briefings and dossiers.
+function tacticsLine(enc, cls) {
+  if (typeof personaOf !== 'function' || !enc) return '';
+  const p = personaOf(enc); if (!p || !p.name) return '';
+  return `<div class="${cls || 'foe-line'}">${ico('target')} <b>Tactics: ${esc(p.name)}.</b> ${esc(p.text)}</div>`;
 }
 
 // Briefing: which deck you're taking, and the optional mission-tuned deck.

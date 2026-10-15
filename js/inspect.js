@@ -124,6 +124,7 @@ function openCommander(src) {
         <div class="ins-kws">
           ${h ? `<div class="kw"><b>${powerIco(power)} ${esc(h.name)}</b> <span class="pill">${h.cost} Energy</span> ${esc(h.text)} <span class="muted">Commander power, once per turn.</span></div>` : '<div class="kw muted">No commander power.</div>'}
           ${passives.map(id => PASSIVES[id] ? `<div class="kw"><b>${passiveIco(id)} ${esc(PASSIVES[id].name)}</b> ${esc(PASSIVES[id].text)}</div>` : '').join('')}
+          ${!mine ? tacticsLine(src.enc || UI.enc, 'kw') : ''}
           ${phases.length ? `<div class="kw warn"><b>Rises again</b> When its Health hits zero, this enemy returns in a new form ${phases.length > 1 ? phases.length + ' times' : 'once'}. Each form brings new powers.</div>` : ''}
         </div>
         <div class="ins-lore"><h3>Dossier</h3>${lore}</div>
