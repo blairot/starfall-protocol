@@ -21,8 +21,16 @@ def duration(path):
     return round(float(out or 0), 2)
 
 
+def src_height(path):
+    out = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=height', '-of', 'csv=p=0', path], capture_output=True, text=True).stdout.strip()
+    return int(out or 0)
+
+
 def encode(src, out, w, h, crf):
-    vf = f'scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},fps=30,format=yuv420p'
+    # never upscale: a 720p source stays 720p in the "1080" folder too; keep the clip's own frame rate
+    sh = src_height(src)
+    if sh and sh < h: w, h = round(w * sh / h / 2) * 2, sh
+    vf = f'scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},format=yuv420p'
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', src, '-an', '-vf', vf, '-c:v', 'libx264', '-preset', 'slow', '-crf', str(crf),
                     '-profile:v', 'high', '-movflags', '+faststart', out], check=True)
 
