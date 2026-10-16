@@ -26,38 +26,29 @@ const CINEMATICS = {
   // ------------------------------------------------------------------ opening
   opening: {
     title: 'Starfall Protocol', kicker: 'Prologue', sector: 0, music: 'menu',
+    // video shots play the clip named by `clip` (video/<size>/<clip>.mp4) when it exists; until then they show
+    // `still` (or the sector's painted vista) with a slow camera move, so the cutscene always works
     shots: [
-      { type: 'title', kicker: 'Prologue', title: 'Starfall Protocol', dur: 4 },
-      { type: 'space', sector: 0, cam: 'pull', title: 'The Reach, 2291',
+      { type: 'title', kicker: 'Prologue', title: 'Starfall Protocol', dur: 3 },
+      { type: 'video', clip: 'opening-lanes', sector: 0, cam: 'pull', title: 'The Reach, 2291',
         lines: [
-          { who: 'narrator', text: "Humanity lives on about four hundred worlds, linked by warp lanes: shortcuts through space that let a ship cross light-years in days." },
-          { who: 'narrator', text: "We didn't build the lanes. We found them, along with the giant alien machines that hold them open. Spacers call those machines Lamps." },
+          { who: 'narrator', text: "Humanity lives on four hundred worlds, linked by warp lanes and held open by giant alien machines we call Lamps." },
         ] },
-      { type: 'ship', sector: 1, ship: 'fleet', action: 'wreck', cam: 'push', sfx: 'alarm',
+      { type: 'video', clip: 'opening-starfall', still: 'still-opening-2', sector: 1, cam: 'push', sfx: 'alarm',
         lines: [
-          { who: 'narrator', text: "On the fourteenth of March, twenty-two nineteen, every Lamp failed at once and stayed dark for nineteen hours." },
-          { who: 'narrator', text: "Ships in the middle of a jump were thrown into open space. Over a million people died, and burning ships fell on the colony of New Lagos." },
+          { who: 'narrator', text: "In twenty-two nineteen, every Lamp failed at once. Ships were torn out of the lanes, and over a million people died. We call it the Starfall." },
         ] },
-      { type: 'log', log: { header: 'COREWARD LANE CASCADE. PUBLIC SUMMARY, 2223',
-          body: 'Ships lost: over three thousand.\nDead: over one million.\nDirection of origin: the galactic core.\nCause: not determined.' },
+      { type: 'video', clip: 'opening-signal', sector: 5, cam: 'push', sfx: 'hum',
         lines: [
-          { who: 'narrator', text: "The Fleet's inquiry never found a cause. Everyone else called it the Starfall." },
+          { who: 'narrator', text: "Now a signal is coming from the centre of the galaxy. The Forge has gone silent, the Swarm is breeding, and a dead Lamp in the Scrap Belt has started to hum." },
         ] },
-      { type: 'space', sector: 5, cam: 'push', sfx: 'hum',
+      { type: 'video', clip: 'opening-arden', still: 'still-opening-5', sector: 0, cam: 'drift',
         lines: [
-          { who: 'narrator', text: "Seventy-two years later, the Fleet picked up a signal from the centre of the galaxy. It sounds like singing, and it is getting louder." },
-          { who: 'narrator', text: "The Forge, three machine-run worlds that build the Fleet's warships, has gone quiet. The Swarm, living weapons kept in quarantine, is breeding fast." },
-          { who: 'narrator', text: "In the Scrap Belt, a ring of Starfall wreckage run by raiders, a Lamp the Fleet shut down after the disaster has started to hum again." },
-        ] },
-      { type: 'ship', sector: 0, ship: 'fleet', action: 'arrive', cam: 'drift',
-        lines: [
-          { who: 'narrator', text: "The Fleet has more trouble than ships, and more ships than officers. It cannot wait for cadets to graduate the slow way." },
-          { who: 'narrator', text: "So cadets come to the Academy at Arden Point, above the capital world, Concord, where a machine decides who is ready to command." },
+          { who: 'narrator', text: "The Fleet needs officers fast. So cadets come to Arden Point, where a machine decides who is ready." },
         ] },
       { type: 'transmission', sfx: 'chime', hold: 1.2,
         lines: [
-          { who: 'halcyon', text: "Cadet. I am Halcyon, the Academy's training intelligence. I decide whether you can command a warship without getting everyone killed." },
-          { who: 'halcyon', text: "Most cadets fail. I mention this for context, not to make you nervous. That would be a side effect." },
+          { who: 'halcyon', text: "Cadet. I am Halcyon, the Academy's training intelligence. Most cadets fail. I mention this for context." },
           { who: 'halcyon', text: "Your first simulation is loading. Please take your station." },
         ] },
     ],

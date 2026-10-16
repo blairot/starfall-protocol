@@ -25,7 +25,7 @@ import glob, json
 def files(*pats): return sorted(p.replace(os.sep, '/') for pat in pats for p in glob.glob(os.path.join(ROOT, pat)))
 rel = lambda l: [os.path.relpath(p, ROOT).replace(os.sep, '/') for p in l]
 common = rel(files('art/portraits/*.webp', 'audio/vo/*.mp3'))
-assets = {'build': n, 'lite': rel(files('art/cards-sm/*.webp', 'art/extra-sm/*.webp')) + common, 'full': rel(files('art/cards/*.webp', 'art/extra/*.webp')) + common}
+assets = {'build': n, 'lite': rel(files('art/cards-sm/*.webp', 'art/extra-sm/*.webp', 'video/720/*.mp4')) + common, 'full': rel(files('art/cards/*.webp', 'art/extra/*.webp', 'video/1080/*.mp4')) + common}
 json.dump(assets, open(os.path.join(ROOT, 'assets.json'), 'w', encoding='utf8'), separators=(',', ':'))
 print(f"assets.json: {len(assets['lite'])} files for phones, {len(assets['full'])} for desktop")
 

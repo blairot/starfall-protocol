@@ -59,6 +59,10 @@ const Cinema = (() => {
   // the sector's painted vista when it exists, else the code-drawn backdrop
   const bdUrl = si => extraArt('sector-' + (SECTORS[si] || SECTORS[0]).id) || `url(${Scene.backdrop(si, hueOf(si))})`;
   // painted images get the "pt" treatment: a sharp layer plus a blurred fill, so phones in portrait don't crop them to a sliver
+  // cutscene clips: video/<720|1080>/<clip>.mp4, listed in VIDEOS (js/videos.js)
+  const VIDEO_BASE = (typeof ART_BASE !== 'undefined' ? ART_BASE : 'art/').replace(/art\/$/, 'video/');
+  const videoSrc = clip => typeof VIDEOS !== 'undefined' && VIDEOS[clip] ? `${VIDEO_BASE}${typeof ART_LITE !== 'undefined' && ART_LITE ? 720 : 1080}/${clip}.mp4` : null;
+  const plainUrl = css => (/url\("?([^")]+)"?\)/.exec(css || '') || [])[1] || '';
   const bgDiv = (cls, img) => /^url\("/.test(img) ? `<div class="cin-bg pt ${cls}" style='--img:${img}'></div>` : `<div class="cin-bg ${cls}" style="background-image:${img}"></div>`;
   function portraitCss(p) {
     if (!p) return '';
@@ -90,6 +94,11 @@ const Cinema = (() => {
     const ov = sh.title ? `<div class="cin-over">${sh.kicker ? `<div class="cin-kick">${esc(sh.kicker)}</div>` : ''}<div class="cin-big">${esc(sh.title)}</div></div>` : '';
     if (sh.type === 'title') return `${bgDiv(`cam-push dim`, bdUrl(sec))}<div class="cin-titlecard"><div class="cin-kick">${esc(sh.kicker || cine.kicker || '')}</div><div class="cin-big">${esc(sh.title || cine.title)}</div></div>`;
     if (sh.type === 'space') return bg + ov;
+    if (sh.type === 'video') {
+      const still = (sh.still && extraArt(sh.still)) || bdUrl(sec), src = videoSrc(sh.clip);
+      if (!src) return bgDiv(`cam-${cam}`, still) + ov;   // no clip yet: the painted still with a slow camera move
+      return `<div class="cin-bg cin-video" style='--img:${still}'><video class="cin-vid" src="${src}" poster="${esc(plainUrl(still))}" muted playsinline autoplay preload="auto" disablepictureinpicture></video></div>` + ov;
+    }
     if (sh.type === 'ship') {
       const still = extraArt(`still-${cid}-${si}`);
       if (still) return `${bgDiv(`cam-${cam}`, still)}` + ov;
@@ -144,6 +153,7 @@ const Cinema = (() => {
     if (typeof Music !== 'undefined') { if (Music.setTheme) Music.setTheme(cine.sector); Music.setMood(cine.music || 'menu'); if (Music.setIntensity) Music.setIntensity(0.25); }
     // decode this cutscene's voice while the title card shows
     const loads = shots.some(s => s.lines.some(l => l.key)) ? load(cid) : Promise.resolve(null);
+    shots.forEach(x => { const src = x.sh.type === 'video' && videoSrc(x.sh.clip); if (src) fetch(src).catch(() => {}); });
     const stage = el.querySelector('.cin-stage'), sub = el.querySelector('.cin-sub');
     const wait = ms => new Promise(r => { const t = setTimeout(r, ms); me.timers.push(t); });
     for (let i = 0; i < shots.length && !me.done; i++) {
@@ -154,6 +164,13 @@ const Cinema = (() => {
       div.innerHTML = shotHTML(cid, cine, sh, i);
       stage.appendChild(div);
       void div.offsetWidth; div.classList.add('on');   // reflow, then fade in (no rAF: works in background tabs too)
+      const vid = div.querySelector('video');
+      if (vid) {
+        const fit = () => { if (vid.duration) vid.playbackRate = Math.max(0.6, Math.min(1, vid.duration / Math.max(1, dur - 0.4))); };
+        vid.addEventListener('loadedmetadata', fit); fit();
+        vid.addEventListener('error', () => div.querySelector('.cin-video').classList.add('novid'));
+        const p = vid.play(); if (p && p.catch) p.catch(() => {});
+      }
       const prev = stage.children.length > 1 ? stage.children[0] : null;
       if (prev) { prev.classList.remove('on'); prev.classList.add('off'); setTimeout(() => prev.remove(), 900); }
       if (sh.sfx && SFX[SFX_MAP[sh.sfx]]) SFX[SFX_MAP[sh.sfx]]();
