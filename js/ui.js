@@ -1068,6 +1068,12 @@ function openBriefing(enc) {
   };
 }
 
+function offlineHTML() {
+  const ok = Offline.available();
+  return `<h3>Offline play</h3><p class="muted small" id="offline-status">${esc(Offline.label())}</p>
+    ${ok ? `<div class="m-actions left"><button class="btn" data-a="offline" id="offline-go" ${Offline.running ? 'disabled' : ''}>${Offline.ready() ? 'Check again' : 'Download everything now'}</button></div>` : ''}`;
+}
+
 // How this enemy plays (its AI personality), shown in briefings and dossiers.
 function tacticsLine(enc, cls) {
   if (typeof personaOf !== 'function' || !enc) return '';
@@ -1310,8 +1316,8 @@ function showSettings(back) {
     + (REDUCED ? '<p class="muted small">Your system asks for reduced motion, so animations are kept short.</p>' : '');
   const buildLine = typeof BUILD !== 'undefined' ? `<p class="muted small">Build ${BUILD.n} · ${BUILD.date}</p>` : '';
   if (tab === 'data') body = buildLine + (save ? `<p class="muted small">${Store.db ? 'Progress saves automatically to your account and this browser.' : 'Progress saves automatically in this browser. Copy a backup code to move it to another device.'}</p>
-    <div class="m-actions left"><button class="btn" data-a="export">Copy backup code</button><button class="btn" data-a="import">Restore from code</button><button class="btn danger" data-a="reset">Erase campaign</button></div><div id="set-extra"></div>${playtestHTML()}`
-    : '<p class="muted">No campaign yet.</p><div class="m-actions left"><button class="btn" data-a="import">Restore from code</button></div><div id="set-extra"></div>' + playtestHTML());
+    <div class="m-actions left"><button class="btn" data-a="export">Copy backup code</button><button class="btn" data-a="import">Restore from code</button><button class="btn danger" data-a="reset">Erase campaign</button></div><div id="set-extra"></div>${offlineHTML()}${playtestHTML()}`
+    : '<p class="muted">No campaign yet.</p><div class="m-actions left"><button class="btn" data-a="import">Restore from code</button></div><div id="set-extra"></div>' + offlineHTML() + playtestHTML());
   const tabs = [['audio', 'Audio'], ['gameplay', 'Gameplay'], ['display', 'Display'], ['data', 'Save Data']];
   const m = modal(`<h2>Settings</h2><div class="tabs" role="tablist">${tabs.map(([k, l]) => `<button role="tab" aria-selected="${tab === k}" class="${tab === k ? 'on' : ''}" data-tab="${k}">${l}</button>`).join('')}</div>
     <div class="set-body">${body}</div><div class="m-actions"><button class="btn primary" data-a="close">Done</button></div>`, 'settings-modal');
@@ -1326,6 +1332,7 @@ function showSettings(back) {
     if (t.dataset.d) { save.diff = t.dataset.d; persist(); toast(`Difficulty: ${DIFFICULTY[save.diff].name}. Applies from your next battle.`); return showSettings(back); }
     const a = t.dataset.a;
     if (a.startsWith('pt-')) return playtestClick(a, m);
+    if (a === 'offline') { Offline.start(true); return; }
     if (a === 'close') { closeModal(); if (back) back(); else if (App.screen === 'map') openMap(); else if (App.screen === 'title') openTitle(); }
     if (a === 'fullscreen') { try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); } catch (err) { toast('Fullscreen is not available here.'); } }
     if (a === 'export') {

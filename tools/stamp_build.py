@@ -1,7 +1,9 @@
 """Stamp a new build number before committing a release.
 
-Writes js/build.js (shown on the title screen and in Settings) and bumps the
-offline-cache VERSION in sw.js so installed copies pick up the new files.
+Writes js/build.js (shown on the title screen and in Settings), bumps the
+offline-cache VERSION in sw.js so installed copies pick up the new files, writes
+assets.json (every art and voice file, for offline download), and checks that
+sw.js's SHELL lists every script index.html loads.
 Run from the repo root:  python tools/stamp_build.py
 """
 import datetime, os, re, subprocess
@@ -17,3 +19,18 @@ s = open(sw, encoding='utf8').read()
 s = re.sub(r"const VERSION = '[^']*';", f"const VERSION = 'starfall-b{n}';", s, count=1)
 open(sw, 'w', encoding='utf8').write(s)
 print(f'build {n} ({date})')
+
+# offline download list: phones use the half-size card and scene art
+import glob, json
+def files(*pats): return sorted(p.replace(os.sep, '/') for pat in pats for p in glob.glob(os.path.join(ROOT, pat)))
+rel = lambda l: [os.path.relpath(p, ROOT).replace(os.sep, '/') for p in l]
+common = rel(files('art/portraits/*.webp', 'audio/vo/*.mp3'))
+assets = {'build': n, 'lite': rel(files('art/cards-sm/*.webp', 'art/extra-sm/*.webp')) + common, 'full': rel(files('art/cards/*.webp', 'art/extra/*.webp')) + common}
+json.dump(assets, open(os.path.join(ROOT, 'assets.json'), 'w', encoding='utf8'), separators=(',', ':'))
+print(f"assets.json: {len(assets['lite'])} files for phones, {len(assets['full'])} for desktop")
+
+# every script the page loads must be in the offline shell
+idx = open(os.path.join(ROOT, 'index.html'), encoding='utf8').read()
+scripts = re.findall(r'<script src="([^"]+)"', idx)
+missing = [x for x in scripts if f"'{x}'" not in s_sw] if (s_sw := open(sw, encoding='utf8').read()) else []
+if missing: raise SystemExit('sw.js SHELL is missing: ' + ', '.join(missing))

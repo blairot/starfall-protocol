@@ -48,6 +48,43 @@ let persistTimer = null;
 // developer shortcut button (only when ?dev=1 was used on this device)
 document.addEventListener('DOMContentLoaded', () => { if (typeof devButtonHTML === 'function') document.body.insertAdjacentHTML('beforeend', devButtonHTML()); });
 
+// ---------------------------------------------------------------- offline download
+// Saves every card, portrait, scene and voice file to the phone so the game works
+// with no signal. Runs once per build in the background; Settings shows progress.
+const Offline = {
+  st: null, running: false,
+  state() { if (!this.st) { try { this.st = JSON.parse(localStorage.getItem('sf_offline')) || {}; } catch (e) { this.st = {}; } } return this.st; },
+  save() { try { localStorage.setItem('sf_offline', JSON.stringify(this.st)); } catch (e) { /* storage blocked */ } },
+  available() { return 'serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) && window.top === window.self && !window.claude; },
+  ready() { const s = this.state(); return s.build === (typeof BUILD !== 'undefined' ? BUILD.n : 0) && s.failed === 0 && s.done === s.total && s.total > 0; },
+  async start(manual) {
+    if (!this.available() || this.running) return;
+    if (!manual && (this.ready() || navigator.onLine === false)) return;
+    const reg = await navigator.serviceWorker.ready; if (!reg.active) return;
+    try {
+      const list = await (await fetch('assets.json', { cache: 'no-cache' })).json();
+      const urls = (typeof ART_LITE !== 'undefined' && ART_LITE ? list.lite : list.full) || [];
+      this.running = true; Object.assign(this.state(), { build: BUILD.n, done: 0, total: urls.length, failed: 0 }); this.save(); this.paint();
+      reg.active.postMessage({ type: 'precache', urls, build: BUILD.n });
+    } catch (e) { this.running = false; if (manual) toast('Could not start the download. Check your connection and try again.'); }
+  },
+  onMessage(m) {
+    if (!m || m.type !== 'precache') return;
+    Object.assign(this.state(), { done: m.done, total: m.total, failed: m.failed, build: m.build }); this.save();
+    if (m.final) { this.running = false; if (m.failed) this.state().failedAt = Date.now(); }
+    this.paint();
+  },
+  label() {
+    if (!this.available()) return 'Offline play works in the installed app (Add to Home Screen) and on the GitHub Pages site.';
+    const s = this.state();
+    if (this.running) return `Downloading art and voice for offline play: ${s.done || 0} of ${s.total || '…'} files.`;
+    if (this.ready()) return `Ready for offline play: all ${s.total} art and voice files are saved on this device.`;
+    if (s.failed && s.build === BUILD.n) return `${s.failed} of ${s.total} files didn't download. Tap the button to try again when you have signal.`;
+    return 'Not everything is saved yet. Download it now so every card and cutscene works with no signal.';
+  },
+  paint() { const el = document.getElementById('offline-status'); if (el) el.textContent = this.label(); const b = document.getElementById('offline-go'); if (b) b.disabled = this.running; },
+};
+
 function persist() {
   if (!App.save) return;
   if (typeof syncDecks === 'function') syncDecks(App.save);
@@ -101,8 +138,10 @@ function start(data) {
   if (lastBootFailed) setTimeout(() => toast('Safe graphics mode: the last launch didn\'t finish loading.', 3500), 800);
   else setTimeout(prewarmAllArt, 1500);
   // Installed web app (GitHub Pages): cache the game for offline play. Not inside claude.ai.
-  if ('serviceWorker' in navigator && location.protocol === 'https:' && window.top === window.self && !window.claude) {
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) && window.top === window.self && !window.claude) {
     navigator.serviceWorker.register('sw.js').then(r => r.update()).catch(() => { /* offline play is optional */ });
+    navigator.serviceWorker.addEventListener('message', e => Offline.onMessage(e.data));
+    navigator.serviceWorker.ready.then(() => setTimeout(() => Offline.start(false), 4000));
     // A new build took over: reload once, but never in the middle of a battle.
     const hadController = !!navigator.serviceWorker.controller;
     navigator.serviceWorker.addEventListener('controllerchange', () => { if (hadController) App.pendingReload = true; maybeReload(); });
