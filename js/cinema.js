@@ -63,6 +63,16 @@ const Cinema = (() => {
   const VIDEO_BASE = (typeof ART_BASE !== 'undefined' ? ART_BASE : 'art/').replace(/art\/$/, 'video/');
   const videoSrc = clip => typeof VIDEOS !== 'undefined' && VIDEOS[clip] ? `${VIDEO_BASE}${typeof ART_LITE !== 'undefined' && ART_LITE ? 720 : 1080}/${clip}.mp4` : null;
   const plainUrl = css => (/url\("?([^")]+)"?\)/.exec(css || '') || [])[1] || '';
+  const posterSrc = clip => `${VIDEO_BASE}poster/${clip}.webp`;
+  // one ready-to-play <video> per clip, made when the cutscene starts so every cut is instant
+  function preloadVideo(clip, holder) {
+    const v = document.createElement('video');
+    v.className = 'cin-vid'; v.muted = true; v.playsInline = true; v.preload = 'auto';
+    ['muted', 'playsinline', 'disablepictureinpicture'].forEach(a => v.setAttribute(a, ''));
+    v.poster = posterSrc(clip); v.src = videoSrc(clip); v.dataset.clip = clip;
+    holder.appendChild(v); v.load();
+    return v;
+  }
   const bgDiv = (cls, img) => /^url\("/.test(img) ? `<div class="cin-bg pt ${cls}" style='--img:${img}'></div>` : `<div class="cin-bg ${cls}" style="background-image:${img}"></div>`;
   function portraitCss(p) {
     if (!p) return '';
@@ -97,7 +107,7 @@ const Cinema = (() => {
     if (sh.type === 'video') {
       const still = (sh.still && extraArt(sh.still)) || bdUrl(sec), src = videoSrc(sh.clip);
       if (!src) return bgDiv(`cam-${cam}`, still) + ov;   // no clip yet: the painted still with a slow camera move
-      return `<div class="cin-bg cin-video" style='--img:${still}'><video class="cin-vid" src="${src}" poster="${esc(plainUrl(still))}" muted playsinline autoplay preload="auto" disablepictureinpicture></video></div>` + ov;
+      return `<div class="cin-bg cin-video cam-${cam}" style='--img:url("${posterSrc(sh.clip)}")'><video class="cin-vid" data-clip="${esc(sh.clip)}" src="${src}" poster="${posterSrc(sh.clip)}" muted playsinline preload="auto" disablepictureinpicture></video></div>` + ov;
     }
     if (sh.type === 'ship') {
       const still = extraArt(`still-${cid}-${si}`);
@@ -153,7 +163,8 @@ const Cinema = (() => {
     if (typeof Music !== 'undefined') { if (Music.setTheme) Music.setTheme(cine.sector); Music.setMood(cine.music || 'menu'); if (Music.setIntensity) Music.setIntensity(0.25); }
     // decode this cutscene's voice while the title card shows
     const loads = shots.some(s => s.lines.some(l => l.key)) ? load(cid) : Promise.resolve(null);
-    shots.forEach(x => { const src = x.sh.type === 'video' && videoSrc(x.sh.clip); if (src) fetch(src).catch(() => {}); });
+    const hold = document.createElement('div'); hold.className = 'cin-preload'; el.appendChild(hold);
+    const pre = {}; shots.forEach(x => { if (x.sh.type === 'video' && videoSrc(x.sh.clip) && !pre[x.sh.clip]) pre[x.sh.clip] = preloadVideo(x.sh.clip, hold); });
     const stage = el.querySelector('.cin-stage'), sub = el.querySelector('.cin-sub');
     const wait = ms => new Promise(r => { const t = setTimeout(r, ms); me.timers.push(t); });
     for (let i = 0; i < shots.length && !me.done; i++) {
@@ -164,9 +175,11 @@ const Cinema = (() => {
       div.innerHTML = shotHTML(cid, cine, sh, i);
       stage.appendChild(div);
       void div.offsetWidth; div.classList.add('on');   // reflow, then fade in (no rAF: works in background tabs too)
-      const vid = div.querySelector('video');
+      let vid = div.querySelector('video');
+      if (vid && pre[vid.dataset.clip]) { const ready = pre[vid.dataset.clip]; vid.replaceWith(ready); vid = ready; }
       if (vid) {
-        const fit = () => { if (vid.duration) vid.playbackRate = Math.max(0.6, Math.min(1, vid.duration / Math.max(1, dur - 0.4))); };
+        // run right up to the cut (and through the crossfade), never stopping early
+        const fit = () => { if (vid.duration) vid.playbackRate = Math.max(0.6, Math.min(1, vid.duration / (dur + 0.6))); };
         vid.addEventListener('loadedmetadata', fit); fit();
         vid.addEventListener('error', () => div.querySelector('.cin-video').classList.add('novid'));
         const p = vid.play(); if (p && p.catch) p.catch(() => {});

@@ -1568,3 +1568,5 @@ body.touch .inspect-hint { color: var(--t-3); }
   .cin-vid { inset: auto; left: 50%; top: 42%; width: auto; height: 50%; max-width: none; transform: translate(-50%, -50%);
     -webkit-mask-image: linear-gradient(transparent 0, #000 14%, #000 86%, transparent); mask-image: linear-gradient(transparent 0, #000 14%, #000 86%, transparent); }
 }
+
+.cin-preload { position: absolute; left: 0; top: 0; width: 2px; height: 2px; overflow: hidden; opacity: 0; pointer-events: none; }
