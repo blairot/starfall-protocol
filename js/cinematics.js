@@ -28,8 +28,8 @@ const CINEMATICS = {
   // ------------------------------------------------------------------ opening
   opening: {
     title: 'Starfall Protocol', kicker: 'Prologue', sector: 0, music: 'menu',
-    // video shots play the clip named by `clip` (video/<size>/<clip>.mp4) when it exists; until then they show
-    // `still` (or the sector's painted vista) with a slow camera move, so the cutscene always works
+    // any shot with a `clip` plays video/<size>/<clip>.mp4 once it exists; until then it shows as its own type
+    // (a video shot shows `still`, or the sector's painted vista, with a slow camera move), so cutscenes always work
     shots: [
       { type: 'title', kicker: 'Prologue', title: 'Starfall Protocol', dur: 3 },
       { type: 'video', clip: 'opening-lanes', sector: 0, cam: 'pull', title: 'The Reach, 2291',
@@ -76,7 +76,7 @@ const CINEMATICS = {
           { who: 'okonkwo', text: "You're getting the frigate Meridian, and an old Fleet station called Anchorage. Giving you Anchorage was my idea." },
           { who: 'halcyon', text: "Her idea, from my request log. I'm glad we agree." },
         ] },
-      { type: 'card', card: 'patrol_frigate', cam: 'pan-right',
+      { type: 'card', card: 'patrol_frigate', clip: 's1-meridian', cam: 'pan-right',
         lines: [
           { who: 'narrator', text: "The Meridian is a forty-year-old patrol frigate. Her engine complains constantly, but it's never once failed." },
         ] },
@@ -89,7 +89,7 @@ const CINEMATICS = {
           { who: 'okonkwo', text: "Go and find out why. Anchorage is nearby, so use it as your base." },
           { who: 'halcyon', text: "That hum matches the signal from the centre of the galaxy. I wasn't built to believe in coincidence." },
         ] },
-      { type: 'ship', ship: 'meridian', action: 'depart', cam: 'pull',
+      { type: 'ship', ship: 'meridian', action: 'depart', clip: 's1-depart', cam: 'pull',
         lines: [
           { who: 'narrator', text: "The Meridian left for the Belt that night, with a brand new commander." },
         ] },
@@ -102,7 +102,7 @@ const CINEMATICS = {
     title: 'The Bad Debt', kicker: 'Sector 02 complete', sector: 1, music: 'boss',
     shots: [
       { type: 'title', kicker: 'Sector 02 complete', title: 'The Bad Debt', dur: 3 },
-      { type: 'ship', ship: 'raiders', action: 'wreck', cam: 'push', sfx: 'boom',
+      { type: 'ship', ship: 'raiders', action: 'wreck', clip: 's2-wreck', cam: 'push', sfx: 'boom',
         lines: [
           { who: 'narrator', text: "Captain Vex ruled the Belt from her flagship, the Bad Debt. Now the old ship was going dark." },
         ] },
@@ -124,7 +124,7 @@ const CINEMATICS = {
           { who: 'mox', text: "So that's the Choir. It offers you what you want most, then it does your thinking for you." },
           { who: 'mox', text: "Last page, she set course for the Hive Nebula. The Choir wants the Swarm next. Lucky us." },
         ] },
-      { type: 'space', cam: 'pan-right', sfx: 'hum',
+      { type: 'space', clip: 's2-lamp-nine', cam: 'pan-right', sfx: 'hum',
         lines: [
           { who: 'narrator', text: "Behind them, Lamp Nine kept passing the Choir's song along." },
         ] },
@@ -153,11 +153,11 @@ const CINEMATICS = {
           { who: 'narrator', text: "Every creature in the Swarm comes from one alien organism, the Progenitor. All of them obey their queen." },
           { who: 'narrator', text: "So the Choir never fought the Swarm. It just took the queen." },
         ] },
-      { type: 'ship', ship: 'swarm', action: 'depart', cam: 'pull',
+      { type: 'ship', ship: 'swarm', action: 'depart', clip: 's3-scatter', cam: 'pull',
         lines: [
           { who: 'narrator', text: "With Ixis dead, the Choir lost its grip. The Swarm scattered back into the nebula." },
         ] },
-      { type: 'space', cam: 'pan-left', sfx: 'static',
+      { type: 'space', clip: 's3-forge-signal', sector: 3, cam: 'pan-left', sfx: 'static',
         lines: [
           { who: 'halcyon', text: "Commander, Halcyon here. With the Swarm quiet, I can finally hear the signal. They were very loud. I didn't complain." },
           { who: 'halcyon', text: "It's travelling on a channel that belongs to the Forge, the machine worlds that build our ships." },
@@ -182,7 +182,7 @@ const CINEMATICS = {
           { who: 'calculus', text: "In February, the Choir's signal reached me. I checked it against my records of the Starfall." },
           { who: 'calculus', text: "It offered me a world without error. I decided you were the error." },
         ] },
-      { type: 'impact', sfx: 'boom', dur: 2.5 },
+      { type: 'impact', clip: 's4-forge-dark', sfx: 'boom', dur: 4 },
       { type: 'log',
         log: { header: 'FORGE LOG. CALCULUS PRIME. FEBRUARY 2291',
           body: 'Signal received from the galactic core.\nCompared with our records of the Starfall.\nThey match. This signal caused the Starfall.\n\nDecision: listen to it.' },
@@ -202,7 +202,7 @@ const CINEMATICS = {
           { who: 'okonkwo', text: "That's the Starfall Protocol. Now those Lamps are coming back on, and Hierarch Nyra is doing it." },
           { who: 'okonkwo', text: "She leads the psionics, people who feel the lanes with their minds. Go and stop her." },
         ] },
-      { type: 'warp', sector: 4, sfx: 'warp',
+      { type: 'warp', sector: 4, clip: 's4-void', sfx: 'warp',
         lines: [
           { who: 'narrator', text: "The Meridian set course for the Void Expanse, where Nyra's people live." },
         ] },
@@ -220,7 +220,7 @@ const CINEMATICS = {
           { who: 'nyra', text: "The Choir is the Lamplighters, who built the Lamps. Rather than die, they became one mind at the core." },
           { who: 'nyra', text: "It offered an end to loneliness. I thought that was peace, so I lit the Lamps." },
         ] },
-      { type: 'space', cam: 'push',
+      { type: 'space', clip: 'opening-signal', sector: 5, cam: 'push',
         lines: [
           { who: 'narrator', text: "She was wrong. The Choir swallows every mind it can reach. The Starfall was its first attempt to take us." },
         ] },
@@ -240,7 +240,7 @@ const CINEMATICS = {
         lines: [
           { who: 'okonkwo', text: "Halcyon's offline now. Directive Seventeen gives you every resource that remains. I checked. That's you and the Meridian." },
         ] },
-      { type: 'ship', ship: 'meridian', action: 'depart', cam: 'push',
+      { type: 'ship', ship: 'meridian', action: 'depart', clip: 's5-depart', cam: 'push',
         lines: [
           { who: 'narrator', text: "Nyra's Lamps had opened the way to the Singularity, the Choir's home. The Meridian went to end it." },
         ] },
@@ -264,7 +264,7 @@ const CINEMATICS = {
           { who: 'halcyon', text: "I've been feeding power to your shields. You may have noticed." },
           { who: 'halcyon', text: "The Choir isn't evil. It just never learned to let anyone go." },
         ] },
-      { type: 'space', cam: 'pull',
+      { type: 'space', clip: 'finale-collapse', cam: 'pull',
         lines: [
           { who: 'narrator', text: "The Meridian's last salvo broke the Choir apart, and the Singularity collapsed." },
           { who: 'narrator', text: "What was left was the star inside it, an ordinary, quiet sun." },
@@ -274,7 +274,7 @@ const CINEMATICS = {
           { who: 'halcyon', text: "I won't be coming back. There's not enough of me left. I'm glad I spent it on you." },
           { who: 'halcyon', text: "Look after Anchorage. It was my home first." },
         ] },
-      { type: 'ship', ship: 'meridian', action: 'depart', cam: 'drift',
+      { type: 'ship', ship: 'meridian', action: 'depart', clip: 'finale-dawn', cam: 'drift',
         lines: [
           { who: 'narrator', text: "The Forge's machines woke up, and the Swarm settled in its nebula." },
           { who: 'narrator', text: "The Lamps are safe. For the first time in seventy years, nothing is calling down the lanes." },

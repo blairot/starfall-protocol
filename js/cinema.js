@@ -102,13 +102,12 @@ const Cinema = (() => {
     const sec = sh.sector != null ? sh.sector : cine.sector, cam = sh.cam || 'drift';
     const bg = `${bgDiv(`cam-${cam}`, bdUrl(sec))}`;
     const ov = sh.title ? `<div class="cin-over">${sh.kicker ? `<div class="cin-kick">${esc(sh.kicker)}</div>` : ''}<div class="cin-big">${esc(sh.title)}</div></div>` : '';
+    // any shot with a `clip` plays it once the clip exists; until then the shot shows as its own type
+    const src = sh.clip && videoSrc(sh.clip);
+    if (src) return `<div class="cin-bg cin-video cam-${cam}" style='--img:url("${posterSrc(sh.clip)}")'><video class="cin-vid" data-clip="${esc(sh.clip)}" src="${src}" poster="${posterSrc(sh.clip)}" muted playsinline preload="auto" disablepictureinpicture></video></div>` + ov;
     if (sh.type === 'title') return `${bgDiv(`cam-push dim`, bdUrl(sec))}<div class="cin-titlecard"><div class="cin-kick">${esc(sh.kicker || cine.kicker || '')}</div><div class="cin-big">${esc(sh.title || cine.title)}</div></div>`;
     if (sh.type === 'space') return bg + ov;
-    if (sh.type === 'video') {
-      const still = (sh.still && extraArt(sh.still)) || bdUrl(sec), src = videoSrc(sh.clip);
-      if (!src) return bgDiv(`cam-${cam}`, still) + ov;   // no clip yet: the painted still with a slow camera move
-      return `<div class="cin-bg cin-video cam-${cam}" style='--img:url("${posterSrc(sh.clip)}")'><video class="cin-vid" data-clip="${esc(sh.clip)}" src="${src}" poster="${posterSrc(sh.clip)}" muted playsinline preload="auto" disablepictureinpicture></video></div>` + ov;
-    }
+    if (sh.type === 'video') return bgDiv(`cam-${cam}`, (sh.still && extraArt(sh.still)) || bdUrl(sec)) + ov;   // no clip yet: the painted still with a slow camera move
     if (sh.type === 'ship') {
       const still = extraArt(`still-${cid}-${si}`);
       if (still) return `${bgDiv(`cam-${cam}`, still)}` + ov;
@@ -164,7 +163,7 @@ const Cinema = (() => {
     // decode this cutscene's voice while the title card shows
     const loads = shots.some(s => s.lines.some(l => l.key)) ? load(cid) : Promise.resolve(null);
     const hold = document.createElement('div'); hold.className = 'cin-preload'; el.appendChild(hold);
-    const pre = {}; shots.forEach(x => { if (x.sh.type === 'video' && videoSrc(x.sh.clip) && !pre[x.sh.clip]) pre[x.sh.clip] = preloadVideo(x.sh.clip, hold); });
+    const pre = {}; shots.forEach(x => { if (x.sh.clip && videoSrc(x.sh.clip) && !pre[x.sh.clip]) pre[x.sh.clip] = preloadVideo(x.sh.clip, hold); });
     const stage = el.querySelector('.cin-stage'), sub = el.querySelector('.cin-sub');
     const wait = ms => new Promise(r => { const t = setTimeout(r, ms); me.timers.push(t); });
     for (let i = 0; i < shots.length && !me.done; i++) {
