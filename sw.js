@@ -8,7 +8,7 @@
 // time ("precache"), so every card, scene and cutscene works with no signal.
 // Bump VERSION (tools/stamp_build.py does it) to replace the code cache.
 // ============================================================================
-const VERSION = 'starfall-b48';
+const VERSION = 'starfall-b49';
 const ASSETS = 'starfall-assets';   // art and voice, kept across builds
 const NET_WAIT = 3500;              // ms to wait for the network before using the saved copy
 const SHELL = [
