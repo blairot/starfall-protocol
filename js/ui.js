@@ -320,7 +320,7 @@ function heroHTML(s, p) {
   if (p.frozen) cls.push('frozen');
   const hc = p.hp < p.maxHp ? 'down' : '';
   return `<div class="${cls.join(' ')}" data-uid="${p.uid}">
-    <div class="h-frame"><div class="h-art" style='background-image:${heroArt(p)}'></div><div class="h-ring"></div></div>
+    <div class="h-frame"><div class="h-art"${side ? PortraitLoop.attr(p.name) : ''} style='background-image:${heroArt(p)}'></div><div class="h-ring"></div></div>
     <div class="h-name">${esc(p.name)}</div>
     <div class="h-hp ${hc}">${p.hp}</div>
     ${p.armor ? `<div class="h-armor">${p.armor}</div>` : ''}
@@ -415,6 +415,7 @@ function renderBattle() {
       <button id="bmenu" class="btn ghost small">Menu</button>
     </aside>
     <svg id="arrow" class="arrow" width="${UI.W || 1280}" height="${UI.H || 760}" viewBox="0 0 ${UI.W || 1280} ${UI.H || 760}"><defs><marker id="ah" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="currentColor"/></marker></defs><line id="arrow-line" x1="0" y1="0" x2="0" y2="0" marker-end="url(#ah)"/></svg>`);
+  PortraitLoop.mount($('#stage-ui'));   // keeps an animated boss portrait playing through redraws
   if (Tip.target && !Tip.target.isConnected) Tip.hide();
   updateArrow();
 }

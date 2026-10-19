@@ -51,7 +51,21 @@ const Cinema = (() => {
   function playLine(buf, from, dur) {
     const c = AudioBus.ctx, b = bus(); if (!c || !b || !buf) return null;
     const src = c.createBufferSource(); src.buffer = buf; src.connect(b); src.start(0, from, dur);
+    const m = meter(); if (m) src.connect(m);
     return src;
+  }
+  // how loud the voice is right now (0..1): drives a speaker's glow (HALCYON has no mouth to move)
+  let an = null, level = null;
+  function meter() {
+    const c = AudioBus.ctx; if (!c) return null;
+    if (!an) { an = c.createAnalyser(); an.fftSize = 512; level = new Uint8Array(an.fftSize); const z = c.createGain(); z.gain.value = 0; an.connect(z); z.connect(c.destination); }
+    return an;
+  }
+  function voiceLevel() {
+    if (!an) return 0;
+    an.getByteTimeDomainData(level); let e = 0;
+    for (let i = 0; i < level.length; i++) { const d = (level[i] - 128) / 128; e += d * d; }
+    return Math.min(1, Math.sqrt(e / level.length) * 5);
   }
 
   // ---------------------------------------------------------------- visuals
@@ -63,7 +77,7 @@ const Cinema = (() => {
   const VIDEO_BASE = (typeof ART_BASE !== 'undefined' ? ART_BASE : 'art/').replace(/art\/$/, 'video/');
   // an entry may carry `a` (hosted copies: {720, 1080, p}) when its files live outside video/ (the artifact's asset store)
   const vEntry = clip => typeof VIDEOS !== 'undefined' && VIDEOS[clip];
-  const videoSrc = clip => { const v = vEntry(clip); if (!v) return null; const q = typeof ART_LITE !== 'undefined' && ART_LITE ? 720 : 1080; return (v.a && v.a[q]) || `${VIDEO_BASE}${q}/${clip}.mp4`; };
+  const videoSrc = clip => { const v = vEntry(clip); if (!v) return null; const q = typeof ART_LITE !== 'undefined' && ART_LITE ? 720 : 1080; if (v.loop) return (v.a && v.a.l) || `${VIDEO_BASE}loop/${clip}.mp4`; return (v.a && v.a[q]) || `${VIDEO_BASE}${q}/${clip}.mp4`; };
   const plainUrl = css => (/url\("?([^")]+)"?\)/.exec(css || '') || [])[1] || '';
   const posterSrc = clip => { const v = vEntry(clip); return (v && v.a && v.a.p) || `${VIDEO_BASE}poster/${clip}.webp`; };
   // one ready-to-play <video> per clip, made when the cutscene starts so every cut is instant
@@ -121,9 +135,9 @@ const Cinema = (() => {
     }
     if (sh.type === 'transmission') {
       const who = (sh.lines && sh.lines[0] && sh.lines[0].who) || sh.who;
-      const c = CAST[who] || {}, p = portraitCss(sh.portrait || c.portrait);
+      const c = CAST[who] || {}, pd = sh.portrait || c.portrait, p = portraitCss(pd);
       return `${bgDiv(`cam-drift dim`, bdUrl(sec))}
-        <div class="cin-comm fx-${c.fx || 'none'}"><div class="cc-portrait" style='background-image:${p}'><i class="cc-scan"></i></div>
+        <div class="cin-comm fx-${c.fx || 'none'}"><div class="cc-portrait"${PortraitLoop.attr(pd && pd.enemy)} style='background-image:${p}'><i class="cc-scan"></i></div>
           <div class="cc-side"><div class="cc-h">Incoming transmission</div><div class="cc-name">${esc(c.name || who || '')}</div>
           <div class="cc-wave">${Array.from({ length: 28 }, (_, i) => `<i style="--d:${(i * 0.05).toFixed(2)}s"></i>`).join('')}</div></div></div>`;
     }
@@ -176,7 +190,8 @@ const Cinema = (() => {
       div.innerHTML = shotHTML(cid, cine, sh, i);
       stage.appendChild(div);
       void div.offsetWidth; div.classList.add('on');   // reflow, then fade in (no rAF: works in background tabs too)
-      let vid = div.querySelector('video');
+      PortraitLoop.mount(div);
+      let vid = div.querySelector('video.cin-vid');
       if (vid && pre[vid.dataset.clip]) { const ready = pre[vid.dataset.clip]; vid.replaceWith(ready); vid = ready; }
       if (vid) {
         // run right up to the cut (and through the crossfade), never stopping early
@@ -201,6 +216,7 @@ const Cinema = (() => {
         div.classList.add('talking');
         const buf = ln.key ? buffers[cid] : null;
         if (buf) { duck(true); const s = playLine(buf, ln.from, ln.dur); if (s) me.srcs.push(s); }
+        if (buf && c.fx === 'ai') { const glow = () => { if (me.done || !div.classList.contains('talking')) { div.style.setProperty('--amp', 0); return; } div.style.setProperty('--amp', voiceLevel().toFixed(2)); setTimeout(glow, 33); }; glow(); }
         await wait(ln.dur * 1000);
         div.classList.remove('talking');
         await wait(350);
@@ -236,9 +252,37 @@ const Cinema = (() => {
     const ln = (sh.lines || [])[0], c = ln ? CAST[ln.who] || {} : {};
     el.innerHTML = `<div class="cin-stage"><div class="cin-shot t-${sh.type} on" style="--dur:9s">${shotHTML(cid, cine, sh, si)}</div></div><div class="cin-bars"></div>
       <div class="cin-sub ${ln ? 'show' : ''}"><b>${esc(c.name || (ln && ln.who) || '')}</b><span>${esc(ln ? ln.text : '')}</span></div><button class="cin-skip" type="button">Skip <span aria-hidden="true">›</span></button>`;
-    document.body.appendChild(el);
+    document.body.appendChild(el); PortraitLoop.mount(el);
   }
-  return { play, stop, plan, hashText, still, playing: () => !!run };
+  return { play, stop, plan, hashText, still, videoSrc, playing: () => !!run };
+})();
+
+// ============================================================================
+// Portrait loops: a character's painted portrait brought to life (a short square
+// clip in video/loop). One <video> per clip, always playing; mount() moves it into
+// whichever element currently asks for it (data-loop), so redraws never restart it.
+// ============================================================================
+const PORTRAIT_LOOPS = { 'HALCYON': 'halcyon-idle', 'HALCYON (Corrupted)': 'halcyon-corrupted' };
+const PortraitLoop = (() => {
+  const pool = {};
+  const clipFor = name => { const c = name && PORTRAIT_LOOPS[name]; return c && !REDUCED && Cinema.videoSrc(c) ? c : null; };
+  function video(clip) {
+    if (pool[clip]) return pool[clip];
+    const v = document.createElement('video');
+    v.className = 'p-loop'; v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'auto';
+    ['muted', 'loop', 'playsinline', 'disablepictureinpicture', 'aria-hidden'].forEach(a => v.setAttribute(a, a === 'aria-hidden' ? 'true' : ''));
+    v.src = Cinema.videoSrc(clip);
+    v.addEventListener('error', () => v.remove());
+    return (pool[clip] = v);
+  }
+  function mount(root) {
+    (root || document).querySelectorAll('[data-loop]').forEach(host => {
+      const v = video(host.dataset.loop);
+      if (v.parentNode !== host) host.appendChild(v);
+      if (v.paused) { const p = v.play(); if (p && p.catch) p.catch(() => {}); }
+    });
+  }
+  return { attr: name => { const c = clipFor(name); return c ? ` data-loop="${c}"` : ''; }, mount };
 })();
 
 // Which cutscene follows which boss, and the gate for the opening.

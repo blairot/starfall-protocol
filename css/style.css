@@ -1382,7 +1382,7 @@ body.touch .inspect-hint { color: var(--t-3); }
 .cin-comm { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); z-index: 3; width: min(820px, 90vw); display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 26px; align-items: center; animation: powerOn .6s var(--ease-out); }
 .cc-portrait { position: relative; aspect-ratio: 1; background: #000 center / cover; clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
   box-shadow: inset 0 0 0 2px hsl(var(--sec-h) 70% 65% / .7); filter: contrast(1.1); }
-.cc-scan { position: absolute; inset: 0; background: var(--scan), linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, .5)); animation: flicker 4s infinite; }
+.cc-scan { position: absolute; inset: 0; z-index: 1; background: var(--scan), linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, .5)); animation: flicker 4s infinite; }
 .cc-h { font: 600 12px var(--f-label); letter-spacing: .3em; text-transform: uppercase; color: var(--red); display: flex; gap: 8px; align-items: center; }
 .cc-h::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--red); box-shadow: 0 0 8px var(--red); animation: lampPulse 1s steps(2) infinite; }
 .cc-name { margin: 8px 0 14px; font: 700 clamp(26px, 4vw, 44px)/1 var(--f-display); letter-spacing: .1em; text-transform: uppercase; }
@@ -1570,3 +1570,10 @@ body.touch .inspect-hint { color: var(--t-3); }
 }
 
 .cin-preload { position: absolute; left: 0; top: 0; width: 2px; height: 2px; overflow: hidden; opacity: 0; pointer-events: none; }
+
+/* 26. portrait loops (a portrait brought to life) and HALCYON's voice glow */
+.p-loop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.h-art .p-loop { clip-path: inherit; }
+.cin-comm.fx-ai .cc-portrait { filter: contrast(1.1) brightness(calc(1 + var(--amp, 0) * .45)); }
+.cin-comm.fx-ai .cc-portrait::after { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; mix-blend-mode: screen;
+  background: radial-gradient(circle at 50% 42%, rgba(255, 196, 110, .55), transparent 62%); opacity: var(--amp, 0); transition: opacity .08s linear; }
