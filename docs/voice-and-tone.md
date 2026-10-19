@@ -21,8 +21,33 @@ A player who has never read a word of lore should finish every cutscene knowing 
 5. **Complete sentences.** No stacked fragments ("Not a ship. Not a fleet."), no twist-reversals ("It was never X. It was Y."), no "something out there" vagueness.
 6. **Numbers only when they help.** "Over a million people died" beats "1.4 million". Drop clock times, exact counts and dates used only for atmosphere. Years are fine when they anchor the timeline.
 7. **Humour is welcome**, especially from HALCYON, Mox and soldiers. Keep it dry and in character. No jokes in a death scene.
-8. **No em dashes** in lore or dialogue. Use commas, colons, full stops or parentheses.
-9. **Voiced lines are read aloud by a text-to-speech voice.** Write numbers and years as words ("twenty-two nineteen", "seventy years"). Avoid abbreviations, symbols and anything hard to pronounce. Keep each line under about 30 words.
+8. **No em dashes** in lore or dialogue. In written copy, use commas, colons, full stops or parentheses. Spoken lines use only commas and full stops (see "Writing for the ear").
+9. **Voiced lines are read aloud by a text-to-speech voice.** Write numbers and years as words ("seventy years ago"). Avoid abbreviations, symbols and anything hard to pronounce. Keep each line under about 22 words. The next section has the full rules.
+
+## Writing for the ear
+
+Cutscene lines are spoken, not read. The narrator is a calm British male voice (Kokoro "bm_george"), and the other characters use other Kokoro voices with radio, synth or psionic effects. A line that looks fine on the page can sound stiff when a voice reads it once, at speaking pace, with no way to scan back. Read every line aloud before you commit it. If you run out of breath or trip over it, rewrite it.
+
+1. **One idea per sentence.** Keep most sentences under 18 words. Vary the length so the scene has rhythm. A short sentence after a long one lands harder.
+2. **Use contractions.** Write "it's", "we're", "didn't" and "who's", the way people talk. Calculus Prime is the one exception. It never contracts, because stiffness is its voice.
+3. **No lists of three or more, and no stacked clauses.** If a sentence needs "which", "and", "but" and a comma aside, split it into two sentences.
+4. **Only full stops and commas.** No colons, semicolons, parentheses or quotation marks inside a spoken line. The text-to-speech voice stumbles on them, and listeners can't hear them anyway.
+5. **Lead with the subject and the verb.** "Seventy years ago, every Lamp went dark at once." Not "It was seventy years ago that the Lamps, all of them, failed."
+6. **Plain words before proper nouns.** Use a description until the listener has met the name. Say "the machine worlds" before the Forge is introduced. When the name arrives, attach the plain words to it once ("the Forge, the machine worlds that build our ships").
+7. **Numbers and years as words.** Prefer round, human numbers ("seventy years ago", "over a million") to exact ones ("seventy-two years", "one point four million"). No digits in spoken text.
+8. **Talk, don't report.** Each character is a person speaking in the moment, to someone, about something they care about. "Go and find out why" beats "Your mission objective is to investigate the anomaly."
+9. **Keep it short enough to animate.** Keep every line under about 22 words, and each cutscene to roughly 110 to 160 spoken words. Every shot will become an animated clip, so a long speech means a long, static shot.
+
+On-screen text in `log` shots (headers and bodies) isn't spoken. It can use colons and dates, but keep it short and plain. The lines spoken over a log follow the rules above.
+
+**Before and after.**
+
+| Written for the page | Written for the ear |
+| --- | --- |
+| In twenty-two nineteen, every Lamp failed at once. | Seventy years ago, every Lamp went dark at once. |
+| The Forge has gone silent, the Swarm is breeding, and a dead Lamp in the Scrap Belt has started to hum. | Since it started, the machine worlds have gone quiet, and the Swarm is breeding again. |
+| Your first mission: go to the Belt, find out why Lamp Nine is humming, and shut it down if you can. | Go and find out why. Anchorage is nearby, so use it as your base. |
+| I am Halcyon. Most cadets fail. I mention this for context. | I'm Halcyon. Most cadets fail. I mention this purely for context. |
 
 ## Avoid
 
@@ -59,8 +84,8 @@ Mysteries are revealed on schedule, and each reveal is stated plainly when it la
 
 | After | The player now clearly knows |
 | --- | --- |
-| Opening | Lanes, Lamps and the Starfall. A signal has started coming from the galactic core. The Forge has gone quiet, the Swarm is breeding fast, and the dead Lamp in the Belt has started humming. The Fleet needs officers, so the player is at the Academy. |
-| Sector 1 (graduation) | The player passes. Okonkwo gives them the Meridian and sends them to the Belt to find out why Lamp 9 is humming. |
+| Opening | Lanes, Lamps and the Starfall. A signal has started coming from the centre of the galaxy. Since then the machine worlds (the Forge, not yet named) have gone quiet and the Swarm is breeding again. The Fleet needs commanders, so the player is at the Academy. |
+| Sector 1 (graduation) | The player passes. Okonkwo gives them the Meridian and Anchorage. The dead Lamp in the Scrap Belt, Lamp 9, has started humming, and the hum matches the signal. She sends them to the Belt to find out why. |
 | Sector 2 (Vex) | The signal is a mind that calls itself the Choir. It offers people what they want most, and those who accept are taken over. It turned Vex. Its next target is the Swarm. |
 | Sector 3 (Ixis) | The Choir took the Swarm's queen and was using the Swarm as an army. The trail now leads to the Forge, which has gone silent. |
 | Sector 4 (Calculus) | Calculus Prime matched the Choir's signal to its own records of the Starfall: the Choir caused the Starfall. After it, the Fleet secretly shut down every Lamp toward the core (Directive 17) to cut the Choir off. Hierarch Nyra has been switching them back on. |
@@ -73,8 +98,8 @@ Mysteries are revealed on schedule, and each reveal is stated plainly when it la
 Humanity lives on about four hundred worlds, linked by warp lanes: shortcuts through space that let a ship cross light-years in days. We didn't build the lanes. We found them, along with the giant alien machines that hold them open. Spacers call those machines Lamps.
 
 **Dialogue (Vex, dying).**
-VEX: "You hear it too, don't you? It told me the Belt was mine. Funny thing: it says that to everyone."
-MOX: "Meridian, Mox here. Vex is gone. Her logs say the voice calls itself the Choir, and it's headed for the Swarm next. Lucky us."
+VEX: "It promised me the Belt if I let it in. Funny thing is, it says that to everyone."
+MOX: "Last page, she set course for the Hive Nebula. The Choir wants the Swarm next. Lucky us."
 
 **Card flavor.** One plain line, in a character's voice or the Fleet's dry voice.
 Nyra: "She was the first human to hear the Choir, at nine years old. She believes it is offering peace."
