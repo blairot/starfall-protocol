@@ -77,7 +77,32 @@ def pipeline(voice):
     return PIPES[lang]
 
 
-def speak(text, voice, speed=1.0):
+# Engine: Chatterbox (default) speaks in each character's Kokoro voice, copied from
+# tools/voice/refs/<voice>.flac (make_refs.py), with far more natural expression.
+# VOICE_ENGINE=kokoro uses Kokoro directly.
+ENGINE = os.environ.get('VOICE_ENGINE', 'chatterbox')
+REFS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'refs')
+# per character: (exaggeration = how much feeling, cfg_weight = pacing; lower is slower and more deliberate)
+EMOTION = {'narrator': (0.6, 0.4), 'halcyon': (0.35, 0.5), 'okonkwo': (0.5, 0.45), 'vex': (0.75, 0.35), 'mox': (0.55, 0.45),
+           'ixis': (0.6, 0.4), 'calculus': (0.25, 0.55), 'unit_zero': (0.35, 0.5), 'nyra': (0.6, 0.4), 'choir': (0.7, 0.35)}
+CB = None
+def chatterbox():
+    global CB
+    if CB is None:
+        import torch
+        from chatterbox.tts import ChatterboxTTS
+        CB = ChatterboxTTS.from_pretrained(device='cuda' if torch.cuda.is_available() else 'cpu')
+    return CB
+
+
+def speak(text, voice, speed=1.0, who=None):
+    if ENGINE == 'chatterbox':
+        import torch
+        m = chatterbox(); ex, cfg = EMOTION.get(who, (0.5, 0.5))
+        torch.manual_seed(int(hash_text(text + voice), 36) & 0x7fffffff)   # same line, same take
+        wav = m.generate(text, audio_prompt_path=os.path.join(REFS, voice + '.flac'), exaggeration=ex, cfg_weight=cfg)
+        x = wav.squeeze(0).detach().cpu().numpy().astype(np.float32)
+        return resample_pitch(x, m.sr / SR) if m.sr != SR else x
     chunks = [np.asarray(audio, dtype=np.float32) for _, _, audio in pipeline(voice)(text, voice=voice, speed=speed)]
     return np.concatenate(chunks) if chunks else np.zeros(SR // 4, dtype=np.float32)
 
@@ -89,18 +114,18 @@ def resample_pitch(x, factor):
     return np.interp(idx, np.arange(len(x)), x).astype(np.float32)
 
 
-def render(text, member, tmp):
+def render(text, member, tmp, who=None):
     fx = member.get('fx', 'none')
     if fx == 'choir':
         parts = []
         for v, pitch, delay in CHOIR:
-            a = resample_pitch(speak(text, v, 0.9), pitch)
+            a = resample_pitch(speak(text, v, 0.9, who), pitch)
             parts.append(np.concatenate([np.zeros(int(delay * SR), np.float32), a]))
         n = max(len(p) for p in parts)
         x = sum(np.pad(p, (0, n - len(p))) for p in parts) / len(parts) * 1.6
     else:
         arche = member.get('voice', 'narrator-m')
-        x = speak(text, VOICES.get(arche, 'bm_george'), SPEED.get(arche, 1.0))
+        x = speak(text, VOICES.get(arche, 'bm_george'), SPEED.get(arche, 1.0), who)
     x = np.concatenate([np.zeros(int(0.06 * SR), np.float32), x, np.zeros(int(0.5 * SR), np.float32)])  # room for echoes
     raw = os.path.join(tmp, 'raw.wav'); sf.write(raw, x, SR)
     return raw, FX.get(fx, FX['none'])
@@ -164,12 +189,12 @@ def main():
                     key, text = f'{cid}-{si}-{li}', line['text']
                     h, out = hash_text(text), os.path.join(CACHE, f'{cid}-{si}-{li}.mp3')
                     member = cast.get(line['who'], {})
-                    sig = f"{h}|{member.get('voice')}|{member.get('fx')}"
+                    sig = f"{h}|{member.get('voice')}|{member.get('fx')}|{ENGINE}"
                     old = manifest.get(key)
                     if (only and cid not in only) or (not args.force and old and old.get('sig') == sig and os.path.exists(out)):
                         if old and os.path.exists(out): keep[key] = old
                         skipped += 1; continue
-                    raw, chain = render(text, member, tmp)
+                    raw, chain = render(text, member, tmp, line['who'])
                     keep[key] = {'d': encode(raw, chain, out), 'h': h, 'sig': sig}
                     made += 1
                     print(f'{key:14} {keep[key]["d"]:5.2f}s  {member.get("name", line["who"])}: {text[:60]}')
