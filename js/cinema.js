@@ -61,9 +61,11 @@ const Cinema = (() => {
   // painted images get the "pt" treatment: a sharp layer plus a blurred fill, so phones in portrait don't crop them to a sliver
   // cutscene clips: video/<720|1080>/<clip>.mp4, listed in VIDEOS (js/videos.js)
   const VIDEO_BASE = (typeof ART_BASE !== 'undefined' ? ART_BASE : 'art/').replace(/art\/$/, 'video/');
-  const videoSrc = clip => typeof VIDEOS !== 'undefined' && VIDEOS[clip] ? `${VIDEO_BASE}${typeof ART_LITE !== 'undefined' && ART_LITE ? 720 : 1080}/${clip}.mp4` : null;
+  // an entry may carry `a` (hosted copies: {720, 1080, p}) when its files live outside video/ (the artifact's asset store)
+  const vEntry = clip => typeof VIDEOS !== 'undefined' && VIDEOS[clip];
+  const videoSrc = clip => { const v = vEntry(clip); if (!v) return null; const q = typeof ART_LITE !== 'undefined' && ART_LITE ? 720 : 1080; return (v.a && v.a[q]) || `${VIDEO_BASE}${q}/${clip}.mp4`; };
   const plainUrl = css => (/url\("?([^")]+)"?\)/.exec(css || '') || [])[1] || '';
-  const posterSrc = clip => `${VIDEO_BASE}poster/${clip}.webp`;
+  const posterSrc = clip => { const v = vEntry(clip); return (v && v.a && v.a.p) || `${VIDEO_BASE}poster/${clip}.webp`; };
   // one ready-to-play <video> per clip, made when the cutscene starts so every cut is instant
   function preloadVideo(clip, holder) {
     const v = document.createElement('video');
