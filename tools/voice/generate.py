@@ -7,8 +7,10 @@ with a short gap between lines, and writes js/vo.js: each line's start offset,
 duration and text hash (so the game can tell when a line's text changed and its
 audio is stale). One file per cutscene means one download and one decode.
 
-Usage (from the repo root, with the Kokoro virtualenv's Python):
-    <kokoro-venv>\\Scripts\\python tools/voice/generate.py [--force] [--only opening,s1]
+Usage (from the repo root):
+    Chatterbox (the default; needs tools/voice/refs from make_refs.py and the Chatterbox virtualenv):
+        <chatterbox-venv>\\Scripts\\python tools/voice/generate.py [--force] [--only opening,s1]
+    Kokoro only: set VOICE_ENGINE=kokoro and use the Kokoro virtualenv's Python.
 Needs node and ffmpeg on PATH. Unchanged lines are skipped unless --force.
 """
 import argparse, json, os, subprocess, sys, tempfile
