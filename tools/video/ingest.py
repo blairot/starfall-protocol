@@ -9,7 +9,7 @@ cutscene player which shots have video (the rest show their painted still).
 
 Run from the repo root:  python tools/video/ingest.py   (needs ffmpeg and ffprobe on PATH)
 """
-import json, os, subprocess
+import json, os, re, subprocess
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 SRC = os.path.join(ROOT, 'video', 'incoming')
@@ -26,11 +26,23 @@ def src_height(path):
     return int(out or 0)
 
 
+def black_bars(path):
+    """Crop that removes letterbox or pillarbox bars (some tools pad a 3:2 image out to 16:9), or None."""
+    out = subprocess.run(['ffmpeg', '-hide_banner', '-i', path, '-vf', 'cropdetect=limit=24:round=2:reset=0', '-f', 'null', '-'], capture_output=True, text=True).stderr
+    crops = re.findall(r'crop=(\d+):(\d+):(\d+):(\d+)', out)
+    if not crops: return None
+    cw, ch, x, y = map(int, crops[-1])
+    probe = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=width,height', '-of', 'csv=p=0', path], capture_output=True, text=True).stdout.strip()
+    fw, fh = map(int, probe.split(','))
+    return f'crop={cw}:{ch}:{x}:{y}' if (cw < fw * 0.98 or ch < fh * 0.98) else None
+
+
 def encode(src, out, w, h, crf):
     # never upscale: a 720p source stays 720p in the "1080" folder too; keep the clip's own frame rate
     sh = src_height(src)
     if sh and sh < h: w, h = round(w * sh / h / 2) * 2, sh
-    vf = f'scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},format=yuv420p'
+    bars = black_bars(src)
+    vf = (bars + ',' if bars else '') + f'scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},format=yuv420p'
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', src, '-an', '-vf', vf, '-c:v', 'libx264', '-preset', 'slow', '-crf', str(crf),
                     '-profile:v', 'high', '-movflags', '+faststart', out], check=True)
 
