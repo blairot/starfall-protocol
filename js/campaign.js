@@ -32,6 +32,7 @@ const ENCOUNTERS = [
     enemy: { name: 'Sim Drone Pilot', hp: 12, ai: 0, deck: dk('scout_drone:4 cadet:4 marine:3 ion_lancer:2 heavy_trooper:2') },
     fixedDeck: dk('cadet:3 scout_drone:3 marine:3 ion_lancer:2 heavy_trooper:2 patrol_frigate:1 star_cruiser:1'), noPower: true, first: 0, noMulligan: true,
     story: 'Your first simulated battle, against a training drone pilot. HALCYON: "Simulation online. Your opponent is a drone pilot of limited competence. So, for now, are you. Deploy units, attack, and bring the enemy commander to zero Health. Try not to embarrass the Academy."',
+    victory: 'HALCYON: "Simulation complete. You won. The drone pilot has been informed, and is taking it well, being software. Next, I will teach you to set things on fire from a distance."',
     tips: [
       'You have <b>1 Energy</b> (the crystals on the right). If a card in your hand costs 1, click it to deploy it. Then press <b>End Turn</b>: you get more Energy every turn.',
       'Units can attack the turn <i>after</i> they arrive. Click your glowing unit, then click a target. Click the enemy commander\'s portrait to hit them directly.',
@@ -45,6 +46,7 @@ const ENCOUNTERS = [
     enemy: { name: 'Sim Gunnery Officer', hp: 16, ai: 0, deck: dk('scout_drone:2 cadet:2 marine:3 ion_lancer:2 rifle_squad:2 plasma_bolt:2 heavy_trooper:2') },
     first: 0, noMulligan: true,
     story: 'A gunnery drill against a simulated Fleet gunnery officer. HALCYON: "I have added Protocols to your deck: one-shot spells. Some units also have Deploy effects, which fire the moment they arrive. Before each battle you can edit your deck in the Hangar. Most cadets forget that. I have a list of which ones."',
+    victory: 'HALCYON: "Gunnery drill passed. You spent your Protocols on the right targets, which puts you ahead of several instructors. Next lesson: walls."',
     tips: [
       'Protocols (spells) have no Attack or Health. When you draw <b>Plasma Bolt</b>, click it, then click an enemy to deal 2 damage.',
       '<b>Deploy:</b> effects trigger when you play the card. Rifle Squad, for example, asks for a target as it lands.',
@@ -53,10 +55,11 @@ const ENCOUNTERS = [
     ],
     grant: { shield_trooper: 1, barricade: 1 } },
 
-  { id: '1-3', sector: 0, name: 'Hold the Line', teaches: ['guardian'],
+  { id: '1-3', sector: 0, name: 'Hold the Line', teaches: ['guardian'], teachesAlso: ['fatigue'],
     enemy: { name: 'Sim Fortress', hp: 18, ai: 1, deck: dk('barricade:2 shield_trooper:3 marine:2 cadet:3 scout_drone:1 bulwark_mech:1 heavy_trooper:2 field_engineer:1') },
     first: 0, noMulligan: true,
     story: 'A fortification drill against a simulated defensive line. HALCYON: "The enemy will deploy Guardian units. You must destroy them before you can attack anything behind them, including the commander. Think of a Guardian as a locked door. Then think of something heavy."',
+    victory: 'HALCYON: "The wall is down. You found something heavy, as advised. Next you will face a commander with a power of their own, so I suggest you choose one too."',
     tips: [
       'Units with <b>Guardian</b> (shown with a shielded frame) must be attacked first. You can\'t hit the commander or other units until they fall.',
       'Spells ignore Guardian. A Plasma Bolt can still hit the commander directly.',
@@ -68,22 +71,25 @@ const ENCOUNTERS = [
     enemy: { name: 'Sim Commander Vale', hp: 20, ai: 1, power: 'pulse', deck: dk('cadet:2 marine:2 shield_trooper:2 rifle_squad:2 recon_officer:1 ion_lancer:2 heavy_trooper:2 plasma_bolt:1 patrol_frigate:1') },
     first: 0,
     story: 'A command exercise against Commander Vale, a simulated officer built from real Fleet service records. HALCYON: "Every commander has a personal power they can use once per turn. You now have two to choose from in the Hangar. Vale has one as well. Vale is based on several of your instructors. I will not say which. They know."',
+    victory: 'Vale salutes as the simulation dissolves. Vale: "Give my regards to your instructors, Cadet. One of them marks your final exam." HALCYON: "Vale is not authorised to share that. Vale is, however, correct."',
     tips: [
       'Your <b>Commander Power</b> sits beside your portrait. It costs 2 Energy and can be used once each turn.',
       'Pulse Laser finishes off damaged units. Nanite Repair keeps your units and commander alive.',
       'Check your power every turn. Spare Energy at the end of a turn is usually a power you forgot to use.',
     ],
-    grant: { interceptor: 1, hover_tank: 1, strike_fighter: 1 }, teachesAlso: ['mulligan', 'fatigue'] },
+    grant: { interceptor: 1, hover_tank: 1, strike_fighter: 1 }, teachesAlso: ['mulligan'] },
 
   { id: '1-E', sector: 0, name: 'Sim: Iron Wall', elite: true, after: '1-4', teachesAlso: ['armor'],
     enemy: { name: 'Sim Bastion', hp: 24, ai: 1, passives: ['thick_hull'], power: 'repair', deck: dk('barricade:2 shield_trooper:2 bulwark_mech:2 heavy_trooper:2 medic_bot:2 marine:2 dreadnought:1 field_repair:1 dig_in:1') },
     story: 'An optional stress test against the Bastion, a heavily armoured simulated fortress. HALCYON: "Most cadets do not get through this one. I tell them so beforehand, as motivation. It rarely helps. The reward is worth the bruises."',
+    victory: 'HALCYON: "Stress test complete. The Bastion\'s armour failed before you did. I have added this to the list of things cadets told me could not be done." The Dreadnought is yours: something heavy of your own.',
     tips: ['This opponent starts with 8 Armor, which absorbs damage before its Health.', 'Its Guardians are tough. Use spells and Deploy damage to pick off whatever blocks you.'],
     grant: { dreadnought: 1, bulwark_mech: 1 } },
 
   { id: '1-5', sector: 0, name: 'Blitz Drill', teaches: ['warp', 'blitz'],
     enemy: { name: 'Sim Strike Wing', hp: 22, ai: 1, power: 'pulse', deck: dk('strike_fighter:3 interceptor:2 hover_tank:2 scout_drone:2 ion_lancer:2 marine:2 railgun:1 recon_officer:1') },
     story: 'A speed drill against a simulated wing of fast attack craft. HALCYON: "Some units can attack the moment they arrive. Today you learn to use them and to fear them. I recommend doing both, in that order."',
+    victory: 'HALCYON: "Speed drill passed. You learned to use fast units and to fear them, in the correct order. Only the final exam remains, and I will be setting it personally."',
     tips: [
       '<b>Warp</b> units can attack the turn they arrive, even the enemy commander. Great for finishing a fight.',
       '<b>Blitz</b> units can attack enemy <i>units</i> the turn they arrive, but not the commander.',
@@ -95,7 +101,7 @@ const ENCOUNTERS = [
     enemy: { name: 'HALCYON', hp: 30, ai: 1, power: 'target_practice', deck: dk('cadet:1 marine:2 shield_trooper:2 rifle_squad:2 interceptor:2 hover_tank:1 heavy_trooper:2 sapper:1 plasma_bolt:2') },
     first: 0,
     story: 'Your final exam, against HALCYON itself. HALCYON: "Final evaluation. I will be your opponent, and I will use everything I have taught you. Admiral Okonkwo is watching from the gallery. She asked me to go easy on you. I declined, because the enemy will not. Proceed, Cadet."',
-    victory: 'HALCYON: "Evaluation complete. You pass. I am told this is where I say congratulations. Congratulations." Admiral Okonkwo signs your commission on the spot and gives you command of the frigate Meridian. Your first orders: go to the Scrap Belt and find out why Lamp 9, shut down by the Fleet seventy years ago, has started humming.',
+    victory: 'HALCYON: "Evaluation complete. You pass. I am told this is where I say congratulations. Congratulations." Admiral Okonkwo signs your commission on the spot and gives you command of the frigate Meridian. Your first orders: go to the Scrap Belt and find out why Lamp 9 has started humming. When the Lamps came back on after the Starfall, the Fleet shut Lamp 9 down for good as a safety measure, and it has been dead for seventy years.',
     tips: ['HALCYON\'s Target Practice deals 1 damage to your commander whenever it has Energy to spare. In a long game that adds up.', 'This is the full exam: Guardians, Warp, Blitz and spells. Use everything you have learned.'],
     unlockPowers: ['drone'] },
 
@@ -103,6 +109,7 @@ const ENCOUNTERS = [
   { id: '2-1', teachesAlso: ['gear'], sector: 1, name: 'Toll Gate', teaches: ['mulligan'],
     enemy: { name: 'Belt Tollmaster', hp: 25, ai: 1, power: 'pulse', deck: dk('scout_drone:2 cadet:2 boarding_crew:3 marine:2 ion_lancer:2 rifle_squad:2 hover_tank:2 heavy_trooper:2 plasma_bolt:1 patrol_frigate:2') },
     story: 'A raider tollmaster is blocking the only charted safe lane into the Belt. Tollmaster: "Pay the toll, Fleet, or we take it out of your hull. Captain Vex gets her cut either way, so don\'t take it personal." Okonkwo: "The Fleet does not pay tolls to raiders, Commander. Go through him." Your deck now holds 20 cards.',
+    victory: 'The Tollmaster\'s guns go quiet, and the safe lane into the Belt is open. Tollmaster: "Fine, no toll. Vex is going to hear about this, Fleet." Okonkwo: "Good. Let her."',
     tips: [
       'A coin flip decides who goes first. Going second gives you an extra card and an <b>Energy Cell</b>, worth 1 extra Energy once.',
       'Use the Energy Cell to play a 2-cost card on turn 1, or to reach a key card a turn early.',
@@ -112,7 +119,7 @@ const ENCOUNTERS = [
 
   { id: '2-E2', teachesAlso: ['salvage'], sector: 1, name: 'Salvage Rights', elite: true, after: '2-1',
     enemy: { name: 'Breaker Jun', hp: 28, persona: 'drill', ai: 2, power: 'drone', passives: ['rapid_deploy'], deck: dk('scrap_rat:2 boarding_crew:2 det_bot:2 mine_layer:2 salvage_crew:2 cargo_hauler:2 scrap_golem:2 shipbreaker:1 harpoon_gun:2 shock_baton:1 echo_protocol:2 black_market:1') },
-    story: 'Breaker Jun runs the biggest salvage crew in the Belt, and Jun\'s people are the ones who pulled the reactor injectors out of Anchorage. Now they want the rest of the station. Jun: "Nobody\'s lived on that wreck in seventy years, Fleet. Salvage law says it\'s ours." Mox: "Salvage law says whoever\'s still standing. Jun starts every fight with extra power and a lot of junk. Clear the junk first."',
+    story: 'Breaker Jun runs the biggest salvage crew in the Belt, and Jun\'s people are the ones who pulled the reactor injectors out of Anchorage. Now they want the rest of the station. Jun: "Nobody\'s lived on that wreck in seventy years, Fleet. Salvage law says it\'s ours." A second voice cuts into the channel: Mad Mox, who runs the salvage crews for Captain Vex and has never liked Jun. Mox: "Mox here, Meridian. Salvage law says whoever\'s still standing. Jun starts every fight with extra power and a lot of junk. Clear the junk first."',
     victory: 'Jun\'s crew pulls back to their cutters and leaves the stolen parts behind, including two reactor injectors with Anchorage\'s serial numbers. Mox: "Keep the shipbreaker too. Call it back rent."',
     tips: ['Jun starts with an extra Energy crystal, so expect bigger plays a turn early.', 'Salvage units do something when they die. Sometimes it is better to leave a weak one alive than to trigger it.'],
     grant: { shipbreaker: 1, cluster_cannon: 1 } },
@@ -120,6 +127,7 @@ const ENCOUNTERS = [
   { id: '2-2', teachesAlso: ['salvage'], sector: 1, name: 'Armed and Dangerous', teaches: ['gear'],
     enemy: { name: 'Gunsmith Rourke', hp: 28, ai: 1, power: 'blade', deck: dk('shock_baton:2 plasma_cutlass:1 harpoon_gun:2 gunrunner:2 quartermaster:2 boarding_crew:2 marine:2 cadet:2 rifle_squad:2 heavy_trooper:2 sapper:1') },
     story: 'Gunsmith Rourke sells weapons to every raider crew in the Belt, and he wants the Meridian for parts. Rourke: "Lovely little frigate, Commander. I\'ll give you a fair price for her. Well. I\'ll give you a price." Okonkwo: "Rourke arms half of Vex\'s crews. Put him out of business and the rest get harder to supply."',
+    victory: 'Rourke cuts his engines and backs his workshop into the debris. Rourke: "No hard feelings, Commander. If you ever want to sell her, you know where I am." Okonkwo: "Half of Vex\'s crews will be short of ammunition by next week. That\'s a start."',
     tips: [
       '<b>Gear</b> arms your commander. Click your portrait, then a target, to attack with it.',
       'Your commander takes damage when attacking a unit, just like a unit would. Use Gear on small units or on the enemy commander.',
@@ -129,7 +137,8 @@ const ENCOUNTERS = [
 
   { id: '2-3', teachesAlso: ['cloak'], sector: 1, name: 'Junkyard Wars', teaches: ['salvage'],
     enemy: { name: 'Scrapper King Ott', hp: 28, ai: 1, power: 'drone', deck: dk('scrap_rat:3 det_bot:2 cargo_hauler:2 scrap_golem:2 mine_layer:2 marine:2 shield_trooper:2 rifle_squad:2 heavy_trooper:2 echo_protocol:1') },
-    story: 'Mox, Vex\'s salvage boss, has offered to help you find Vex, but first you have to get through Scrapper King Ott\'s yard. Mox: "Meridian, this is Mox. I strip wrecks for Vex. Or I did, until she started talking to that Lamp and wiring its hum into every ship she owns. I want her stopped before she gets us all killed. Sable knows where Vex parks her flagship. Ott sits between you and Sable, and everything in Ott\'s yard either explodes or gets back up."',
+    story: 'Mad Mox, Vex\'s salvage boss, has offered to help you find Vex, but first you have to get through Scrapper King Ott\'s yard. Mox: "Meridian, Mox here. I strip wrecks for Vex. Or I did, until she started talking to that Lamp and wiring its hum into every ship she owns. I want her stopped before she gets us all killed. Sable knows where Vex parks her flagship. Ott sits between you and Sable, and everything in Ott\'s yard either explodes or gets back up."',
+    victory: 'Ott\'s yard finally stops exploding, and the lane to Sable is clear. Ott: "Go and see Sable, then. I\'m not going anywhere near a Lamp that hums. I tried living near one once. Never again." Mox: "Sable will want something from you. She always does."',
     tips: [
       '<b>Salvage:</b> effects trigger when the unit is destroyed. Killing it is still worth it, but plan for what comes next.',
       'When Mine Layer dies, it deals 1 damage to <i>everything</i> on your side. Don\'t rely on lots of 1-Health units.',
@@ -139,7 +148,8 @@ const ENCOUNTERS = [
 
   { id: '2-4', sector: 1, name: 'Ghost Signal', teaches: ['cloak'],
     enemy: { name: 'Sable, Smuggler Queen', hp: 28, ai: 2, power: 'pulse', deck: dk('smuggler:3 shadow_corsair:2 ghost_operative:1 smoke_screen:2 boarding_crew:2 scrap_rat:2 marine:2 rifle_squad:2 hover_tank:2 plasma_bolt:2') },
-    story: 'Sable, a smuggler who trades in secrets, knows where Vex\'s flagship is, and she only sells to people who survive meeting her. Sable: "Vex\'s coordinates? Expensive. Not money, Commander. I want to see if you\'re worth betting on. My ships run dark, so you\'ll see them when they shoot you." Mox: "She means that. Shoot back fast."',
+    story: 'Sable, a smuggler who trades in secrets, knows where Vex\'s flagship is. She makes contact on a ghost signal, a message bounced between a dozen dead wrecks so nobody can trace it, and she only sells to people who survive meeting her. Sable: "Vex\'s coordinates? Expensive. Not money, Commander. I want to see if you\'re worth betting on. My ships run dark, so you\'ll see them when they shoot you." Mox: "She means that. Shoot back fast. She also brokered the bounty on your head, so don\'t feel bad about it."',
+    victory: 'Sable\'s dark ships drop their cloaks one by one, and a set of coordinates arrives on a ghost signal nobody could trace. Sable: "Vex\'s flagship, parked beside Lamp 9. I\'d say good luck, but I\'ve seen you fight." Mox: "That\'s the nicest thing Sable has ever said to anyone."',
     tips: [
       '<b>Cloak</b> units can\'t be attacked or targeted until they attack. Area damage like Flak Barrage still hits them.',
       'Once a Cloaked unit attacks, it is revealed (unless a card such as Smoke Screen cloaks it again).',
@@ -149,11 +159,13 @@ const ENCOUNTERS = [
   { id: '2-E', sector: 1, name: 'Bounty: Kade', elite: true, after: '2-3',
     enemy: { name: 'Kade the Bounty Hunter', hp: 30, ai: 2, persona: 'forge', passives: ['veteran_crew'], power: 'blade', deck: dk('plasma_cutlass:2 rail_rifle:1 harpoon_gun:2 gunrunner:2 quartermaster:2 boarding_crew:2 ion_lancer:2 interceptor:2 hover_tank:2 ghost_operative:1 shakedown:2') },
     story: 'Someone has put a price on your head, and Kade, the best bounty hunter in the Belt, has taken the contract. Mox: "The bounty went out through Sable\'s network, paid with Vex\'s money. Kade has never missed a contract. You don\'t have to take this fight. But Kade will find you eventually, so you might as well pick the time."',
+    victory: 'Kade\'s ship pulls away with its guns cold. Kade: "First contract I\'ve ever handed back. Keep your head, Commander. Somebody else will want it." Mox: "Forty-one for forty-one, then you. Kade will be hearing about that for years."',
     tips: ['Kade\'s units all have +1 Attack. Trade carefully: they hit harder than their cards say.'] },
 
   { id: '2-5', sector: 1, name: 'Wreck Run',
     enemy: { name: 'Raider Wing Leader', hp: 30, ai: 2, power: 'blade', deck: dk('boarding_crew:2 scrap_rat:2 smuggler:2 det_bot:2 shadow_corsair:1 plunderer:2 mine_layer:1 scrap_golem:1 plasma_cutlass:1 shock_baton:1 broadside:1 hover_tank:2 interceptor:2') },
     story: 'Sable\'s coordinates put Vex\'s flagship, the Bad Debt, in the debris field beside Lamp 9, and Vex\'s best pilots are waiting to stop you reaching it. Wing Leader: "Captain says nobody goes near the Lamp. Captain says it\'s hers. Turn around, Fleet." Mox: "They learned to fly in the junk out here. Don\'t follow them into it."',
+    victory: 'The Wing Leader\'s pilots scatter into the junk, and the way to the Bad Debt is open. Wing Leader: "Go on, then. The Captain hasn\'t been herself for months. Maybe you can tell her."',
     tips: ['A full raider deck: Gear, Salvage, Cloak and Blitz together. Check the board before every attack.'] },
 
   { id: '2-6', sector: 1, name: 'Captain Vex', boss: true, bossCard: 'vex',
@@ -167,6 +179,7 @@ const ENCOUNTERS = [
   { id: '3-1', sector: 2, name: 'Venom Fields', teaches: ['toxic'],
     enemy: { name: 'Hive Overseer', hp: 30, ai: 1, power: 'spawn_brood', deck: dk('venom_stinger:3 acid_spitter:2 larva:3 chitin_guard:2 spore_carrier:2 marine:2 cadet:2 rapid_mutation:2 heavy_trooper:2 hover_tank:2 spawn_surge:1 hive_reaper:1 scout_drone:1') },
     story: 'A small Swarm patrol guards the edge of the nebula, steered by a Hive Overseer. Okonkwo: "I spent nine years on this quarantine line, Commander. Rule one: their stingers are Toxic. They kill anything they scratch, however big it is. Rule two: see rule one." Your deck now holds 25 cards.',
+    victory: 'The patrol breaks apart, and the Overseer\'s brood dies with it. Okonkwo: "Nine years on that line and I never once crossed it. It feels strange, Commander. Keep going."',
     tips: [
       '<b>Toxic</b> units destroy any unit they damage, however big it is. Answer them with spells, cheap units or Barrier.',
       'Hive Larva turns into a 3/3 Brood Warrior at the start of its owner\'s turn. Kill larvae early.',
@@ -183,41 +196,47 @@ const ENCOUNTERS = [
   { id: '3-2', sector: 2, name: 'Bloodline', teaches: ['siphon'],
     enemy: { name: 'Leech Matron', hp: 30, ai: 2, power: 'spawn_brood', deck: dk('blood_leech:3 lamprey:2 venom_stinger:2 larva:2 chitin_guard:2 spore_carrier:2 broodmother:2 rapid_mutation:2 life_drain:2 marine:2 heavy_trooper:2 hover_tank:2') },
     story: 'A Leech Matron nests here, breeding Swarm organisms whose bites heal their own side. Okonkwo: "Every bite they land patches them up. Don\'t leave anything half dead out there, Commander. Finish what you start, or they will."',
+    victory: 'The Leech Matron\'s nest goes still, and nothing in it is getting back up. Okonkwo: "Good. Nothing left half dead. The breeding grounds are next, and that\'s where the numbers come from."',
     tips: ['<b>Siphon</b>: damage this unit deals also heals its commander. Kill Siphon units before they attack.'],
     grant: { blood_leech: 2, spore_carrier: 2, life_drain: 1 } },
 
   { id: '3-3', sector: 2, name: 'The Brood',
     enemy: { name: 'Brood Tender', hp: 32, ai: 2, power: 'spawn_brood', deck: dk('broodmother:2 hive_mind:2 spore_carrier:3 larva:3 swarmling:0 spawn_surge:2 hive_surge:2 venom_stinger:2 chitin_guard:2 infest:1 frenzied_ripper:2 acid_spitter:2 blood_leech:2') },
     story: 'A Brood Tender, a walking breeding chamber, is turning out new Swarm faster than you can count them. Okonkwo: "This is how the brood tripled in a year. Every turn you give it, there will be more of them. So don\'t give it many turns."',
+    victory: 'The Brood Tender falls, and for the first time in a year the nebula has fewer Swarm in it than it did yesterday. Okonkwo: "Our scouts say something big is hunting them further in. Stay sharp."',
     tips: ['The Swarm wins by numbers. Area damage like Flak Barrage and Broadside is very strong here.', 'Hive Mind gives every unit summoned after it +1 Attack. Kill it first.'],
     grant: { hive_mind: 1, broodmother: 1, spawn_surge: 1, frenzied_ripper: 1 } },
 
   { id: '3-4', sector: 2, name: 'Apex Predator',
     enemy: { name: 'Ripper Alpha', hp: 32, ai: 2, power: 'mutagen', deck: dk('frenzied_ripper:3 hive_reaper:2 devourer_worm:2 acid_spitter:2 venom_stinger:2 rapid_mutation:2 toxic_spitter:2 blood_leech:2 chitin_guard:2 lamprey:2 hover_tank:2 heavy_trooper:2') },
     story: 'The biggest Swarm hunter the Fleet has ever recorded is picking off your scouts, and it gets more dangerous every time you wound it. Okonkwo: "The scouts call it the Alpha. Nobody who got close enough came back with a better name. Kill it in one blow, Commander. If you only hurt it, you just make it angry."',
+    victory: 'The Alpha goes down in one blow, which was the only way it was going to go down. Okonkwo: "The scouts would like to suggest a better name for it now. Most of their suggestions aren\'t printable."',
     tips: ['Frenzied Ripper gains +2 Attack whenever it survives damage. Kill it in one hit or leave it alone.', 'Devourer Worm destroys a friendly unit and takes its Attack and Health. Keep removal ready.'] },
 
   { id: '3-E', sector: 2, name: 'The Hivewarden', elite: true, after: '3-3',
     enemy: { name: 'The Hivewarden', hp: 32, ai: 2, passives: ['brood_growth'], power: 'spawn_brood', deck: dk('broodmother:2 hive_mind:2 lamprey:2 hive_reaper:2 chitin_guard:2 spore_carrier:2 larva:2 venom_stinger:2 acid_rain:1 hive_surge:2 infest:2 rapid_mutation:2 frenzied_ripper:2') },
     story: 'The Hivewarden is an ancient guardian beast, older than the Swarm Wars, and its brood grows stronger every turn it lives. Okonkwo: "I saw it once from the bridge of my old ship, the Aurora. We had orders to leave it alone, and I was glad of them. You have no such orders. This fight is optional."',
+    victory: 'The Hivewarden falls, and its brood stops growing. Okonkwo: "We had orders to leave that thing alone because we were afraid of it. I\'ll add a line to the Aurora\'s old log. Somebody should know it\'s done."',
     tips: ['Brood Growth gives a random enemy unit +1/+1 every turn. The longer the fight, the more it favours the Warden.'] },
 
   { id: '3-5', sector: 2, name: 'Queen\'s Guard',
     enemy: { name: 'Royal Guard Thorax', hp: 34, ai: 2, power: 'spawn_brood', deck: dk('chitin_guard:3 lamprey:2 hive_reaper:2 acid_spitter:2 venom_stinger:2 broodmother:2 hive_mind:1 hive_surge:2 life_drain:2 spore_carrier:2 larva:2 devourer_worm:1 rapid_mutation:2') },
     story: 'Royal Guard Thorax and its chamber guard stand between you and the Swarm\'s queen, Ixis. Okonkwo: "Thorax was bred for one job: nobody reaches the queen. It is very good at that job. Its wall is thick, some of it feeds on wounds, and the poisonous ones wait behind it. Spend spells here, not your best units."',
+    victory: 'Thorax falls in the doorway it was bred to hold, and the queen\'s chamber is open. Okonkwo: "Nobody has ever got this far, Commander. Ixis is waiting. End it."',
     tips: ['Lamprey Sentinels are Guardians with Siphon, and Toxic units wait behind the wall. Spells are the cheapest way through.'] },
 
   { id: '3-6', sector: 2, name: 'Ixis, Brood Queen', boss: true, bossCard: 'ixis',
     enemy: { name: 'Ixis, Brood Queen', hp: 40, ai: 2, power: 'spawn_brood', passives: ['brood_growth'], deck: dk('broodmother:2 hive_mind:2 hive_reaper:2 lamprey:2 devourer_worm:1 frenzied_ripper:2 venom_stinger:2 acid_spitter:2 spore_carrier:2 larva:2 spawn_surge:1 acid_rain:1 hive_surge:2 infest:1 life_drain:1') },
     story: 'Ixis, queen of the Swarm, waits in her chamber, and the whole nebula pulses in time with the Choir\'s song. Ixis: "For fifty years my children waited quietly behind your line. The Choir promised them room to grow, beyond your quarantine and your guns. Who are you to tell them to stop?" Okonkwo: "She kept the peace for fifty years, Commander. Now she is leading an army. End it."',
     victory: 'Ixis falls, and her brood scatters into the nebula. Without her, the Swarm stops moving as one: the Choir had taken hold of the queen and was using her children as its army. In the quiet, the Meridian can finally trace the Choir\'s signal. It runs through the nebula on a machine control band used by the Forge, which has not answered anyone since February. Set course for the Forge Worlds.',
-    tips: ['Ixis summons two Swarmlings every turn. Clear them with area damage, not single-target removal.', 'One of her units grows every turn. Trade aggressively.'],
+    tips: ['Ixis summons a Swarmling most turns. Clear them with area damage, not single-target removal.', 'Once she has three or more units, one of them grows every turn. Trade aggressively.', 'Lamprey Sentinel has <b>Siphon</b>: whenever it deals damage, even while blocking your attack, Ixis heals. Kill it with spells or one big hit.'],
     unlockPowers: ['mutagen'] },
 
   // ===================================================================== SECTOR 4
   { id: '4-1', sector: 3, name: 'Foundry Gate', teaches: ['barrier'],
     enemy: { name: 'Gate Warden Unit', hp: 32, ai: 2, power: 'plating', deck: dk('shield_drone:3 aegis_sentinel:2 plating_tech:2 gatling_drone:0 repair_drone:2 assembler:2 nanoforge:1 marine:2 shield_trooper:2 heavy_trooper:2 bulwark_mech:2 recon_officer:2 deflector_grid:1 combat_stims:2 patrol_frigate:2 field_engineer:2 plasma_bolt:3') },
     story: 'The Forge\'s outer gate is held by the Gate Warden Unit and its shielded constructs. HALCYON: "Commander, a message from Arden Point. The Forge built my servers, the Academy and your ship, so please do not break anything we will need back. Also, you are doing well. Do not let that go to your head." Your deck now holds 30 cards.',
+    victory: 'The Gate Warden powers down, and the outer foundry gate opens for the first time since February. HALCYON: "Commander, I note that you broke only the parts we did not need. I am almost impressed. Do not tell the Admiral."',
     tips: ['<b>Barrier</b> blocks the first hit completely. Pop it with something cheap, like a 1-Attack unit or your Pulse Laser, before committing big hits.', 'This commander gains <b>Armor</b>, which absorbs damage before Health.'],
     teachesAlso: ['armor'],
     grant: { shield_drone: 2, aegis_sentinel: 1, plating_tech: 2 } },
@@ -225,6 +244,7 @@ const ENCOUNTERS = [
   { id: '4-2', sector: 3, name: 'Signal Jammers', teaches: ['emp'],
     enemy: { name: 'Jammer Array', hp: 32, ai: 2, power: 'reconfigure', deck: dk('emp_trooper:3 disruptor:2 shield_drone:2 aegis_sentinel:2 plating_tech:2 assembler:2 repair_drone:2 reactor_core:1 marine:2 heavy_trooper:2 rifle_squad:2 recon_officer:2 bulwark_mech:2 fortify:2 railgun:2') },
     story: 'A field of jammer towers floods the foundry approach with electromagnetic pulses that strip units back to their basic settings. Okonkwo: "Those towers were built to protect the foundries from lightning storms. Now they\'re pointed at us. Anything clever you put on a unit won\'t last here, so keep it simple."',
+    victory: 'The jammer towers go silent, and your units can hold their upgrades again. Okonkwo: "Those towers can go back to watching for lightning. The assembly lines are next, and they\'ve had months to stockpile."',
     tips: ['<b>EMP</b> wipes a unit back to its basic card: no keywords, no buffs, no text. Great against Toxic, Guardian or big buffed units.', 'Don\'t stack buffs on one unit while EMP is around.'],
     grant: { emp_trooper: 2, disruptor: 2, fortify: 1 } },
 
@@ -238,23 +258,27 @@ const ENCOUNTERS = [
   { id: '4-3', sector: 3, name: 'Assembly Line', teaches: ['twin'],
     enemy: { name: 'Line Supervisor', hp: 34, ai: 2, power: 'reconfigure', deck: dk('gatling_drone:3 war_walker:1 assembler:2 overdrive:2 shield_drone:2 nanoforge:2 aegis_sentinel:2 emp_trooper:2 plating_tech:2 repair_drone:2 heavy_trooper:2 hover_tank:2 lightning_arc:0 disruptor:2 deflector_grid:1 fortify:1 railgun:2') },
     story: 'The Line Supervisor runs a drone factory that has not stopped since the Forge went silent, and it has added you to its quality checks. Line Supervisor: "Defect detected. Organic commander, Fleet origin. Scheduling removal." Okonkwo: "Its gun drones fire twice a turn. Don\'t let them pile up."',
+    victory: 'The drone line stops for the first time since February. Line Supervisor: "Defect not removed. Logging first failure in two million units." Okonkwo: "Frame that, Commander. The reactor district is next."',
     tips: ['<b>Twin-Fire</b> units attack twice per turn. With Barrier as well, they shred units.', 'Overdrive gives a unit Twin-Fire. Kill or EMP the unit it lands on.'],
     grant: { gatling_drone: 2, overdrive: 1, assembler: 1 } },
 
   { id: '4-4', sector: 3, name: 'Meltdown', teaches: ['overheat'],
     enemy: { name: 'Reactor Overseer', hp: 34, ai: 2, power: 'pulse', deck: dk('arc_coil:3 overclocked_mech:2 storm_titan:1 lightning_arc:3 chain_lightning:2 vent_heat:2 gatling_drone:2 shield_drone:2 plating_tech:2 emp_trooper:2 aegis_sentinel:2 reactor_core:1 heavy_trooper:2 hover_tank:2 fortify:2') },
     story: 'The Reactor Overseer has been running this district\'s reactors past their safe limits, and its machines borrow tomorrow\'s power to hit hard today. Reactor Overseer: "Meltdown probability: high. Acceptable." Okonkwo: "When it overheats, it\'s short of power on its next turn. That\'s when you push."',
+    victory: 'The Reactor Overseer\'s machines burn through the last of their borrowed power and go cold. Reactor Overseer: "Meltdown probability: revised. Outcome: unacceptable." Okonkwo: "Calculus Prime\'s inner perimeter is all that\'s left. Get through it."',
     tips: ['<b>Overheat (N)</b>: cheap, powerful cards that lock N of your Energy crystals next turn.', 'After the enemy overheats, it has less Energy next turn. That\'s your window to push.'],
     grant: { arc_coil: 2, lightning_arc: 2, overclocked_mech: 1, vent_heat: 1 } },
 
   { id: '4-5', sector: 3, name: 'Core Defenses',
     enemy: { name: 'Defense Matrix', hp: 36, ai: 2, power: 'reconfigure', passives: ['thick_hull'], deck: dk('aegis_sentinel:2 reactor_core:2 war_walker:1 gatling_drone:2 shield_drone:2 nanoforge:2 assembler:2 emp_trooper:2 disruptor:2 overclocked_mech:2 storm_titan:1 lightning_arc:2 chain_lightning:1 deflector_grid:1 fortify:2 plating_tech:2 repair_drone:2') },
     story: 'The Defense Matrix guards Calculus Prime\'s inner perimeter, and it re-optimises itself against every attack it survives. Defense Matrix: "Threat model updated. Your previous tactics will not work here." Okonkwo: "Then use new ones. This will be a long fight, Commander. Bring cards that draw cards."',
+    victory: 'The Defense Matrix runs out of new defences before you run out of new tactics. Defense Matrix: "Threat model incomplete. Perimeter open." Okonkwo: "Calculus Prime is on the other side. Whatever it tells you, remember it\'s been listening to the Choir since February."',
     tips: ['A grinding defensive opponent. Card draw and big threats win long games.'] },
 
   { id: '4-E', sector: 3, name: 'Siege Engine Mk IX', elite: true, after: '4-4',
     enemy: { name: 'Siege Engine Mk IX', hp: 34, ai: 3, power: 'plating', passives: ['rapid_deploy'], deck: dk('storm_titan:2 war_walker:1 overclocked_mech:2 arc_coil:2 bulwark_mech:2 star_cruiser:2 reactor_core:2 heavy_trooper:2 aegis_sentinel:2 gatling_drone:2 chain_lightning:2 lightning_arc:2 fortify:2 vent_heat:2 deflector_grid:1 kill_order:1 shield_drone:1') },
     story: 'The Siege Engine Mk IX is a prototype war machine that has sat running in a sealed bay for a century, and it starts every fight a step ahead. Okonkwo: "The Fleet ordered that walker in 2187 and then couldn\'t pay for it. It\'s been waiting for orders ever since, and the Choir finally gave it some. This fight is optional, but I\'d rather it wasn\'t behind us."',
+    victory: 'The Siege Engine Mk IX shuts down for the first time in a century. Okonkwo: "Ordered in 2187, decommissioned in 2291. I\'ll tell Procurement the order is finally closed."',
     tips: ['It starts with an extra Energy crystal, so expect big plays early. Save your removal for its biggest threats.'] },
 
   { id: '4-6', sector: 3, name: 'Calculus Prime', boss: true, bossCard: 'calculus',
@@ -268,6 +292,7 @@ const ENCOUNTERS = [
   { id: '5-1', sector: 4, name: 'Whispering Dark', teaches: ['amplify'],
     enemy: { name: 'Void Acolyte Choir', hp: 30, ai: 2, power: 'mind_spike', deck: dk('void_initiate:3 psi_adept:2 void_oracle:1 void_shards:3 plasma_bolt:2 mind_blast:1 railgun:2 flak_barrage:2 marine:2 shield_trooper:2 heavy_trooper:2 recon_officer:2 supply_drop:1 patrol_frigate:2 bulwark_mech:2') },
     story: 'The first Psionic outpost is held by acolytes, novice psionics who focus their minds together to make their spells hit harder. Okonkwo: "They\'ve called themselves a choir for generations, long before the real one turned up. They don\'t find it funny anymore. Most of them have never met Nyra, but they\'re still in your way."',
+    victory: 'The acolytes break formation and scatter into the dark. Okonkwo: "Most of them are barely trained, Commander. Let them go home. Our problem is the woman relighting the Lamps."',
     tips: ['<b>Amplify +N</b>: while this unit is alive, its owner\'s spells deal N extra damage. Kill Amplify units before the big spell lands.'],
     grant: { void_initiate: 2, psi_adept: 1, void_shards: 2 } },
 
@@ -281,30 +306,35 @@ const ENCOUNTERS = [
   { id: '5-2', sector: 4, name: 'Frozen Moon', teaches: ['cryo'],
     enemy: { name: 'Cryomancer Vel', hp: 30, ai: 2, power: 'mind_spike', deck: dk('cryo_sentry:3 frost_lance:3 cryo_nova:2 glacial_titan:1 void_initiate:2 psi_adept:2 shield_trooper:2 bulwark_mech:2 heavy_trooper:2 recon_officer:2 void_shards:2 supply_drop:2 railgun:2 star_cruiser:1 marine:2') },
     story: 'Cryomancer Vel, head of the psionics who pull heat out of matter, holds the frozen moon on your route and will not let a Fleet ship pass. Vel: "I froze this whole moon once, Commander, to save my people. One frigate is no trouble at all." Okonkwo: "Frozen units lose their next attack. Don\'t plan everything around one big turn."',
+    victory: 'The frozen moon starts to thaw, and Vel lowers her staff. Vel: "I froze this moon to save my people. Nyra says she is saving everyone. I am starting to wonder which of us was right." Okonkwo: "Let her think about it. The Psionic Archive is next, and it knows the way to Nyra."',
     tips: ['<b>Cryo</b>: a frozen unit or commander can\'t attack on its next turn. Frozen Guardians still block.', 'Cryo Nova freezes your whole board. Don\'t rely on one big attacking turn.'],
     grant: { cryo_sentry: 2, frost_lance: 2, cryo_nova: 1 } },
 
   { id: '5-3', sector: 4, name: 'The Psionic Archive', teaches: ['scan'],
     enemy: { name: 'Archivist Prime', hp: 32, ai: 2, power: 'mind_spike', deck: dk('mind_seer:3 probe_unit:3 foresight:2 telepath:2 psi_adept:2 void_initiate:2 void_oracle:1 frost_lance:2 void_shards:2 cryo_sentry:2 phase_stalker:2 heavy_trooper:2 mind_blast:1 psionic_storm:1 supply_drop:2') },
     story: 'The Psionic Orders keep their records in a great archive, and those records show the way to Nyra\'s sanctum. Archivist Prime: "Every psionic secret is kept here, Commander. Your Fleet\'s records are a children\'s library by comparison. My keepers will find the right answer to anything you try." Okonkwo: "Then show them something they haven\'t read."',
+    victory: 'The keepers run out of answers before you run out of questions. Archivist Prime: "You did something we had not read. Take the route to the sanctum, Commander. You were going there anyway." Okonkwo: "It runs through a minefield. Of course it does."',
     tips: ['<b>Scan</b>: pick one of three cards to add to your hand. Choose for the situation in front of you.', 'Telepath copies a random card from your hand. Your own tricks can be used against you.'],
     grant: { mind_seer: 2, probe_unit: 2, foresight: 1, telepath: 1 } },
 
   { id: '5-4', sector: 4, name: 'Minefield', teaches: ['trap'],
     enemy: { name: 'Snare Mistress Ilu', hp: 32, ai: 2, power: 'mind_spike', startTraps: ['sniper_mine'], deck: dk('grav_snare:2 sniper_mine:2 kinetic_barrier:2 mirror_field:1 psionic_null:1 psi_adept:2 cryo_sentry:2 phase_stalker:2 mind_seer:2 void_initiate:2 frost_lance:2 void_shards:2 heavy_trooper:2 bulwark_mech:2 psionic_storm:1 patrol_frigate:2 recon_officer:1') },
     story: 'Snare Mistress Ilu has sown the approach to Nyra\'s sanctum with psionic traps, and she already has one armed and waiting. Ilu: "I have never lost a perimeter, Commander. Step wherever you like." Okonkwo: "Send in something cheap first, and let her traps go off on that."',
+    victory: 'Ilu\'s last trap goes off on an empty patch of space. Ilu: "My first lost perimeter. I would like to say it was close." Okonkwo: "Only the Twin Minds stand between you and Nyra now."',
     tips: ['<b>Traps</b> are armed face-down (shown by the enemy portrait) and fire on <i>your</i> turn when their condition is met.', 'Bait traps with cheap units and cheap spells before playing your best card. She already has one armed.'],
     grant: { grav_snare: 1, sniper_mine: 2, kinetic_barrier: 1, mirror_field: 1 } },
 
   { id: '5-5', sector: 4, name: 'Puppet Masters', teaches: ['control'],
     enemy: { name: 'The Twin Minds', hp: 30, ai: 2, power: 'mind_spike', deck: dk('dominate:2 telepath:2 phase_stalker:2 psionic_horror:2 void_oracle:2 psi_adept:2 cryo_sentry:2 frost_lance:2 void_shards:2 mind_seer:2 sniper_mine:1 grav_snare:1 psionic_null:1 bulwark_mech:2 heavy_trooper:2 star_cruiser:2 mind_blast:1') },
     story: 'The Twin Minds, Nyra\'s closest advisers, are siblings who joined their minds as children, and they can reach into other minds too. Twin Minds: "We are two, and we think as one. Soon your soldiers will think as we do." Okonkwo: "They can take control of your units, Commander. Your biggest unit is the one they\'ll want."',
+    victory: 'The Twin Minds lose their grip on your units, and for a moment they sound like two frightened children. Twin Minds: "She told us the song would let everyone think as one. We never asked if everyone wanted to." Okonkwo: "Nyra\'s sanctum is open, Commander. Finish this."',
     tips: ['<b>Mind Control</b> effects steal your units. Against Dominate, your biggest unit is your biggest risk.', 'Stolen units can\'t attack the turn they\'re taken.'],
     grant: { phase_stalker: 2, psionic_horror: 1, dominate: 1 } },
 
   { id: '5-E', sector: 4, name: 'The Null Choir', elite: true, after: '5-4',
     enemy: { name: 'The Null Choir', hp: 28, ai: 3, power: 'mind_spike', passives: ['void_resonance'], startTraps: ['psionic_null'], deck: dk('void_oracle:1 psi_adept:2 void_initiate:2 psionic_horror:2 void_shards:3 frost_lance:3 mind_blast:1 psionic_storm:1 cryo_nova:1 grav_snare:1 mirror_field:1 sniper_mine:1 glacial_titan:1 bulwark_mech:2 telepath:2 mind_seer:2 recon_officer:1 marine:2') },
     story: 'The Null Choir are psionics who gave themselves to the Choir willingly, and now they speak only in unison, with its voice. Null Choir: "Join us, Commander. It is quiet in here." Okonkwo: "That is what the Choir does to people who say yes. The rest of the Orders consider them dead. This fight is optional."',
+    victory: 'The Null Choir falls silent all at once, the way it spoke. Okonkwo: "The Orders mourned them the day they said yes to the Choir. Let\'s make sure nobody else has to."',
     tips: ['Their spells and Mind Spike deal +1 damage, and they start with a Trap armed that cancels your first spell.'] },
 
   { id: '5-6', sector: 4, name: 'Nyra, Void Hierarch', boss: true, bossCard: 'nyra',
@@ -318,16 +348,19 @@ const ENCOUNTERS = [
   { id: '6-1', sector: 5, name: 'Vex Reborn',
     enemy: { name: 'Vex Reborn', hp: 34, ai: 2, power: 'broadside_power', passives: ['boarding_party'], deck: dk('boarding_crew:3 interceptor:2 hover_tank:2 plunderer:2 shadow_corsair:2 ghost_operative:2 det_bot:2 scrap_golem:2 shipbreaker:1 plasma_cutlass:2 rail_rifle:1 cluster_cannon:1 quartermaster:2 broadside:2 shakedown:2 kill_order:2') },
     story: 'The first echo waits at the edge of the core: Captain Vex and her flagship, rebuilt by the Choir in black glass. Vex Reborn: "The Choir gave me a second chance, Commander. It\'ll give you one too." Mox: "That isn\'t Vex. Vex never thanked anybody for anything in her life. Put it down, for her sake."',
+    victory: 'Vex Reborn shatters, and the black-glass Bad Debt breaks apart around her. Mox: "There. Vex would\'ve hated that copy more than you did. I\'ll drink to the real one when we\'re home."',
     tips: ['Like the original, Vex Reborn\'s Warp and Blitz units get +1 Attack.', 'Full Broadside deals 1 damage to all your units every turn. 1-Health units won\'t last.'] },
 
   { id: '6-2', sector: 5, name: 'Ixis Ascendant',
     enemy: { name: 'Ixis Ascendant', hp: 34, ai: 2, power: 'spawn_brood', passives: ['singularity'], deck: dk('broodmother:2 hive_mind:2 hive_reaper:2 lamprey:2 devourer_worm:2 frenzied_ripper:2 venom_stinger:2 acid_spitter:2 spore_carrier:2 larva:2 acid_rain:2 hive_surge:2 infest:2 life_drain:2 spawn_surge:2') },
     story: 'The Choir has rebuilt Ixis as an echo, and her new brood is tougher than the old one. Ixis Ascendant: "My children are with me again, Commander. All of them, forever." Okonkwo: "The real Ixis loved her children. That thing only counts them. Clear the board and keep it clear."',
+    victory: 'Ixis Ascendant cracks apart, and her glass brood crumbles with her. Far away in the nebula, the real Swarm stays quiet. Okonkwo: "She loved them, once. That thing never did. Keep moving, Commander."',
     tips: ['Every unit she summons gets +1 Health.', 'Area damage and Guardians are critical here. The board fills up fast.'] },
 
   { id: '6-3', sector: 5, name: 'Calculus Omega',
     enemy: { name: 'Calculus Omega', hp: 32, ai: 2, persona: 'forge', power: 'reconfigure', passives: ['adaptive_armor'], deck: dk('aegis_sentinel:2 war_walker:2 storm_titan:2 gatling_drone:2 shield_drone:2 nanoforge:2 assembler:2 emp_trooper:2 reactor_core:1 overclocked_mech:2 disruptor:2 chain_lightning:2 lightning_arc:2 deflector_grid:1 emp_blast:1 fortify:1 calculus:1 kill_order:2') },
     story: 'The Choir has rebuilt Calculus Prime as Calculus Omega, a machine mind built entirely around its song. Calculus Omega: "Recalculating. The error has been corrected. Only you remain." Unit Zero: "Commander, this is Unit Zero, the Forge\'s first machine mind. Calculus was copied from me, and that is a copy of Calculus. I would consider it a personal favour if you deleted it."',
+    victory: 'Calculus Omega stops recalculating and goes dark. Unit Zero: "Deletion confirmed. Thank you, Commander. I have waited a long time to be the only one of us again."',
     tips: ['It starts with 10 Armor and gains 2 more every turn. You need a fast, aggressive plan or overwhelming late-game power.'] },
 
   { id: '6-E2', sector: 5, name: 'The Lost Fleet', elite: true, after: '6-3',
@@ -340,11 +373,13 @@ const ENCOUNTERS = [
   { id: '6-4', sector: 5, name: 'Nyra Unbound',
     enemy: { name: 'Nyra Unbound', hp: 24, ai: 2, power: 'mind_spike', passives: ['singularity'], deck: dk('void_oracle:1 psi_adept:2 void_initiate:2 psionic_horror:2 glacial_titan:1 phase_stalker:2 telepath:2 frost_lance:2 void_shards:2 mind_blast:1 psionic_storm:1 grav_snare:1 mirror_field:1 kinetic_barrier:1 cryo_nova:1 mind_seer:2 nyra:1 star_cruiser:1 marine:2 heavy_trooper:1') },
     story: 'The Choir has rebuilt Nyra as an echo and speaks through her in her own voice. Nyra Unbound: "She wanted rest for everyone, Commander. We gave it to her. Let us give it to you." Okonkwo: "Nyra is gone. Whatever is talking, don\'t answer it."',
+    victory: 'Nyra Unbound breaks apart mid-sentence, still offering you rest. Okonkwo: "That\'s the last of the commanders it took. Only the Choir itself is left, Commander."',
     tips: ['Two Traps are armed at the start. Bait them out before committing your key cards.', 'Every unit she summons gets +1 Health.'] },
 
   { id: '6-E', sector: 5, name: 'Echo of HALCYON', elite: true, after: '6-2',
     enemy: { name: 'HALCYON (Corrupted)', hp: 30, ai: 3, persona: 'drill', power: 'void_lash', passives: ['thick_hull'], deck: dk('okonkwo:1 fleet_captain:2 breach_commando:2 dreadnought:1 star_cruiser:2 hover_tank:2 interceptor:2 rifle_squad:2 sapper:2 heavy_trooper:2 bulwark_mech:2 railgun:2 kill_order:2 orbital_strike:1 supply_drop:2 flak_barrage:2 field_repair:1') },
     story: 'An Academy training signal is broadcasting from the core in HALCYON\'s voice: it is the Choir\'s echo of HALCYON, running one last simulation. HALCYON (Corrupted): "Cadet. Final evaluation. I will be your opponent." Okonkwo: "That is the copy the Choir made when Halcyon went into the song. It knows every simulation Halcyon ever ran, including the ones built from my records. Beat it anyway. Halcyon would insist. This fight is optional."',
+    victory: 'The corrupted simulation ends with a perfect copy of HALCYON\'s old words: "Evaluation complete." The echo shatters before it can give a result. Okonkwo: "Halcyon would have given you one. It would have been a pass."',
     tips: ['It starts with 8 Armor, and Void Lash deals 2 damage to a random target each turn.', 'It plays the Academy\'s best cards, including Admiral Okonkwo, who arrives with two Guardian marines.'] },
 
   { id: '6-5', sector: 5, name: 'The Choir', boss: true, final: true,
@@ -393,6 +428,21 @@ function encUnlocked(save, e) {
 function sectorUnlocked(save, si) { return si === 0 || !!save.cleared[ENCOUNTERS.find(e => e.sector === si - 1 && e.boss).id]; }
 function highestSector(save) { let h = 0; for (let i = 0; i < SECTORS.length; i++) if (sectorUnlocked(save, i)) h = i; return h; }
 function deckSizeFor(save) { return DECK_SIZES[highestSector(save)]; }
+// Advisor: each tip shows for one of your turns, in order. A tip that names a card waits until
+// that card is in your hand or on the battlefield. Once every tip has been shown, the Advisor
+// goes quiet instead of repeating the last one. State lives on the battle (s._adv) so it resumes.
+function advisorTip(s, enc, turn) {
+  const tips = (enc && enc.tips) || []; if (!tips.length || !s || s.over) return '';
+  const st = s._adv || (s._adv = { shown: [], at: {} });
+  if (st.at[turn] === undefined) {
+    const P = s.players[0], E = s.players[1];
+    const seen = new Set([...P.hand, ...P.board, ...E.board].map(c => CARDS[c.id] && CARDS[c.id].name));
+    const named = t => { const plain = t.replace(/<[^>]+>/g, ''); return CARD_LIST.filter(d => !d.token && d.name.length > 4 && plain.includes(d.name)).map(d => d.name); };
+    const i = tips.findIndex((t, k) => { if (st.shown.includes(k)) return false; const n = named(t); return !n.length || n.some(x => seen.has(x)); });
+    st.at[turn] = i; if (i >= 0) st.shown.push(i);
+  }
+  return st.at[turn] >= 0 ? tips[st.at[turn]] : '';
+}
 function nextEncounter(save) { return ENCOUNTERS.find(e => !e.elite && !save.cleared[e.id]) || null; }
 
 function maxCopies(d) { return d.rarity === 'legendary' ? 1 : 2; }

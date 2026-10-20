@@ -210,7 +210,7 @@ function board(s, enc, b, turns) {
   if (!P.hand.length) say('  (empty)');
   if (s.choice && s.choice.pi === 0) say(`CHOOSE A CARD (command: choose <n>): ${s.choice.opts.map((id, i) => `${i + 1}. ${cardText(id)}`).join(' | ')}`);
   const tips = enc.tips || [];
-  if (tips.length && !s.over) say(`Tactical Advisor: ${tips[Math.min(Math.max(0, turns - 1), tips.length - 1)].replace(/<[^>]+>/g, '')}`);
+  if (tips.length && !s.over) { s._adv = b.adv || (b.adv = { shown: [], at: {} }); const t = fn('advisorTip')(s, enc, Math.max(1, turns)); if (t) say(`Tactical Advisor: ${t.replace(/<[^>]+>/g, '')}`); }
 }
 
 // ---------------------------------------------------------------- end of battle: same rules as endBattle() in js/ui.js
@@ -228,7 +228,7 @@ function finish(run, save, b, s) {
     const hurt = Object.entries(s.hurt || {}).sort((x, y) => y[1] - x[1]).slice(0, 3);
     if (hurt.length) say('What hurt you most: ' + hurt.map(([k, n]) => `${k} ${n} damage`).join(' · '));
     if ((enc.tips || []).length) say(`Advisor: ${enc.tips[Math.floor(Math.random() * enc.tips.length)].replace(/<[^>]+>/g, '')}`);
-    if (save.streak.n >= 2 && save.diff !== 'cadet') say(`That's ${save.streak.n} losses in a row here. You may retry this one battle on Cadet (weaker enemies): launch ${enc.id} --easy`);
+    if (save.streak.n >= (enc.boss ? 1 : 2) && save.diff !== 'cadet') say(`That's ${save.streak.n} losses in a row here. You may retry this one battle on Cadet (weaker enemies): launch ${enc.id} --easy`);
     else if (save.diff !== 'cadet' && save.stats.losses >= 3) say('Struggling? You can switch to Cadet difficulty in Settings at any time (command: difficulty cadet).');
     return;
   }
@@ -301,7 +301,7 @@ function main(argv) {
       writeJ(run, 'battle.json', b);
       const r = rebuild(b); if (r.log.length) { say('Before your first turn:'); r.log.forEach(l => say(l)); }
       if (r.s.over) { finish(run, save, b, r.s); return persist(); }
-      return board(r.s, enc, b, r.turns);
+      board(r.s, enc, b, r.turns); return writeJ(run, 'battle.json', b);
     }
     let r = rebuild(b);
     if (r.phase === 'mulligan') {
@@ -310,7 +310,7 @@ function main(argv) {
       P.hand.forEach((c, i) => say(`  ${i + 1}. ${cardText(c.id)}`));
       return;
     }
-    if (cmd === 'look') return board(r.s, enc, b, r.turns);
+    if (cmd === 'look') { board(r.s, enc, b, r.turns); return writeJ(run, 'battle.json', b); }
     const s = r.s; let a = null;
     if (cmd === 'end') a = { k: 'end' };
     else if (cmd === 'concede') a = { k: 'concede' };
@@ -340,7 +340,7 @@ function main(argv) {
     if (a.k === 'end') { say('You end your turn. ENEMY TURN:'); r.log.forEach(l => say('  ' + l)); if (!r.s.over) say('YOUR TURN.'); }
     else r.log.forEach(l => say(l));
     if (r.s.over) { say(''); finish(run, save, b, r.s); return persist(); }
-    say(''); return board(r.s, enc, b, r.turns);
+    say(''); board(r.s, enc, b, r.turns); return writeJ(run, 'battle.json', b);
   }
   if (b && ['launch', 'deck', 'buy', 'open', 'crate', 'difficulty'].includes(cmd) && !(cmd === 'deck' && !args.length)) return say('A battle is in progress. Finish it (or concede) first. Use: look');
   switch (cmd) {
@@ -402,13 +402,13 @@ function main(argv) {
       const size = fn('deckSizeFor')(save);
       if (!enc.fixedDeck && save.deck.length !== size) return say(`Your deck has ${save.deck.length}/${size} cards. It needs exactly ${size}.`);
       const easy = args.includes('--easy');
-      if (easy && !(save.streak && save.streak.id === enc.id && save.streak.n >= 2)) return say('Retry on Cadet is offered after two losses in a row on the same mission.');
+      if (easy && !(save.streak && save.streak.id === enc.id && save.streak.n >= (enc.boss ? 1 : 2))) return say('Retry on Cadet is offered after two losses in a row on the same mission (one, on a boss).');
       [...(enc.teaches || []), ...(enc.teachesAlso || [])].forEach(k => { if (!save.codex.includes(k)) save.codex.push(k); });
       persist();
       const nb = newBattle(save, enc, { easy }); writeJ(run, 'battle.json', nb);
       say(`Launching ${enc.id}: ${enc.name}${easy ? ' (Cadet retry)' : ''}.`);
       const r = rebuild(nb), P = r.s.players[0];
-      if (nb.mull !== null) { if (r.log.length) { say('Before your first turn:'); r.log.forEach(l => say(l)); } return board(r.s, enc, nb, r.turns); }   // this mission skips the mulligan
+      if (nb.mull !== null) { if (r.log.length) { say('Before your first turn:'); r.log.forEach(l => say(l)); } board(r.s, enc, nb, r.turns); return writeJ(run, 'battle.json', nb); }   // this mission skips the mulligan
       say(`OPENING HAND (${r.s.first === 0 ? 'you go first' : 'you go second: +1 card and an Energy Cell'}). Swap cards with "mulligan <n...>" or "keep".`);
       P.hand.forEach((c, i) => say(`  ${i + 1}. ${cardText(c.id)}`));
       break;

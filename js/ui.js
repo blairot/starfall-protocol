@@ -372,7 +372,7 @@ function renderBattle() {
   const P = s.players[0], E = s.players[1];
   for (const p of s.players) { UI.names[p.uid] = p.name; p.board.forEach(m => UI.names[m.uid] = D(m.id).name); }
   const tips = UI.enc.tips || [];
-  const tip = tips.length ? tips[Math.min(Math.max(0, UI.playerTurns - 1), tips.length - 1)] : '';
+  const tip = tips.length ? advisorTip(s, UI.enc, Math.max(1, UI.playerTurns)) : '';
   const handN = P.hand.length;
   const HW = UI.portrait ? 576 : 880, CW = UI.portrait ? 152 : 122, fitN = Math.floor(HW / CW);
   const overlap = handN > fitN ? -Math.min(UI.portrait ? 84 : 62, Math.ceil((handN * CW - HW) / (handN - 1))) : 4;
@@ -767,7 +767,7 @@ function endBattle() {
   save.streak = won ? null : { id: enc.id, n: save.streak && save.streak.id === enc.id ? save.streak.n + 1 : 1 };
   if (!won) {
     save.stats.losses++;
-    const offerEasy = save.streak.n >= 2 && save.diff !== 'cadet';
+    const offerEasy = save.streak.n >= (enc.boss ? 1 : 2) && save.diff !== 'cadet';
     const done = applyContracts(save, tally);
     persist(); SFX.lose(); if (Music.stinger) Music.stinger('defeat');
     const m = modal(`${paintedBanner('screen-defeat')}<div class="m-eyebrow danger">Defeat</div><h2>${esc(enc.name)}</h2>

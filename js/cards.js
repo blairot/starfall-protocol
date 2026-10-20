@@ -33,7 +33,7 @@ const KEYWORDS = {
   salvage:  { name: 'Salvage', card: true, text: 'Triggers when this unit is destroyed.' },
   cloak:    { name: 'Cloak', card: true, text: "Can't be attacked or targeted by the enemy until it attacks." },
   toxic:    { name: 'Toxic', card: true, text: 'Destroys any unit damaged by this.' },
-  siphon:   { name: 'Siphon', card: true, text: 'Damage this deals also heals your commander.' },
+  siphon:   { name: 'Siphon', card: true, text: 'Damage this deals also heals your commander, including the damage it deals back when it is attacked.' },
   barrier:  { name: 'Barrier', card: true, text: 'Blocks the first instance of damage this unit would take.' },
   armor:    { name: 'Armor', card: true, text: "Absorbs damage before your commander's Health." },
   twin:     { name: 'Twin-Fire', card: true, text: 'Can attack twice each turn.' },
