@@ -38,3 +38,6 @@ art/BRIEF4.md
 # cutscene video: raw downloads and briefs (the converted video/720 and video/1080 files are committed)
 video/incoming/
 video/BRIEF*.md
+
+# AI playtester scratch runs (campaign saves and battle logs)
+tools/playtest-agents/runs/
