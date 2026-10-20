@@ -275,7 +275,7 @@ Targets:   E0 = enemy commander, E1..E7 = enemy units left to right; A0 = you, A
 
 function main(argv) {
   const [run, cmd, ...args] = argv;
-  if (!run || run === 'help' || !cmd) { say(HELP); return; }
+  if (!run || run === 'help' || !cmd || cmd === 'help') { say(HELP); return; }
   journal(run, [cmd, ...args].join(' '));
   if (cmd === 'new') {
     const diff = args.includes('--diff') ? args[args.indexOf('--diff') + 1] : 'officer';
