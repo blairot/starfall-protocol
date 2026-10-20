@@ -44,6 +44,7 @@ const KEYWORDS = {
   scan:     { name: 'Scan', card: true, text: 'Choose one of three cards to add to your hand.' },
   control:  { name: 'Mind Control', card: true, text: 'Take an enemy unit for your own. It cannot attack the turn you take it.' },
   packs:    { name: 'Supply Packs & Credits', text: 'Win battles and finish contracts to earn Credits. Spend 125 Credits on a 5-card Supply Pack at the Supply Depot. Every pack has at least one Rare or better. Elites and bosses also award packs.' },
+  anchorage: { name: 'Anchorage & Alloy', text: 'Anchorage is your forward base. Battles also salvage Alloy: spend it at Anchorage to repair modules that make your fleet stronger, such as more commander Health or a starting card.' },
   crafting: { name: 'Scrap & Crafting', text: 'Copies beyond what a deck can hold (2, or 1 for a Legendary) turn into Scrap automatically. Spend Scrap in the Hangar to craft the exact cards you want, or scrap cards you no longer need.' },
 };
 

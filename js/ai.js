@@ -40,13 +40,13 @@ const AI_W0 = {
 };
 const AI_PERSONAS = {
   drill: { name: 'By the book', text: 'Plays the textbook line: trades when it should, attacks when it can.', w: {} },
-  raider: { name: 'Reckless', text: 'Races for your face whenever the fight looks close, loves Warp, Blitz and Gear, and throws units away for tempo.',
+  raider: { name: 'Reckless', text: 'Races for your commander whenever the fight looks close, loves Warp, Blitz and Gear weapons, and throws units away to keep up the pressure.',
     w: { face: 1.2, faceRace: 2.4, mine: 0.9, theirs: 1.0, warp: 1.5, blitz: 1.0, gearOn: 1.5, danger: 0.8, ff: 1.5 } },
   swarm: { name: 'Swarming', text: 'Floods the battlefield with cheap units before big ones and sacrifices them freely. Area damage hurts it most.',
     w: { wide: 1.6, mine: 0.85, theirs: 1.22, atk: 0.9, hp: 0.75, base: 1.2, guardian: 0.6, hand: 0.7, handCost: 0.3 } },
   forge: { name: 'Methodical', text: 'Clears the board first, protects its Guardians and Barrier units, and rarely hits you until lethal is close.',
     w: { face: 0.6, faceLethal: 1.2, self: 1.0, theirs: 1.3, guardian: 2.5, barrier: 2, armor: 0.3, danger: 1.3, ff: 0 } },
-  psionic: { name: 'Cunning', text: 'Saves its removal and mind control for your best unit, and values cards and Traps over tempo.',
+  psionic: { name: 'Cunning', text: 'Saves its removal and mind control for your best unit, and would rather build up cards and Traps than rush you.',
     w: { face: 0.95, theirs: 1.1, hand: 1.1, traps: 2.2, hold: 10, holdMin: 7 } },
   choir: { name: 'Relentless', text: 'Balanced, but always pressing: it fights hard for the board and spends every card and power it can each turn.',
     w: { face: 1.1, mine: 1.1, theirs: 1.35, hand: 0.75, danger: 0.8, eager: 4 } },

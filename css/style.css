@@ -341,6 +341,7 @@ textarea:focus, input[type=search]:focus, #nc-name:focus { outline: none; box-sh
   clip-path: polygon(1.3em 0, 100% 0, 100% calc(100% - 1.3em), calc(100% - 1.3em) 100%, 0 100%, 0 1.3em); }
 .mull-card.on .swap { display: grid; }
 .got { padding: 12px 0; border-bottom: 1px solid var(--edge-1); }
+.grad-list { margin: 8px 0 6px; padding-left: 20px; display: grid; gap: 4px; }
 .advisor.inline { margin-top: 12px; padding: 12px 14px; }
 
 /* ================================================================ 7. TITLE */

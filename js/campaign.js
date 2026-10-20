@@ -33,7 +33,7 @@ const ENCOUNTERS = [
     fixedDeck: dk('cadet:3 scout_drone:3 marine:3 ion_lancer:2 heavy_trooper:2 patrol_frigate:1 star_cruiser:1'), noPower: true, first: 0, noMulligan: true,
     story: 'Your first simulated battle, against a training drone pilot. HALCYON: "Simulation online. Your opponent is a drone pilot of limited competence. So, for now, are you. Deploy units, attack, and bring the enemy commander to zero Health. Try not to embarrass the Academy."',
     tips: [
-      'You have <b>1 Energy</b> (the crystals on the right). Click a card in your hand that costs 1 to deploy it, then press <b>End Turn</b>.',
+      'You have <b>1 Energy</b> (the crystals on the right). If a card in your hand costs 1, click it to deploy it. Then press <b>End Turn</b>: you get more Energy every turn.',
       'Units can attack the turn <i>after</i> they arrive. Click your glowing unit, then click a target. Click the enemy commander\'s portrait to hit them directly.',
       'When units fight, each deals its Attack (yellow) to the other\'s Health (red). Destroying enemy units keeps your commander safe.',
       'You gain 1 more Energy each turn, up to 10, so bigger cards become playable later. Try to spend it all every turn.',
@@ -46,10 +46,10 @@ const ENCOUNTERS = [
     first: 0, noMulligan: true,
     story: 'A gunnery drill against a simulated Fleet gunnery officer. HALCYON: "I have added Protocols to your deck: one-shot spells. Some units also have Deploy effects, which fire the moment they arrive. Before each battle you can edit your deck in the Hangar. Most cadets forget that. I have a list of which ones."',
     tips: [
-      'Protocols (spells) have no Attack or Health. Click <b>Plasma Bolt</b>, then click an enemy to deal 2 damage.',
-      '<b>Deploy:</b> effects trigger when you play the card. Rifle Squad asks for a target as it lands.',
+      'Protocols (spells) have no Attack or Health. When you draw <b>Plasma Bolt</b>, click it, then click an enemy to deal 2 damage.',
+      '<b>Deploy:</b> effects trigger when you play the card. Rifle Squad, for example, asks for a target as it lands.',
       'Use spells on enemy units that your own units can\'t beat in a fair fight.',
-      'Recon Officer draws a card. An empty hand means no options.',
+      'Cards that draw more cards, like Recon Officer, keep your options open. An empty hand means no options.',
     ],
     grant: { shield_trooper: 1, barricade: 1 } },
 
@@ -60,7 +60,7 @@ const ENCOUNTERS = [
     tips: [
       'Units with <b>Guardian</b> (shown with a shielded frame) must be attacked first. You can\'t hit the commander or other units until they fall.',
       'Spells ignore Guardian. A Plasma Bolt can still hit the commander directly.',
-      'Your own Guardians protect you the same way. Use them to shield your fragile units.',
+      'Only Guardians block. Your other units do not stop enemies attacking your commander. The Shield Trooper and Barricade HALCYON gave you are Guardians: use them to protect yourself.',
     ],
     grant: { field_engineer: 1, sapper: 1, dig_in: 1 }, unlockPowers: ['repair', 'pulse'] },
 
@@ -71,11 +71,11 @@ const ENCOUNTERS = [
     tips: [
       'Your <b>Commander Power</b> sits beside your portrait. It costs 2 Energy and can be used once each turn.',
       'Pulse Laser finishes off damaged units. Nanite Repair keeps your units and commander alive.',
-      'At the start of a battle you can swap cards out of your opening hand. Send back expensive cards to find early plays.',
+      'Check your power every turn. Spare Energy at the end of a turn is usually a power you forgot to use.',
     ],
     grant: { interceptor: 1, hover_tank: 1, strike_fighter: 1 }, teachesAlso: ['mulligan'] },
 
-  { id: '1-E', sector: 0, name: 'Sim: Iron Wall', elite: true, after: '1-4',
+  { id: '1-E', sector: 0, name: 'Sim: Iron Wall', elite: true, after: '1-4', teachesAlso: ['armor'],
     enemy: { name: 'Sim Bastion', hp: 24, ai: 1, passives: ['thick_hull'], power: 'repair', deck: dk('barricade:2 shield_trooper:2 bulwark_mech:2 heavy_trooper:2 medic_bot:2 marine:2 dreadnought:1 field_repair:1 dig_in:1') },
     story: 'An optional stress test against the Bastion, a heavily armoured simulated fortress. HALCYON: "Most cadets do not get through this one. I tell them so beforehand, as motivation. It rarely helps. The reward is worth the bruises."',
     tips: ['This opponent starts with 8 Armor, which absorbs damage before its Health.', 'Its Guardians are tough. Use spells and Deploy damage to pick off whatever blocks you.'],
@@ -93,10 +93,10 @@ const ENCOUNTERS = [
 
   { id: '1-6', sector: 0, name: 'HALCYON', boss: true, bossCard: 'okonkwo', graduation: true,
     enemy: { name: 'HALCYON', hp: 30, ai: 1, power: 'target_practice', deck: dk('cadet:1 marine:2 shield_trooper:2 rifle_squad:2 interceptor:2 hover_tank:1 heavy_trooper:2 sapper:1 plasma_bolt:2') },
-    first: 0, noMulligan: true,
+    first: 0,
     story: 'Your final exam, against HALCYON itself. HALCYON: "Final evaluation. I will be your opponent, and I will use everything I have taught you. Admiral Okonkwo is watching from the gallery. She asked me to go easy on you. I declined, because the enemy will not. Proceed, Cadet."',
     victory: 'HALCYON: "Evaluation complete. You pass. I am told this is where I say congratulations. Congratulations." Admiral Okonkwo signs your commission on the spot and gives you command of the frigate Meridian. Your first orders: go to the Scrap Belt and find out why Lamp 9, shut down by the Fleet seventy years ago, has started humming.',
-    tips: ['HALCYON\'s Target Practice deals 1 damage to your commander every turn. Win quickly, before it adds up.', 'This is the full exam: Guardians, Warp, Blitz and spells. Use everything you have learned.'],
+    tips: ['HALCYON\'s Target Practice deals 1 damage to your commander whenever it has Energy to spare. In a long game that adds up.', 'This is the full exam: Guardians, Warp, Blitz and spells. Use everything you have learned.'],
     unlockPowers: ['drone'] },
 
   // ===================================================================== SECTOR 2
@@ -396,6 +396,24 @@ function deckSizeFor(save) { return DECK_SIZES[highestSector(save)]; }
 function nextEncounter(save) { return ENCOUNTERS.find(e => !e.elite && !save.cleared[e.id]) || null; }
 
 function maxCopies(d) { return d.rarity === 'legendary' ? 1 : 2; }
+
+// Academy lessons: HALCYON loads the cards a mission grants straight into your deck, as the
+// briefings say. When the deck is full, each one replaces a copy of the starter card you hold
+// most of (the cheaper one on a tie). Returns the ids that went in.
+function academyLoad(save, ids) {
+  const size = deckSizeFor(save), deck = save.deck, keep = new Set(ids), added = [];
+  for (const id of ids) {
+    if (deck.filter(x => x === id).length >= (save.coll[id] || 0)) continue;
+    if (deck.length >= size) {
+      const n = {}; deck.forEach(x => { if (!keep.has(x)) n[x] = (n[x] || 0) + 1; });
+      const out = Object.keys(n).sort((a, b) => n[b] - n[a] || D(a).cost - D(b).cost)[0];
+      if (!out) break;
+      deck.splice(deck.indexOf(out), 1);
+    }
+    deck.push(id); added.push(id);
+  }
+  return added;
+}
 
 function grantCard(save, id, n) { let scrap = 0; for (let k = 0; k < (n || 1); k++) scrap += gainCard(save, id); return scrap; }
 

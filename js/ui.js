@@ -784,12 +784,13 @@ function endBattle() {
   save.credits += rw.credits;
   if (rw.packs) save.packs[rw.packTier] = (save.packs[rw.packTier] || 0) + rw.packs;
   const graduated = enc.graduation && firstClear && !economyOpen(save);
-  if (graduated) { ['packs', 'crafting'].forEach(k => { if (!save.codex.includes(k)) save.codex.push(k); }); refillContracts(save); }
+  if (graduated) { ['packs', 'crafting', 'anchorage'].forEach(k => { if (!save.codex.includes(k)) save.codex.push(k); }); refillContracts(save); }
   if (rw.alloy) ensureStation(save).alloy += rw.alloy;
   if (rw.scrap) save.scrap += rw.scrap;
   const legendScrap = rw.legendary ? gainCard(save, rw.legendary) : 0;
   const granted = [], crate = firstClear ? crateChoice(enc) : null;
   if (firstClear && enc.grant && !crate) Object.entries(enc.grant).forEach(([id, n]) => { grantCard(save, id, n); for (let k = 0; k < n; k++) granted.push(id); });
+  const loaded = firstClear && enc.sector === 0 && !enc.elite && granted.length ? academyLoad(save, [...new Set(granted)]) : [];
   const unlocked = [];
   if (firstClear && enc.unlockPowers) enc.unlockPowers.forEach(p => { if (!save.powers.includes(p)) { save.powers.push(p); unlocked.push(p); } });
   if (!save.power && save.powers.length) save.power = save.powers[0];
@@ -807,14 +808,14 @@ function endBattle() {
   if (rw.legendary) bits.push(`<div class="legend-reveal"><div class="lr-card">${cardHTML(rw.legendary, { cls: 'big' })}</div><div><div class="m-eyebrow">Legendary acquired</div><h3 class="lr-name">${esc(D(rw.legendary).name)} joins your fleet</h3><p class="muted">${legendScrap ? `You already owned this card, so it became ${legendScrap} Scrap.` : 'Add it to your deck in the Hangar.'}</p></div></div>`);
   if (granted.length) {
     const c = {}; granted.forEach(id => c[id] = (c[id] || 0) + 1);
-    bits.push(`<div class="got"><b>New cards:</b> ${Object.entries(c).map(([id, n]) => `<span class="chip" data-card="${id}">${esc(D(id).name)}${n > 1 ? ' ×' + n : ''}</span>`).join(' ')}<div class="muted">They're in your collection. Add them to a deck in the Hangar.</div></div>`);
+    bits.push(`<div class="got"><b>New cards:</b> ${Object.entries(c).map(([id, n]) => `<span class="chip" data-card="${id}">${esc(D(id).name)}${n > 1 ? ' ×' + n : ''}</span>`).join(' ')}<div class="muted">${loaded.length ? 'HALCYON has loaded them into your deck for the next lesson.' : "They're in your collection. Add them to a deck in the Hangar."}</div></div>`);
   }
   if (crate) bits.push(`<div class="crate" id="crate"><div class="m-eyebrow">Supply crate</div><h3>Choose one card to keep</h3>
     <div class="crate-row">${crate.map(id => `<button class="crate-card" data-crate="${id}" aria-label="Keep ${esc(D(id).name)}">${cardHTML(id)}<span class="crate-own">${crateCopies(id) > 1 ? '×' + crateCopies(id) + ' · ' : ''}${save.coll[id] ? 'You have ' + save.coll[id] : 'New'}</span></button>`).join('')}</div>
     <p class="muted small">${TOUCH.on ? 'Press and hold' : 'Right-click'} a card to read it first. The other two go back to the quartermaster.</p></div>`);
   unlocked.forEach(p => bits.push(`<div class="got power-got"><b>New commander power:</b> ${powerIco(p)} ${esc(HEROPOWERS[p].name)}: ${esc(HEROPOWERS[p].text)} <span class="muted">Equip it in the Hangar.</span></div>`));
   if (newSector) bits.push(`<div class="got"><b>Deck size increased to ${deckSizeFor(save)}.</b> <span class="muted">Add ${Math.max(0, deckSizeFor(save) - save.deck.length)} cards in the Hangar before your next battle. A new pack set is available at the Supply Depot.</span></div>`);
-  if (graduated) bits.push('<div class="got"><b>Training complete: Supply Depot and Anchorage unlocked.</b> <span class="muted">Battles and contracts now earn Credits for Supply Packs at the Depot, and Alloy to repair Anchorage, your new forward base. Craft the cards you want with Scrap in the Hangar.</span></div>');
+  if (graduated) bits.push('<div class="got"><b>Training complete. Three things are now open:</b><ul class="grad-list"><li><b>Supply Depot:</b> spend Credits on packs of new cards.</li><li><b>Crafting:</b> spare copies become Scrap; spend Scrap in the Hangar on the cards you want.</li><li><b>Anchorage:</b> your forward base. Spend Alloy there on upgrades.</li></ul><span class="muted">Each is explained in the Archive. Battles and contracts earn Credits and Alloy from now on.</span></div>');
   const unopened = unopenedPacks(save);
   const m = modal(`${paintedBanner('screen-victory')}<div class="m-eyebrow ok">Victory</div><h2>${esc(enc.name)}</h2>
     ${enc.victory && firstClear ? `<p class="story">${esc(enc.victory)}</p>` : ''}

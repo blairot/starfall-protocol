@@ -236,12 +236,13 @@ function finish(run, save, b, s) {
   save.credits += rw.credits;
   if (rw.packs) save.packs[rw.packTier] = (save.packs[rw.packTier] || 0) + rw.packs;
   const graduated = enc.graduation && firstClear && !fn('economyOpen')(save);
-  if (graduated) { ['packs', 'crafting'].forEach(k => { if (!save.codex.includes(k)) save.codex.push(k); }); fn('refillContracts')(save); }
+  if (graduated) { ['packs', 'crafting', 'anchorage'].forEach(k => { if (!save.codex.includes(k)) save.codex.push(k); }); fn('refillContracts')(save); }
   if (rw.alloy) fn('ensureStation')(save).alloy += rw.alloy;
   if (rw.scrap) save.scrap += rw.scrap;
   if (rw.legendary) fn('gainCard')(save, rw.legendary);
   const crate = firstClear ? fn('crateChoice')(enc) : null, granted = [];
   if (firstClear && enc.grant && !crate) Object.entries(enc.grant).forEach(([id, n]) => { fn('grantCard')(save, id, n); for (let k = 0; k < n; k++) granted.push(id); });
+  const loaded = firstClear && enc.sector === 0 && !enc.elite && granted.length ? fn('academyLoad')(save, [...new Set(granted)]) : [];
   const unlocked = [];
   if (firstClear && enc.unlockPowers) enc.unlockPowers.forEach(p => { if (!save.powers.includes(p)) { save.powers.push(p); unlocked.push(p); } });
   if (!save.power && save.powers.length) save.power = save.powers[0];
@@ -254,11 +255,11 @@ function finish(run, save, b, s) {
   if (rw.alloy) say(`+${rw.alloy} Alloy for Anchorage`);
   if (rw.scrap) say(`+${rw.scrap} Scrap`);
   if (rw.legendary) say(`Legendary acquired: ${cardText(rw.legendary)}`);
-  if (granted.length) say(`New cards: ${Object.entries(deckCounts(granted)).map(([id, n]) => D(id).name + (n > 1 ? ' ×' + n : '')).join(', ')}. They're in your collection; add them to a deck in the Hangar.`);
+  if (granted.length) say(`New cards: ${Object.entries(deckCounts(granted)).map(([id, n]) => D(id).name + (n > 1 ? ' ×' + n : '')).join(', ')}. ${loaded.length ? 'HALCYON has loaded them into your deck for the next lesson.' : "They're in your collection; add them to a deck in the Hangar."}`);
   if (crate) { save.pendingCrate = crate; say(`SUPPLY CRATE: choose one card to keep (command: crate <card>). The others go back:`); crate.forEach(id => say(`  ${id}: ${cardText(id)}${fn('crateCopies')(id) > 1 ? ' (×' + fn('crateCopies')(id) + ')' : ''} · ${save.coll[id] ? 'you have ' + save.coll[id] : 'new'}`)); }
   unlocked.forEach(p => say(`New commander power: ${HEROPOWERS[p].name}: ${HEROPOWERS[p].text} (equip with: power set ${p})`));
   if (newSector) say(`Deck size increased to ${fn('deckSizeFor')(save)}. Add ${Math.max(0, fn('deckSizeFor')(save) - save.deck.length)} cards before your next battle. A new pack set is at the Supply Depot.`);
-  if (graduated) say('Training complete: Supply Depot and Anchorage unlocked. Battles and contracts now earn Credits for Supply Packs, and Alloy to repair Anchorage. Craft cards with Scrap.');
+  if (graduated) say('Training complete. Three things are now open: Supply Depot (spend Credits on packs of new cards); Crafting (spare copies become Scrap; spend Scrap in the Hangar on the cards you want); Anchorage (your forward base; spend Alloy there on upgrades). Each is explained in the Archive (command: codex). Battles and contracts earn Credits and Alloy from now on.');
   if (fn('economyOpen')(save)) say(`Wallet: ${save.credits} Credits · ${save.scrap} Scrap · ${fn('ensureStation')(save).alloy} Alloy · unopened packs: ${Object.values(save.packs).reduce((a, c) => a + c, 0)}`);
   if (CINE_AFTER[enc.id] && firstClear) say(`A cutscene plays now. Watch it with: cutscene ${CINE_AFTER[enc.id]}`);
 }
