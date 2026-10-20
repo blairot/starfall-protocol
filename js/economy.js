@@ -16,10 +16,11 @@ const ECON = {
   freshChance: 0,      // chance a Common/Rare/Epic slot avoids cards you already own (Legendaries always avoid duplicates); duplicates become Scrap for crafting
   scrapValue: { common: 5, rare: 20, epic: 100, legendary: 400 },
   craftCost: { common: 40, rare: 100, epic: 400, legendary: 1600 },
-  winCredits: { normal: 10, elite: 40, boss: 60 },
+  winCredits: { normal: 25, elite: 50, boss: 75 },      // a first clear always pays more than a replay
   replayCredits: { normal: 15, elite: 30, boss: 45 },
   winPacks: { normal: 0, elite: 1, boss: 1 },
   gradPacks: 1,        // packs for finishing the Academy
+  gradCredits: 125,    // enough for one pack on your first visit to the Supply Depot
   contractSlots: 2,
   // Alloy repairs Anchorage station modules (station.js)
   alloyWin: { normal: 30, elite: 50, boss: 100 },
@@ -176,7 +177,7 @@ function economyOpen(save) { return save.codex.includes('packs'); }
 function battleRewards(save, enc, firstClear) {
   const kind = encKind(enc);
   const r = { credits: 0, packs: 0, packTier: packTierFor(enc), legendary: firstClear && enc.bossCard ? enc.bossCard : null };
-  if (enc.graduation && firstClear) { r.credits = 100; r.packs = ECON.gradPacks; r.alloy = ECON.alloyGraduation; return r; }
+  if (enc.graduation && firstClear) { r.credits = ECON.gradCredits; r.packs = ECON.gradPacks; r.alloy = ECON.alloyGraduation; return r; }
   if (!economyOpen(save)) return r;
   r.credits = Math.round((firstClear ? ECON.winCredits[kind] : ECON.replayCredits[kind]) * creditMultOf(save));
   r.alloy = firstClear ? ECON.alloyWin[kind] : ECON.alloyReplay[kind];
@@ -186,12 +187,12 @@ function battleRewards(save, enc, firstClear) {
 // Missions from Sector 2 on offer a choice: keep one of up to three cards from the supply crate.
 // Academy missions hand out their teaching cards; optional missions give their named cards.
 function crateChoice(enc) { return enc.grant && enc.sector >= 1 && !enc.elite ? Object.keys(enc.grant).slice(0, 3) : null; }
-// A Common from the crate comes as a full pair for your deck; anything rarer is a single copy.
-function crateCopies(id) { return D(id).rarity === 'common' ? 2 : 1; }
+// One copy per crate pick, so a later pack copy is a useful second copy rather than Scrap.
+function crateCopies(id) { return 1; }
 
 function describeEncReward(enc, save) {
   const bits = [];
-  if (enc.graduation && !save.cleared[enc.id]) bits.push(`Supply Depot and Anchorage station unlocked: ${ECON.gradPacks} Academy Pack${ECON.gradPacks > 1 ? 's' : ''} + 100 Credits + 60 Alloy`);
+  if (enc.graduation && !save.cleared[enc.id]) bits.push(`Supply Depot and Anchorage station unlocked: ${ECON.gradPacks} Academy Pack${ECON.gradPacks > 1 ? 's' : ''} + ${ECON.gradCredits} Credits + 60 Alloy`);
   else if (economyOpen(save)) {
     const k = encKind(enc);
     bits.push(`${Math.round(ECON.winCredits[k] * creditMultOf(save))} Credits`, `${ECON.alloyWin[k]} Alloy`);

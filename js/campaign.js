@@ -73,7 +73,7 @@ const ENCOUNTERS = [
       'Pulse Laser finishes off damaged units. Nanite Repair keeps your units and commander alive.',
       'Check your power every turn. Spare Energy at the end of a turn is usually a power you forgot to use.',
     ],
-    grant: { interceptor: 1, hover_tank: 1, strike_fighter: 1 }, teachesAlso: ['mulligan'] },
+    grant: { interceptor: 1, hover_tank: 1, strike_fighter: 1 }, teachesAlso: ['mulligan', 'fatigue'] },
 
   { id: '1-E', sector: 0, name: 'Sim: Iron Wall', elite: true, after: '1-4', teachesAlso: ['armor'],
     enemy: { name: 'Sim Bastion', hp: 24, ai: 1, passives: ['thick_hull'], power: 'repair', deck: dk('barricade:2 shield_trooper:2 bulwark_mech:2 heavy_trooper:2 medic_bot:2 marine:2 dreadnought:1 field_repair:1 dig_in:1') },
@@ -100,7 +100,7 @@ const ENCOUNTERS = [
     unlockPowers: ['drone'] },
 
   // ===================================================================== SECTOR 2
-  { id: '2-1', sector: 1, name: 'Toll Gate', teaches: ['mulligan'],
+  { id: '2-1', teachesAlso: ['gear'], sector: 1, name: 'Toll Gate', teaches: ['mulligan'],
     enemy: { name: 'Belt Tollmaster', hp: 25, ai: 1, power: 'pulse', deck: dk('scout_drone:2 cadet:2 boarding_crew:3 marine:2 ion_lancer:2 rifle_squad:2 hover_tank:2 heavy_trooper:2 plasma_bolt:1 patrol_frigate:2') },
     story: 'A raider tollmaster is blocking the only charted safe lane into the Belt. Tollmaster: "Pay the toll, Fleet, or we take it out of your hull. Captain Vex gets her cut either way, so don\'t take it personal." Okonkwo: "The Fleet does not pay tolls to raiders, Commander. Go through him." Your deck now holds 20 cards.',
     tips: [
@@ -110,14 +110,14 @@ const ENCOUNTERS = [
     ],
     grant: { shock_baton: 2, plasma_cutlass: 1, harpoon_gun: 1 } },
 
-  { id: '2-E2', sector: 1, name: 'Salvage Rights', elite: true, after: '2-1',
+  { id: '2-E2', teachesAlso: ['salvage'], sector: 1, name: 'Salvage Rights', elite: true, after: '2-1',
     enemy: { name: 'Breaker Jun', hp: 28, persona: 'drill', ai: 2, power: 'drone', passives: ['rapid_deploy'], deck: dk('scrap_rat:2 boarding_crew:2 det_bot:2 mine_layer:2 salvage_crew:2 cargo_hauler:2 scrap_golem:2 shipbreaker:1 harpoon_gun:2 shock_baton:1 echo_protocol:2 black_market:1') },
     story: 'Breaker Jun runs the biggest salvage crew in the Belt, and Jun\'s people are the ones who pulled the reactor injectors out of Anchorage. Now they want the rest of the station. Jun: "Nobody\'s lived on that wreck in seventy years, Fleet. Salvage law says it\'s ours." Mox: "Salvage law says whoever\'s still standing. Jun starts every fight with extra power and a lot of junk. Clear the junk first."',
     victory: 'Jun\'s crew pulls back to their cutters and leaves the stolen parts behind, including two reactor injectors with Anchorage\'s serial numbers. Mox: "Keep the shipbreaker too. Call it back rent."',
     tips: ['Jun starts with an extra Energy crystal, so expect bigger plays a turn early.', 'Salvage units do something when they die. Sometimes it is better to leave a weak one alive than to trigger it.'],
     grant: { shipbreaker: 1, cluster_cannon: 1 } },
 
-  { id: '2-2', sector: 1, name: 'Armed and Dangerous', teaches: ['gear'],
+  { id: '2-2', teachesAlso: ['salvage'], sector: 1, name: 'Armed and Dangerous', teaches: ['gear'],
     enemy: { name: 'Gunsmith Rourke', hp: 28, ai: 1, power: 'blade', deck: dk('shock_baton:2 plasma_cutlass:1 harpoon_gun:2 gunrunner:2 quartermaster:2 boarding_crew:2 marine:2 cadet:2 rifle_squad:2 heavy_trooper:2 sapper:1') },
     story: 'Gunsmith Rourke sells weapons to every raider crew in the Belt, and he wants the Meridian for parts. Rourke: "Lovely little frigate, Commander. I\'ll give you a fair price for her. Well. I\'ll give you a price." Okonkwo: "Rourke arms half of Vex\'s crews. Put him out of business and the rest get harder to supply."',
     tips: [
@@ -127,7 +127,7 @@ const ENCOUNTERS = [
     ],
     grant: { scrap_rat: 2, det_bot: 2, cargo_hauler: 1 } },
 
-  { id: '2-3', sector: 1, name: 'Junkyard Wars', teaches: ['salvage'],
+  { id: '2-3', teachesAlso: ['cloak'], sector: 1, name: 'Junkyard Wars', teaches: ['salvage'],
     enemy: { name: 'Scrapper King Ott', hp: 28, ai: 1, power: 'drone', deck: dk('scrap_rat:3 det_bot:2 cargo_hauler:2 scrap_golem:2 mine_layer:2 marine:2 shield_trooper:2 rifle_squad:2 heavy_trooper:2 echo_protocol:1') },
     story: 'Mox, Vex\'s salvage boss, has offered to help you find Vex, but first you have to get through Scrapper King Ott\'s yard. Mox: "Meridian, this is Mox. I strip wrecks for Vex. Or I did, until she started talking to that Lamp and wiring its hum into every ship she owns. I want her stopped before she gets us all killed. Sable knows where Vex parks her flagship. Ott sits between you and Sable, and everything in Ott\'s yard either explodes or gets back up."',
     tips: [
@@ -142,7 +142,7 @@ const ENCOUNTERS = [
     story: 'Sable, a smuggler who trades in secrets, knows where Vex\'s flagship is, and she only sells to people who survive meeting her. Sable: "Vex\'s coordinates? Expensive. Not money, Commander. I want to see if you\'re worth betting on. My ships run dark, so you\'ll see them when they shoot you." Mox: "She means that. Shoot back fast."',
     tips: [
       '<b>Cloak</b> units can\'t be attacked or targeted until they attack. Area damage like Flak Barrage still hits them.',
-      'Once a Cloaked unit attacks, it is revealed for good.',
+      'Once a Cloaked unit attacks, it is revealed (unless a card such as Smoke Screen cloaks it again).',
     ],
     grant: { broadside: 1, quartermaster: 1, gunrunner: 1 } },
 
@@ -174,7 +174,7 @@ const ENCOUNTERS = [
     grant: { venom_stinger: 2, acid_spitter: 1, larva: 2 } },
 
   { id: '3-E2', sector: 2, name: 'Spore Garden', elite: true, after: '3-1',
-    enemy: { name: 'Spore Mother', hp: 30, ai: 2, power: 'mutagen', startBoard: ['spore_carrier', 'spore_carrier'], deck: dk('spore_carrier:2 venom_stinger:2 acid_spitter:2 toxic_spitter:2 blood_leech:2 larva:2 broodmother:1 lamprey:2 life_drain:2 rapid_mutation:2 acid_rain:1 hive_surge:1') },
+    enemy: { name: 'Spore Mother', hp: 30, ai: 2, power: 'mutagen', startBoard: ['spore_carrier'], deck: dk('spore_carrier:2 venom_stinger:2 acid_spitter:2 toxic_spitter:2 blood_leech:2 larva:2 broodmother:1 lamprey:2 life_drain:2 rapid_mutation:2 acid_rain:1 hive_surge:1') },
     story: 'A Spore Mother is a Swarm creature the size of a frigate that seeds the nebula with spores. The spores grow into food for the brood, and this one has filled a whole asteroid field. Okonkwo: "Burn the garden and the brood goes hungry. It already has two spore carriers out when you arrive, and almost everything it grows is Toxic. Don\'t let your big units take hits from small ones."',
     victory: 'The garden burns, and the brood in this part of the nebula loses its food supply. Okonkwo\'s biologists want samples. You send them the acid rain glands, sealed in three layers of containment.',
     tips: ['The Spore Mother starts with two Spore Carriers on the board. Clear them early.', 'Toxic units destroy anything they damage. Trade them with cheap units, not your best ones.'],
@@ -308,7 +308,7 @@ const ENCOUNTERS = [
     tips: ['Their spells and Mind Spike deal +1 damage, and they start with a Trap armed that cancels your first spell.'] },
 
   { id: '5-6', sector: 4, name: 'Nyra, Void Hierarch', boss: true, bossCard: 'nyra',
-    enemy: { name: 'Nyra, Void Hierarch', hp: 30, ai: 3, power: 'mind_spike', passives: ['void_resonance'], startTraps: ['psionic_null'], deck: dk('void_oracle:1 psi_adept:2 void_initiate:2 psionic_horror:2 glacial_titan:1 phase_stalker:2 telepath:1 cryo_sentry:2 frost_lance:2 void_shards:2 mind_blast:1 dominate:1 grav_snare:1 mirror_field:1 sniper_mine:1 kinetic_barrier:1 cryo_nova:1 mind_seer:2 star_cruiser:1 marine:2 shield_trooper:1') },
+    enemy: { name: 'Nyra, Void Hierarch', hp: 28, ai: 2, power: 'mind_spike', passives: ['void_resonance'], startTraps: ['psionic_null'], deck: dk('void_oracle:1 psi_adept:2 void_initiate:2 psionic_horror:2 glacial_titan:1 phase_stalker:2 telepath:1 cryo_sentry:2 frost_lance:2 void_shards:2 mind_blast:1 dominate:1 grav_snare:1 mirror_field:1 sniper_mine:1 kinetic_barrier:1 cryo_nova:1 mind_seer:2 star_cruiser:1 marine:2 shield_trooper:1') },
     story: 'Hierarch Nyra leads the Psionic Orders, and for the past year she has been relighting the Lamps that lead to the Choir. Nyra: "I first heard it singing when I was nine years old, Commander, and I have never been lonely since. It offers an end to loneliness and fear. I opened the way so that everyone could have that. Do you not want to rest?" Okonkwo: "She believes every word of it. Stop her anyway."',
     victory: 'Nyra falls, and with her last strength she tells you the whole truth. The Choir is the Lamplighters, the aliens who built the Lamps, merged into one mind at the galactic core so that they would never die. It absorbs every mind it can reach, and the Starfall was its first attempt to pull in all of humanity. Nyra truly believed it was offering peace. The Lamps she relit still lead to the core, and the Meridian is going through them to end it.',
     tips: ['Nyra starts with Psionic Null armed, so your first spell will be cancelled. Lead with a cheap one.', 'Her spells deal +1 damage. Kill her Amplify units on sight.'],
@@ -338,7 +338,7 @@ const ENCOUNTERS = [
     grant: { orbital_strike: 1, dominate: 1 } },
 
   { id: '6-4', sector: 5, name: 'Nyra Unbound',
-    enemy: { name: 'Nyra Unbound', hp: 30, ai: 2, power: 'mind_spike', passives: ['singularity'], startTraps: ['psionic_null', 'sniper_mine'], deck: dk('void_oracle:1 psi_adept:2 void_initiate:2 psionic_horror:2 glacial_titan:1 phase_stalker:2 telepath:2 frost_lance:2 void_shards:2 mind_blast:1 psionic_storm:1 grav_snare:1 mirror_field:1 kinetic_barrier:1 cryo_nova:1 mind_seer:2 nyra:1 star_cruiser:1 marine:2 heavy_trooper:1') },
+    enemy: { name: 'Nyra Unbound', hp: 24, ai: 2, power: 'mind_spike', passives: ['singularity'], deck: dk('void_oracle:1 psi_adept:2 void_initiate:2 psionic_horror:2 glacial_titan:1 phase_stalker:2 telepath:2 frost_lance:2 void_shards:2 mind_blast:1 psionic_storm:1 grav_snare:1 mirror_field:1 kinetic_barrier:1 cryo_nova:1 mind_seer:2 nyra:1 star_cruiser:1 marine:2 heavy_trooper:1') },
     story: 'The Choir has rebuilt Nyra as an echo and speaks through her in her own voice. Nyra Unbound: "She wanted rest for everyone, Commander. We gave it to her. Let us give it to you." Okonkwo: "Nyra is gone. Whatever is talking, don\'t answer it."',
     tips: ['Two Traps are armed at the start. Bait them out before committing your key cards.', 'Every unit she summons gets +1 Health.'] },
 
@@ -348,7 +348,7 @@ const ENCOUNTERS = [
     tips: ['It starts with 8 Armor, and Void Lash deals 2 damage to a random target each turn.', 'It plays the Academy\'s best cards, including Admiral Okonkwo, who arrives with two Guardian marines.'] },
 
   { id: '6-5', sector: 5, name: 'The Choir', boss: true, final: true,
-    enemy: { name: 'Herald of the Choir', hp: 18, ai: 3, power: 'corrupt', passives: ['choir_song'], phases: ['choir2', 'choir3'], deck: dk('null_horror:2 herald_of_end:1 entropy_wave:1 unmaking:1 choir_echo:3 void_wisp:3 shadow_corsair:0 ion_lancer:0 psionic_horror:1 storm_titan:0 patrol_frigate:2 hive_reaper:1 shadow_corsair:2 frost_lance:2 void_shards:2 mind_blast:1 marine:2 heavy_trooper:2 interceptor:2 ion_lancer:2') },
+    enemy: { name: 'Herald of the Choir', hp: 16, ai: 3, power: 'corrupt', passives: ['choir_song'], phases: ['choir2', 'choir3'], deck: dk('null_horror:2 herald_of_end:1 entropy_wave:1 unmaking:1 choir_echo:3 void_wisp:3 shadow_corsair:0 ion_lancer:0 psionic_horror:1 storm_titan:0 patrol_frigate:2 hive_reaper:1 shadow_corsair:2 frost_lance:2 void_shards:2 mind_blast:1 marine:2 heavy_trooper:2 interceptor:2 ion_lancer:2') },
     story: 'At the Singularity, the Choir builds a champion to face you: the Herald, made of light and black glass, speaking with every voice it has absorbed. The Choir: "Commander. We are everyone who ever answered us. Join us, and you will never be alone or afraid again." Okonkwo: "When the Herald falls, the Choir will take over the fight itself, and it will come back stronger twice. Save something for the end, Commander. Then come home."',
     victory: 'The Choir\'s last voice goes quiet, and the Singularity collapses into an ordinary star. The Lamps are safe. Across the Reach, the Forge\'s machines answer their owners again and the Swarm goes back to sleep. The Meridian is going home.',
     tips: ['The Choir has <b>three phases</b>. Each time its Health reaches 0, it returns stronger. Don\'t spend everything on phase one.', 'Phase two deals 1 damage to all your units every turn. Phase three destroys its own units, deals 2 damage to each of yours and hits much harder.'] },
@@ -377,9 +377,9 @@ const ENEMY_ART = {
 
 // ---------------------------------------------------------------- difficulty
 const DIFFICULTY = {
-  cadet:   { name: 'Cadet', hp: 0.75, ai: -1, text: 'Weaker enemies. For learning the game.' },
+  cadet:   { name: 'Cadet', hp: 0.65, ai: -1, text: 'Weaker enemies. For learning the game.' },
   officer: { name: 'Officer', hp: 1.0, ai: 0, text: 'The intended challenge.' },
-  admiral: { name: 'Admiral', hp: 1.2, ai: 1, text: 'Tougher, smarter enemies.' },
+  admiral: { name: 'Admiral', hp: 1.3, ai: 1, text: 'Tougher, smarter enemies.' },
 };
 
 // ---------------------------------------------------------------- progression
@@ -399,19 +399,20 @@ function maxCopies(d) { return d.rarity === 'legendary' ? 1 : 2; }
 
 // Academy lessons: HALCYON loads the cards a mission grants straight into your deck, as the
 // briefings say. When the deck is full, each one replaces a copy of the starter card you hold
-// most of (the cheaper one on a tie). Returns the ids that went in.
+// most of (the cheaper one on a tie). Returns the ids that went in (.removed: those taken out).
 function academyLoad(save, ids) {
-  const size = deckSizeFor(save), deck = save.deck, keep = new Set(ids), added = [];
+  const size = deckSizeFor(save), deck = save.deck, keep = new Set(ids), added = [], removed = [];
   for (const id of ids) {
     if (deck.filter(x => x === id).length >= (save.coll[id] || 0)) continue;
     if (deck.length >= size) {
       const n = {}; deck.forEach(x => { if (!keep.has(x)) n[x] = (n[x] || 0) + 1; });
       const out = Object.keys(n).sort((a, b) => n[b] - n[a] || D(a).cost - D(b).cost)[0];
       if (!out) break;
-      deck.splice(deck.indexOf(out), 1);
+      deck.splice(deck.indexOf(out), 1); removed.push(out);
     }
     deck.push(id); added.push(id);
   }
+  added.removed = removed;   // the starter cards that made room
   return added;
 }
 

@@ -18,12 +18,17 @@ const vm = require('vm'), fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const arg = (k, d) => { const i = process.argv.indexOf('--' + k); return i > 0 ? process.argv[i + 1] : d; };
 const DIFF = arg('diff', 'officer'), GAMES = +arg('games', 40), LEVELS = arg('levels', '1,2').split(',').map(Number), JSON_OUT = arg('json', null);
+// --tune: for missions below their target win rate (at the first level), search the enemy Health that reaches it
+const TUNE = process.argv.includes('--tune'), target = e => e.boss ? 55 : e.elite ? 45 : e.sector >= 2 ? 65 : 0;
 
 const G = { console, Date, JSON, performance: { now: () => Date.now() }, setTimeout, clearTimeout };
 G.window = G; vm.createContext(G);
 for (const f of ['build', 'engine', 'cards', 'strategies', 'ai', 'campaign', 'economy', 'station', 'decks', 'lore', 'cinematics'])
   vm.runInContext(fs.readFileSync(path.join(ROOT, 'js', f + '.js'), 'utf8'), G, { filename: f + '.js' });
 const g = n => vm.runInContext(n, G);
+// --patch "<js>": try a rule change in the simulation without editing the game; --only 3-6,3-E: report just these
+if (arg('patch', null)) vm.runInContext(arg('patch'), G);
+const ONLY = arg('only', null) ? arg('only').split(',') : null;
 const [ENCOUNTERS, ECON, D] = [g('ENCOUNTERS'), g('ECON'), g('D')];
 const fn = n => g(n);
 
@@ -85,8 +90,19 @@ for (const enc of order) {
     for (let k = 0; k < GAMES; k++) { let res; try { res = play(save, enc, L); } catch (e) { res = { win: false, turns: 0, hp: 0 }; } if (res.win) { w++; hp += res.hp; } turns += res.turns; }
     r.levels[L] = { win: Math.round(100 * w / GAMES), turns: +(turns / GAMES).toFixed(1), hp: w ? Math.round(hp / w) : 0 };
   }
+  if (TUNE && r.levels[LEVELS[0]].win < target(enc)) {
+    const hp0 = enc.enemy.hp; let lo = Math.round(hp0 * 0.4), hi = hp0, best = hp0;
+    while (hi - lo > 1) {
+      const mid = Math.round((lo + hi) / 2); enc.enemy.hp = mid;
+      let w = 0; const n = Math.max(GAMES, 60);
+      for (let k = 0; k < n; k++) { try { if (play(save, enc, LEVELS[0]).win) w++; } catch (e) { /* loss */ } }
+      if (100 * w / n >= target(enc)) { best = mid; lo = mid; } else hi = mid;
+    }
+    enc.enemy.hp = hp0; r.tuneHp = best === hp0 ? Math.round(hp0 * 0.4) : best;
+    console.log(`   tune ${enc.id}: target ${target(enc)}%, enemy Health ${hp0} -> ${r.tuneHp}`);
+  }
   rows.push(r);
-  console.log(`${enc.id.padEnd(8)} ${r.kind.padEnd(6)} ${String(r.deck).padEnd(5)} ` + LEVELS.map(l => `${String(r.levels[l].win).padStart(6)}%  ${String(r.levels[l].turns).padStart(5)}  ${String(r.levels[l].hp).padStart(6)}`).join('   ') + '  ' + enc.name);
+  if (!ONLY || ONLY.includes(enc.id)) console.log(`${enc.id.padEnd(8)} ${r.kind.padEnd(6)} ${String(r.deck).padEnd(5)} ` + LEVELS.map(l => `${String(r.levels[l].win).padStart(6)}%  ${String(r.levels[l].turns).padStart(5)}  ${String(r.levels[l].hp).padStart(6)}`).join('   ') + '  ' + enc.name);
   clear(save, enc);
 }
 console.log(`done in ${Math.round((Date.now() - t0) / 1000)} s`);

@@ -225,6 +225,8 @@ function finish(run, save, b, s) {
     save.stats.losses++;
     say(`== DEFEAT: ${enc.name}`);
     say('Your forces pull back to regroup. Adjust your deck in the Hangar and try again.');
+    const hurt = Object.entries(s.hurt || {}).sort((x, y) => y[1] - x[1]).slice(0, 3);
+    if (hurt.length) say('What hurt you most: ' + hurt.map(([k, n]) => `${k} ${n} damage`).join(' · '));
     if ((enc.tips || []).length) say(`Advisor: ${enc.tips[Math.floor(Math.random() * enc.tips.length)].replace(/<[^>]+>/g, '')}`);
     if (save.streak.n >= 2 && save.diff !== 'cadet') say(`That's ${save.streak.n} losses in a row here. You may retry this one battle on Cadet (weaker enemies): launch ${enc.id} --easy`);
     else if (save.diff !== 'cadet' && save.stats.losses >= 3) say('Struggling? You can switch to Cadet difficulty in Settings at any time (command: difficulty cadet).');
@@ -255,7 +257,7 @@ function finish(run, save, b, s) {
   if (rw.alloy) say(`+${rw.alloy} Alloy for Anchorage`);
   if (rw.scrap) say(`+${rw.scrap} Scrap`);
   if (rw.legendary) say(`Legendary acquired: ${cardText(rw.legendary)}`);
-  if (granted.length) say(`New cards: ${Object.entries(deckCounts(granted)).map(([id, n]) => D(id).name + (n > 1 ? ' ×' + n : '')).join(', ')}. ${loaded.length ? 'HALCYON has loaded them into your deck for the next lesson.' : "They're in your collection; add them to a deck in the Hangar."}`);
+  if (granted.length) say(`New cards: ${Object.entries(deckCounts(granted)).map(([id, n]) => D(id).name + (n > 1 ? ' ×' + n : '')).join(', ')}. ${loaded.length ? `HALCYON has loaded them into your deck for the next lesson${loaded.removed.length ? ', swapping out ' + loaded.removed.map(id => D(id).name).join(', ') : ''}. Change it any time in the Hangar.` : "They're in your collection; add them to a deck in the Hangar."}`);
   if (crate) { save.pendingCrate = crate; say(`SUPPLY CRATE: choose one card to keep (command: crate <card>). The others go back:`); crate.forEach(id => say(`  ${id}: ${cardText(id)}${fn('crateCopies')(id) > 1 ? ' (×' + fn('crateCopies')(id) + ')' : ''} · ${save.coll[id] ? 'you have ' + save.coll[id] : 'new'}`)); }
   unlocked.forEach(p => say(`New commander power: ${HEROPOWERS[p].name}: ${HEROPOWERS[p].text} (equip with: power set ${p})`));
   if (newSector) say(`Deck size increased to ${fn('deckSizeFor')(save)}. Add ${Math.max(0, fn('deckSizeFor')(save) - save.deck.length)} cards before your next battle. A new pack set is at the Supply Depot.`);

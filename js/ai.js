@@ -153,6 +153,18 @@ function holdRemoval(s, pi, w, scored) {
   }
 }
 
+// The first attack of a sequence that kills the enemy commander this turn, or null.
+function lethalNow(s, pi) {
+  const O = s.players[1 - pi], P = s.players[pi];
+  let dmg = 0; const hitters = [];
+  for (const c of [...P.board, P]) {
+    if (!canAttack(s, pi, c.uid) || !attackTargets(s, c.uid).includes(O.uid)) continue;
+    const swings = isHero(c) ? 1 : (c.kw.twin ? 2 : 1) - (c.attacks || 0);
+    dmg += atkOf(s, c) * Math.max(1, swings); hitters.push(c.uid);
+  }
+  return hitters.length && dmg >= O.hp + O.armor ? { k: 'atk', a: hitters[0], t: O.uid } : null;
+}
+
 function aiActions(s, pi) {
   const acts = [], p = s.players[pi];
   p.hand.forEach((c, hi) => {
@@ -228,6 +240,10 @@ function aiChoose(s, pi, level) {
   AI_PLAN = null;
   // Battles saved before personas existed: look the enemy commander up by name.
   if (pi === 1 && s.players[1].persona === undefined && !s.sim && typeof personaOf === 'function') s.players[1].persona = personaOf(s.players[1]).key;
+  // Lethal on the board: if everything that can reach the enemy commander adds up to a kill, take it.
+  // Greedy one-step scoring can't see a kill that needs several attacks, so check it first, at every level.
+  const kill = lethalNow(s, pi);
+  if (kill) return kill;
   const w = decisionWeights(s, pi);
   const base = evaluate(s, pi, w);
   const acts = aiActions(s, pi);
@@ -246,9 +262,8 @@ function aiChoose(s, pi, level) {
   if (w.hold) holdRemoval(s, pi, w, scored);
   scored.forEach(x => { if (x.v < 1e6) x.v += (Math.random() - 0.5) * noise; });
   scored.sort((x, y) => y.v - x.v);
-  // Ganging up on a threat: veterans always consider it; pilots (tutorial level) only
-  // when they're about to die; rookies never.
-  if ((level >= 2 || (level === 1 && lethalMargin(s, pi) <= 0)) && !s.sim) {
+  // Ganging up on a threat (e.g. a big Guardian walling the board): every level but rookies.
+  if (level >= 1 && !s.sim) {
     const ff = focusFire(s, pi, w);
     if (ff && ff.v > Math.max(base, scored[0].v) + w.ff) {
       AI_PLAN = { pi, turn: s.turnNo, steps: ff.steps.slice(1) };
@@ -256,7 +271,9 @@ function aiChoose(s, pi, level) {
     }
   }
   // Relentless: also spends cards and power on moves that look slightly worse than passing.
-  const good = scored.filter(x => x.v > base + 0.05 || (w.eager && x.a.k !== 'atk' && x.v > base - w.eager));
+  // Relentless commanders also spend cards on slightly-worse-than-passing moves; a power is only
+  // used when it helps (no wasted heals at full Health, no hitting your own side).
+  const good = scored.filter(x => x.v > base + (x.a.k === 'pow' ? 0.001 : 0.05) || (w.eager && x.a.k === 'play' && x.v > base - w.eager));
   if (!good.length) return null;
   if (level === 0 && good.length > 1 && Math.random() < 0.3 && good[0].v < 1e6) return pick(good).a;
   return good[0].a;

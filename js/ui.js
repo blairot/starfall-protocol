@@ -749,6 +749,13 @@ function contractLines(done) {
   return done.map(c => `<div class="reward-chip contract"><span class="rc-icon">${ico('contract')}</span><span><b>Contract complete:</b> ${esc(CONTRACTS[c.id].text)}</span><b class="rc-val">+${CONTRACTS[c.id].reward} Credits</b></div>`).join('');
 }
 
+// The defeat screen names what did the damage, so a loss says what to prepare for.
+function hurtHTML(s) {
+  const top = Object.entries(s.hurt || {}).sort((a, b) => b[1] - a[1]).slice(0, 3);
+  if (!top.length) return '';
+  return `<div class="hurt"><div class="m-eyebrow">What hurt you most</div>${top.map(([k, n]) => `<div class="hurt-row"><span>${esc(k)}</span><b>${n} damage</b></div>`).join('')}</div>`;
+}
+
 function endBattle() {
   const s = UI.s, enc = UI.enc, save = App.save;
   if (UI.ended === s) return; UI.ended = s;
@@ -765,6 +772,7 @@ function endBattle() {
     persist(); SFX.lose(); if (Music.stinger) Music.stinger('defeat');
     const m = modal(`${paintedBanner('screen-defeat')}<div class="m-eyebrow danger">Defeat</div><h2>${esc(enc.name)}</h2>
       <p>Your forces pull back to regroup. Adjust your deck in the Hangar and try again.</p>
+      ${hurtHTML(s)}
       ${done.length ? `<div class="rewards">${contractLines(done)}</div>` : ''}
       ${(enc.tips || []).length ? `<div class="advisor inline"><div class="adv-h">Advisor</div><div class="adv-t">${pick(enc.tips)}</div></div>` : ''}
       ${offerEasy ? `<p class="muted">That's ${save.streak.n} losses in a row here. <b>Retry on Cadet</b> runs this one battle with weaker enemies and doesn't change your difficulty setting.</p>` : save.diff !== 'cadet' && save.stats.losses >= 3 ? '<p class="muted">Struggling? You can switch to Cadet difficulty in Settings at any time.</p>' : ''}
@@ -808,7 +816,7 @@ function endBattle() {
   if (rw.legendary) bits.push(`<div class="legend-reveal"><div class="lr-card">${cardHTML(rw.legendary, { cls: 'big' })}</div><div><div class="m-eyebrow">Legendary acquired</div><h3 class="lr-name">${esc(D(rw.legendary).name)} joins your fleet</h3><p class="muted">${legendScrap ? `You already owned this card, so it became ${legendScrap} Scrap.` : 'Add it to your deck in the Hangar.'}</p></div></div>`);
   if (granted.length) {
     const c = {}; granted.forEach(id => c[id] = (c[id] || 0) + 1);
-    bits.push(`<div class="got"><b>New cards:</b> ${Object.entries(c).map(([id, n]) => `<span class="chip" data-card="${id}">${esc(D(id).name)}${n > 1 ? ' ×' + n : ''}</span>`).join(' ')}<div class="muted">${loaded.length ? 'HALCYON has loaded them into your deck for the next lesson.' : "They're in your collection. Add them to a deck in the Hangar."}</div></div>`);
+    bits.push(`<div class="got"><b>New cards:</b> ${Object.entries(c).map(([id, n]) => `<span class="chip" data-card="${id}">${esc(D(id).name)}${n > 1 ? ' ×' + n : ''}</span>`).join(' ')}<div class="muted">${loaded.length ? `HALCYON has loaded them into your deck for the next lesson${loaded.removed.length ? `, swapping out ${loaded.removed.map(id => esc(D(id).name)).join(', ')}` : ''}. Change it any time in the Hangar.` : "They're in your collection. Add them to a deck in the Hangar."}</div></div>`);
   }
   if (crate) bits.push(`<div class="crate" id="crate"><div class="m-eyebrow">Supply crate</div><h3>Choose one card to keep</h3>
     <div class="crate-row">${crate.map(id => `<button class="crate-card" data-crate="${id}" aria-label="Keep ${esc(D(id).name)}">${cardHTML(id)}<span class="crate-own">${crateCopies(id) > 1 ? '×' + crateCopies(id) + ' · ' : ''}${save.coll[id] ? 'You have ' + save.coll[id] : 'New'}</span></button>`).join('')}</div>

@@ -271,8 +271,9 @@ function attack(s, aUid, tUid) {
   }
   if (!isHero(a)) delete a.kw.cloak;
   const aA = atkOf(s, a), tA = isHero(t) ? 0 : atkOf(s, t);
-  damage(s, a.uid, t, aA);
+  s.inAttack = true; damage(s, a.uid, t, aA);
   if (tA > 0) damage(s, t.uid, a, tA);
+  s.inAttack = false;
   if (isHero(a)) {
     a.heroAttacks++;
     if (a.weapon) {
@@ -334,6 +335,7 @@ function damage(s, src, tgt, n) {
   if (isHero(t)) {
     const a = Math.min(t.armor, n); t.armor -= a; t.hp -= (n - a);
     ev(s, { t: 'dmg', uid: t.uid, n });
+    if (t.i === 0 && !s.sim) hurtBy(s, sc, n);
     fire(s, 'onHeroDamaged', t.i, { amount: n });
   } else {
     if (t.kw.barrier) { delete t.kw.barrier; ev(s, { t: 'shield', uid: t.uid }); return 0; }
@@ -344,6 +346,13 @@ function damage(s, src, tgt, n) {
   }
   if (sc && !isHero(sc) && sc.kw.siphon && !sc.silenced) heal(s, 'H' + sc.owner, n);
   return n;
+}
+
+// What has damaged your commander this battle, by source (shown on the defeat screen).
+function hurtBy(s, sc, n) {
+  const k = s.inFatigue ? 'Fatigue (empty deck)' : !sc ? 'Card effects' : !isHero(sc) ? D(sc.id).name
+    : s.inAttack ? (sc.weapon ? D(sc.weapon.id).name : sc.name + ' (attacking)') : 'Enemy spells and powers';
+  s.hurt = s.hurt || {}; s.hurt[k] = (s.hurt[k] || 0) + n;
 }
 
 function heal(s, tgt, n) {
@@ -381,7 +390,7 @@ function summon(s, pi, id, pos) {
 function draw(s, pi, n) {
   const p = s.players[pi]; const got = [];
   for (let k = 0; k < (n == null ? 1 : n); k++) {
-    if (!p.deck.length) { p.fatigue++; ev(s, { t: 'fatigue', pi, n: p.fatigue }); damage(s, null, p, p.fatigue); continue; }
+    if (!p.deck.length) { p.fatigue++; ev(s, { t: 'fatigue', pi, n: p.fatigue }); s.inFatigue = true; damage(s, null, p, p.fatigue); s.inFatigue = false; continue; }
     const c = p.deck.pop();
     if (p.hand.length >= MAX_HAND) { ev(s, { t: 'burn', pi, id: c.id }); continue; }
     p.hand.push(c); got.push(c); ev(s, { t: 'draw', pi });

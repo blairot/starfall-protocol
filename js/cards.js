@@ -27,6 +27,7 @@ const KEYWORDS = {
   power:    { name: 'Commander Power', text: 'Once per turn your commander can use their power for 2 Energy. Pick a power before each battle in the Hangar.' },
   warp:     { name: 'Warp', card: true, text: 'Can attack the same turn it is deployed.' },
   blitz:    { name: 'Blitz', card: true, text: 'Can attack enemy units (not commanders) the turn it is deployed.' },
+  fatigue: { name: 'Fatigue', text: 'When your deck is empty, each card you would draw deals damage to your commander instead: 1 the first time, then 2, then 3, and so on. Long battles can be won by outlasting the enemy.' },
   mulligan: { name: 'Opening Hand & Energy Cell', text: 'Before the battle you may swap any cards in your opening hand. Whoever goes second draws an extra card and gets an Energy Cell: a 0-cost card worth 1 Energy this turn.' },
   gear:     { name: 'Gear', card: true, text: 'Equips your commander with a weapon (Attack / Durability). Click your commander to attack. Each attack uses 1 Durability.' },
   salvage:  { name: 'Salvage', card: true, text: 'Triggers when this unit is destroyed.' },
@@ -266,7 +267,7 @@ const HEROPOWERS = {
   target_practice: { name: 'Target Practice', cost: 2, text: 'Deal 1 damage to the enemy commander.', use: (s, c) => damage(s, null, c.them, 1) },
   cannon_volley:   { name: 'Cannon Volley', cost: 2, text: 'Deal 2 damage to a random enemy.', use: (s, c) => { const t = randomEnemy(s, c.pi); if (t) damage(s, null, t, 2); } },
   broadside_power: { name: 'Full Broadside', cost: 2, text: 'Deal 1 damage to all enemy units.', use: (s, c) => enemyMinions(s, c.pi).forEach(t => damage(s, null, t, 1)) },
-  spawn_brood:     { name: 'Spawn Brood', cost: 2, text: 'Summon two 1/1 Swarmlings.', canUse: (s, c) => c.me.board.length < MAX_BOARD, use: (s, c) => { summon(s, c.pi, 'swarmling'); summon(s, c.pi, 'swarmling'); } },
+  spawn_brood:     { name: 'Spawn Brood', cost: 2, text: 'Summon a 1/1 Swarmling.', canUse: (s, c) => c.me.board.length < MAX_BOARD, use: (s, c) => { summon(s, c.pi, 'swarmling'); } },
   reconfigure:     { name: 'Reconfigure', cost: 2, text: 'Gain 2 Armor. Give a random friendly unit +1/+1.', use: (s, c) => { gainArmor(s, c.pi, 2); const m = pick(friendlyMinions(s, c.pi)); if (m) buff(s, m, 1, 1); } },
   mind_spike:      { name: 'Mind Spike', cost: 2, target: 'any', text: 'Deal 1 damage. Amplify increases this.', use: (s, c) => damage(s, null, c.target, sp(s, c.pi, 1)) },
   corrupt:         { name: 'Corrupt', cost: 2, target: 'enemyMinion', text: 'Give an enemy unit -1 Attack.', use: (s, c) => buff(s, c.target, -Math.min(1, getChar(s, c.target).atk), 0) },
@@ -278,7 +279,7 @@ const PLAYER_POWERS = ['repair', 'pulse', 'drone', 'blade', 'mutagen', 'plating'
 // ============================================================ Boss passives
 const PASSIVES = {
   boarding_party: { name: 'Boarding Party', text: 'Units with Warp or Blitz have +1 Attack.', auraAtk: (s, m) => (m.kw.warp || m.kw.blitz) ? 1 : 0 },
-  brood_growth:   { name: 'Brood Growth', text: 'At the end of this commander\'s turn, a random friendly unit gains +1/+1.', turnEnd: (s, c) => { const m = pick(friendlyMinions(s, c.pi)); if (m) buff(s, m, 1, 1); } },
+  brood_growth:   { name: 'Brood Growth', text: 'At the end of this commander\'s turn, if it has 3 or more units, a random one gains +1/+1.', turnEnd: (s, c) => { const f = friendlyMinions(s, c.pi); if (f.length >= 3) buff(s, pick(f), 1, 1); } },
   adaptive_armor: { name: 'Adaptive Armor', text: 'Starts with 10 Armor. Gains 2 Armor each turn.', gameStart: (s, c) => { c.me.armor += 10; }, turnStart: (s, c) => gainArmor(s, c.pi, 2) },
   void_resonance: { name: 'Void Resonance', text: 'Spells and Mind Spike deal +1 damage. Starts with a Trap armed.', amplify: 1 },
   thick_hull:     { name: 'Thick Hull', text: 'Starts with 8 Armor.', gameStart: (s, c) => { c.me.armor += 8; } },
@@ -292,8 +293,8 @@ const PASSIVES = {
 
 // ============================================================ Multi-phase boss stages
 const PHASES = {
-  choir2: { name: 'The Choir Awakened', hp: 18, power: 'void_lash', passives: ['entropy'], text: 'The shell cracks. A thousand voices sing at once. HALCYON reroutes power to you: +8 Health, +1 card.',
+  choir2: { name: 'The Choir Awakened', hp: 14, power: 'void_lash', passives: ['entropy'], text: 'The shell cracks. A thousand voices sing at once. HALCYON reroutes power to you: +8 Health, +1 card.',
     enter: (s, c) => { heal(s, c.them, 8); draw(s, c.op, 1); enemyMinions(s, c.pi).forEach(m => damage(s, null, m, 1)); summon(s, c.pi, 'choir_echo'); ['herald_of_end', 'entropy_wave'].forEach(id => addDeck(s, c.pi, id)); } },
-  choir3: { name: 'The Devourer Eternal', hp: 20, armor: 0, power: 'unmake', passives: ['hunger'], text: 'Everything goes quiet. Then the dark opens its mouth. HALCYON gives you everything it has left: +8 Health, +2 cards.',
+  choir3: { name: 'The Devourer Eternal', hp: 16, armor: 0, power: 'unmake', passives: ['hunger'], text: 'Everything goes quiet. Then the dark opens its mouth. HALCYON gives you everything it has left: +8 Health, +2 cards.',
     enter: (s, c) => { heal(s, c.them, 8); draw(s, c.op, 2); friendlyMinions(s, c.pi).forEach(m => destroy(s, m)); enemyMinions(s, c.pi).forEach(m => damage(s, null, m, 2)); draw(s, c.pi, 2); addDeck(s, c.pi, 'devouring_dark'); } },
 };
