@@ -47,8 +47,8 @@ const kwNames = d => (d.kw || []).map(k => (KEYWORDS[k] ? KEYWORDS[k].name : k))
 function cardText(id, costNow) {
   const d = D(id);
   const cost = costNow != null && costNow !== d.cost ? `${costNow} (base ${d.cost})` : d.cost;
-  const stats = d.type === 'unit' ? ` ${d.atk}/${d.hp}` : d.type === 'gear' ? ` ${d.atk}/${d.dur} gear` : '';
-  const kws = kwNames(d); const txt = (d.text || '').replace(/<[^>]+>/g, '');
+  const stats = d.type === 'unit' ? ` ${d.atk}/${d.hp}` : d.type === 'gear' ? ` ${d.atk}/${d.hp}` : '';
+  const txt = (d.text || '').replace(/<[^>]+>/g, '').replace(/\*\*/g, ''); const kws = kwNames(d).filter(k => !txt.includes(k));
   return `${d.name} [${cost} Energy, ${d.rarity} ${d.type}${stats}]${kws.length ? ' ' + kws.join(', ') + '.' : ''}${txt ? ' ' + txt : ''}`;
 }
 function cardFull(id) {
@@ -109,7 +109,7 @@ function cutscene(cid) {
 }
 
 // ---------------------------------------------------------------- battle (rebuilt from seed + actions)
-function names(s) { const m = {}; s.players.forEach(p => { m[p.uid] = p.i === 0 ? 'your commander' : p.name; p.board.forEach(x => m[x.uid] = D(x.id).name); }); return m; }
+function names(s) { const m = {}; s.players.forEach(p => { m[p.uid] = p.i === 0 ? 'your commander' : p.name; p.board.forEach(x => m[x.uid] = (p.i === 0 ? 'your ' : 'enemy ') + D(x.id).name); }); return m; }
 function refOf(s, uid) {
   if (uid === 'H1') return 'E0'; if (uid === 'H0') return 'A0';
   for (const pi of [0, 1]) { const k = s.players[pi].board.findIndex(m => m.uid === uid); if (k >= 0) return (pi ? 'E' : 'A') + (k + 1); }
@@ -251,7 +251,7 @@ function finish(run, save, b, s) {
   say(`== VICTORY: ${enc.name}`);
   if (enc.victory && firstClear) say(enc.victory);
   if (rw.credits) say(`+${rw.credits} Credits (${graduated ? 'graduation bonus' : firstClear ? 'mission reward' : 'replay reward'})`);
-  if (rw.packs) say(`+${rw.packs} ${PACK_SETS[rw.packTier - 1].name} pack(s)`);
+  if (rw.packs) say(`+${rw.packs} ${PACK_SETS[rw.packTier - 1].name}${rw.packs > 1 ? 's' : ''}`);
   if (rw.alloy) say(`+${rw.alloy} Alloy for Anchorage`);
   if (rw.scrap) say(`+${rw.scrap} Scrap`);
   if (rw.legendary) say(`Legendary acquired: ${cardText(rw.legendary)}`);
@@ -375,15 +375,15 @@ function main(argv) {
     case 'packs': {
       if (!fn('economyOpen')(save)) return say('The Supply Depot unlocks after you graduate the Academy.');
       say(`Supply Depot · Credits ${save.credits} · a pack costs ${ECON.packPrice} Credits (${ECON.packSize} cards)`);
-      PACK_SETS.forEach((p, i) => { if (i <= fn('highestSector')(save)) say(`  tier ${i + 1}: ${p.name}${save.packs[i + 1] ? ' · you have ' + save.packs[i + 1] + ' unopened' : ''}`); });
+      PACK_SETS.forEach((p, i) => { if (fn('setUnlocked')(save, i + 1)) say(`  tier ${i + 1}: ${p.name}${save.packs[i + 1] ? ' · you have ' + save.packs[i + 1] + ' unopened' : ''}`); });
       break;
     }
-    case 'buy': { const t = +args[0]; if (!fn('economyOpen')(save) || !(t >= 1 && t <= fn('highestSector')(save) + 1)) return say('That pack is not available.'); if (save.credits < ECON.packPrice) return say(`Not enough Credits (${save.credits}/${ECON.packPrice}).`); save.credits -= ECON.packPrice; save.packs[t] = (save.packs[t] || 0) + 1; persist(); say(`Bought a ${PACK_SETS[t - 1].name} pack. Credits left: ${save.credits}.`); break; }
+    case 'buy': { const t = +args[0]; if (!fn('economyOpen')(save) || !fn('setUnlocked')(save, t)) return say('That pack is not available.'); if (save.credits < ECON.packPrice) return say(`Not enough Credits (${save.credits}/${ECON.packPrice}).`); save.credits -= ECON.packPrice; save.packs[t] = (save.packs[t] || 0) + 1; persist(); say(`Bought a ${PACK_SETS[t - 1].name}. Credits left: ${save.credits}.`); break; }
     case 'open': {
       const t = +args[0]; if (!save.packs[t]) return say('No unopened pack of that tier.');
       seed(Math.floor(Math.random() * 2 ** 31) ^ Date.now());
       save.packs[t]--; const got = fn('openPack')(save, t); persist();
-      say(`You tear open the ${PACK_SETS[t - 1].name} pack:`);
+      say(`You tear open the ${PACK_SETS[t - 1].name}:`);
       got.forEach(c => say(`  ${c.rarity.toUpperCase()}${c.isNew ? ' NEW' : ''}: ${cardText(c.id)}${c.scrap ? ' (duplicate beyond the limit: +' + c.scrap + ' Scrap)' : ''}`));
       break;
     }
