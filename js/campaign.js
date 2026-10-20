@@ -68,7 +68,7 @@ const ENCOUNTERS = [
     grant: { field_engineer: 1, sapper: 1, dig_in: 1 }, unlockPowers: ['repair', 'pulse'] },
 
   { id: '1-4', sector: 0, name: 'Command Authority', teaches: ['power'],
-    enemy: { name: 'Sim Commander Vale', hp: 20, ai: 1, power: 'pulse', deck: dk('cadet:2 marine:2 shield_trooper:2 rifle_squad:2 recon_officer:1 ion_lancer:2 heavy_trooper:2 plasma_bolt:1 patrol_frigate:1') },
+    enemy: { name: 'Sim Commander Vale', hp: 24, ai: 1, power: 'pulse', deck: dk('cadet:2 marine:2 shield_trooper:2 rifle_squad:2 recon_officer:1 ion_lancer:2 heavy_trooper:2 plasma_bolt:1 patrol_frigate:1') },
     first: 0,
     story: 'A command exercise against Commander Vale, a simulated officer built from real Fleet service records. HALCYON: "Every commander has a personal power they can use once per turn. You now have two to choose from in the Hangar. Vale has one as well. Vale is based on several of your instructors. I will not say which. They know."',
     victory: 'Vale salutes as the simulation dissolves. Vale: "Give my regards to your instructors, Cadet. One of them marks your final exam." HALCYON: "Vale is not authorised to share that. Vale is, however, correct."',
@@ -106,7 +106,7 @@ const ENCOUNTERS = [
     unlockPowers: ['drone'] },
 
   // ===================================================================== SECTOR 2
-  { id: '2-1', teachesAlso: ['gear'], sector: 1, name: 'Toll Gate', teaches: ['mulligan'],
+  { id: '2-1', previews: ['gear'], sector: 1, name: 'Toll Gate', teaches: ['mulligan'],
     enemy: { name: 'Belt Tollmaster', hp: 25, ai: 1, power: 'pulse', deck: dk('scout_drone:2 cadet:2 boarding_crew:3 marine:2 ion_lancer:2 rifle_squad:2 hover_tank:2 heavy_trooper:2 plasma_bolt:1 patrol_frigate:2') },
     story: 'A raider tollmaster is blocking the only charted safe lane into the Belt. Tollmaster: "Pay the toll, Fleet, or we take it out of your hull. Captain Vex gets her cut either way, so don\'t take it personal." Okonkwo: "The Fleet does not pay tolls to raiders, Commander. Go through him." Your deck now holds 20 cards.',
     victory: 'The Tollmaster\'s guns go quiet, and the safe lane into the Belt is open. Tollmaster: "Fine, no toll. Vex is going to hear about this, Fleet." Okonkwo: "Good. Let her."',
@@ -124,7 +124,7 @@ const ENCOUNTERS = [
     tips: ['Jun starts with an extra Energy crystal, so expect bigger plays a turn early.', 'Salvage units do something when they die. Sometimes it is better to leave a weak one alive than to trigger it.'],
     grant: { shipbreaker: 1, cluster_cannon: 1 } },
 
-  { id: '2-2', teachesAlso: ['salvage'], sector: 1, name: 'Armed and Dangerous', teaches: ['gear'],
+  { id: '2-2', previews: ['salvage'], sector: 1, name: 'Armed and Dangerous', teaches: ['gear'],
     enemy: { name: 'Gunsmith Rourke', hp: 28, ai: 1, power: 'blade', deck: dk('shock_baton:2 plasma_cutlass:1 harpoon_gun:2 gunrunner:2 quartermaster:2 boarding_crew:2 marine:2 cadet:2 rifle_squad:2 heavy_trooper:2 sapper:1') },
     story: 'Gunsmith Rourke sells weapons to every raider crew in the Belt, and he wants the Meridian for parts. Rourke: "Lovely little frigate, Commander. I\'ll give you a fair price for her. Well. I\'ll give you a price." Okonkwo: "Rourke arms half of Vex\'s crews. Put him out of business and the rest get harder to supply."',
     victory: 'Rourke cuts his engines and backs his workshop into the debris. Rourke: "No hard feelings, Commander. If you ever want to sell her, you know where I am." Okonkwo: "Half of Vex\'s crews will be short of ammunition by next week. That\'s a start."',
@@ -135,7 +135,7 @@ const ENCOUNTERS = [
     ],
     grant: { scrap_rat: 2, det_bot: 2, cargo_hauler: 1 } },
 
-  { id: '2-3', teachesAlso: ['cloak'], sector: 1, name: 'Junkyard Wars', teaches: ['salvage'],
+  { id: '2-3', previews: ['cloak'], sector: 1, name: 'Junkyard Wars', teaches: ['salvage'],
     enemy: { name: 'Scrapper King Ott', hp: 28, ai: 1, power: 'drone', deck: dk('scrap_rat:3 det_bot:2 cargo_hauler:2 scrap_golem:2 mine_layer:2 marine:2 shield_trooper:2 rifle_squad:2 heavy_trooper:2 echo_protocol:1') },
     story: 'Mad Mox, Vex\'s salvage boss, has offered to help you find Vex, but first you have to get through Scrapper King Ott\'s yard. Mox: "Meridian, Mox here. I strip wrecks for Vex. Or I did, until she started talking to that Lamp and wiring its hum into every ship she owns. I want her stopped before she gets us all killed. Sable knows where Vex parks her flagship. Ott sits between you and Sable, and everything in Ott\'s yard either explodes or gets back up."',
     victory: 'Ott\'s yard finally stops exploding, and the lane to Sable is clear. Ott: "Go and see Sable, then. I\'m not going anywhere near a Lamp that hums. I tried living near one once. Never again." Mox: "Sable will want something from you. She always does."',
@@ -183,8 +183,9 @@ const ENCOUNTERS = [
     tips: [
       '<b>Toxic</b> units destroy any unit they damage, however big it is. Answer them with spells, cheap units or Barrier.',
       'Hive Larva turns into a 3/3 Brood Warrior at the start of its owner\'s turn. Kill larvae early.',
+      'The Swarm wins with numbers. Cards that hit every enemy unit at once (Flak Barrage, Broadside, Acid Rain) are worth a slot in your deck for this whole sector.',
     ],
-    grant: { venom_stinger: 2, acid_spitter: 1, larva: 2 } },
+    grant: { acid_rain: 1, venom_stinger: 2, acid_spitter: 1 } },
 
   { id: '3-E2', sector: 2, name: 'Spore Garden', elite: true, after: '3-1',
     enemy: { name: 'Spore Mother', hp: 30, ai: 2, power: 'mutagen', startBoard: ['spore_carrier'], deck: dk('spore_carrier:2 venom_stinger:2 acid_spitter:2 toxic_spitter:2 blood_leech:2 larva:2 broodmother:1 lamprey:2 life_drain:2 rapid_mutation:2 acid_rain:1 hive_surge:1') },
@@ -285,7 +286,7 @@ const ENCOUNTERS = [
     enemy: { name: 'Calculus Prime', hp: 40, ai: 3, power: 'reconfigure', passives: ['adaptive_armor'], deck: dk('aegis_sentinel:2 war_walker:1 storm_titan:1 gatling_drone:2 shield_drone:2 nanoforge:2 assembler:2 emp_trooper:2 reactor_core:1 overclocked_mech:2 repair_drone:1 plating_tech:2 disruptor:2 chain_lightning:1 lightning_arc:2 deflector_grid:1 emp_blast:1 fortify:1 overdrive:2') },
     story: 'Calculus Prime has governed the Forge for over a century, and after listening to the Choir it has decided that people are the flaw in its work. Calculus Prime: "Organic Commander. I have calculated your chances of victory eleven million times. The Choir showed me a universe without error. You are an error." Okonkwo: "It built most of the Fleet, Commander. Shut it down anyway."',
     victory: 'Calculus Prime\'s core cracks, and its logs open. In February it compared the Choir\'s signal with its own sensor records from the night of the Starfall, and they matched: the Choir caused the Starfall. That is why the Fleet secretly shut down every Lamp leading toward the core afterwards, under a classified order called Directive 17, the Starfall Protocol. Someone has been switching those Lamps back on: Hierarch Nyra, leader of the Psionic Orders in the Void Expanse. The Meridian goes after her.',
-    tips: ['Calculus starts with 10 Armor and gains 2 more every turn. Attack early and keep attacking: waiting only makes it tougher.', 'EMP Blast wipes the buffs from all your units at once. Spread your strength across several units.'],
+    tips: ['Calculus starts with 6 Armor and gains 1 more every turn. Attack early and keep attacking: waiting only makes it tougher.', 'EMP Blast wipes the buffs from all your units at once. Spread your strength across several units.'],
     unlockPowers: ['plating'] },
 
   // ===================================================================== SECTOR 5
@@ -361,7 +362,7 @@ const ENCOUNTERS = [
     enemy: { name: 'Calculus Omega', hp: 32, ai: 2, persona: 'forge', power: 'reconfigure', passives: ['adaptive_armor'], deck: dk('aegis_sentinel:2 war_walker:2 storm_titan:2 gatling_drone:2 shield_drone:2 nanoforge:2 assembler:2 emp_trooper:2 reactor_core:1 overclocked_mech:2 disruptor:2 chain_lightning:2 lightning_arc:2 deflector_grid:1 emp_blast:1 fortify:1 calculus:1 kill_order:2') },
     story: 'The Choir has rebuilt Calculus Prime as Calculus Omega, a machine mind built entirely around its song. Calculus Omega: "Recalculating. The error has been corrected. Only you remain." Unit Zero: "Commander, this is Unit Zero, the Forge\'s first machine mind. Calculus was copied from me, and that is a copy of Calculus. I would consider it a personal favour if you deleted it."',
     victory: 'Calculus Omega stops recalculating and goes dark. Unit Zero: "Deletion confirmed. Thank you, Commander. I have waited a long time to be the only one of us again."',
-    tips: ['It starts with 10 Armor and gains 2 more every turn. You need a fast, aggressive plan or overwhelming late-game power.'] },
+    tips: ['It starts with 6 Armor and gains 1 more every turn. You need a fast, aggressive plan or overwhelming late-game power.'] },
 
   { id: '6-E2', sector: 5, name: 'The Lost Fleet', elite: true, after: '6-3',
     enemy: { name: 'Echo of the Lost Fleet', hp: 32, ai: 3, persona: 'drill', power: 'void_lash', passives: ['singularity'], deck: dk('marine:2 heavy_trooper:2 rifle_squad:2 siege_gunner:2 patrol_frigate:2 star_cruiser:2 battlecruiser:1 interceptor:2 hover_tank:2 fleet_captain:1 flak_barrage:2 orbital_strike:1 railgun:2 kill_order:1') },

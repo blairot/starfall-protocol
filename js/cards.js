@@ -280,7 +280,7 @@ const PLAYER_POWERS = ['repair', 'pulse', 'drone', 'blade', 'mutagen', 'plating'
 const PASSIVES = {
   boarding_party: { name: 'Boarding Party', text: 'Units with Warp or Blitz have +1 Attack.', auraAtk: (s, m) => (m.kw.warp || m.kw.blitz) ? 1 : 0 },
   brood_growth:   { name: 'Brood Growth', text: 'At the end of this commander\'s turn, if it has 3 or more units, a random one gains +1/+1.', turnEnd: (s, c) => { const f = friendlyMinions(s, c.pi); if (f.length >= 3) buff(s, pick(f), 1, 1); } },
-  adaptive_armor: { name: 'Adaptive Armor', text: 'Starts with 10 Armor. Gains 2 Armor each turn.', gameStart: (s, c) => { c.me.armor += 10; }, turnStart: (s, c) => gainArmor(s, c.pi, 2) },
+  adaptive_armor: { name: 'Adaptive Armor', text: 'Starts with 6 Armor. Gains 1 Armor each turn.', gameStart: (s, c) => { c.me.armor += 6; }, turnStart: (s, c) => gainArmor(s, c.pi, 1) },
   void_resonance: { name: 'Void Resonance', text: 'Spells and Mind Spike deal +1 damage. Starts with a Trap armed.', amplify: 1 },
   thick_hull:     { name: 'Thick Hull', text: 'Starts with 8 Armor.', gameStart: (s, c) => { c.me.armor += 8; } },
   veteran_crew:   { name: 'Veteran Crew', text: 'Units have +1 Attack.', auraAtk: () => 1 },

@@ -17,7 +17,7 @@
 const vm = require('vm'), fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const arg = (k, d) => { const i = process.argv.indexOf('--' + k); return i > 0 ? process.argv[i + 1] : d; };
-const DIFF = arg('diff', 'officer'), GAMES = +arg('games', 40), LEVELS = arg('levels', '1,2').split(',').map(Number), JSON_OUT = arg('json', null);
+const DIFF = arg('diff', 'officer'), GAMES = +arg('games', 40), LEVELS = arg('levels', '1,2').split(',').map(x => x === 'F' ? 'F' : Number(x)), JSON_OUT = arg('json', null);
 // --tune: for missions below their target win rate (at the first level), search the enemy Health that reaches it
 const TUNE = process.argv.includes('--tune'), target = e => e.boss ? 55 : e.elite ? 45 : e.sector >= 2 ? 65 : 0;
 
@@ -32,13 +32,22 @@ const ONLY = arg('only', null) ? arg('only').split(',') : null;
 const [ENCOUNTERS, ECON, D] = [g('ENCOUNTERS'), g('ECON'), g('D')];
 const fn = n => g(n);
 
+// 'F' = the face-racer: plays its most expensive affordable card, always attacks the enemy commander when it can
+function faceChoose(s, pi) {
+  const P = s.players[pi], O = s.players[1 - pi];
+  const hand = P.hand.map((c, hi) => ({ c, hi })).filter(x => fn('canPlay')(s, pi, x.hi)).sort((a, b) => D(b.c.id).cost - D(a.c.id).cost);
+  if (hand.length) { const x = hand[0], ts = fn('cardTargets')(s, pi, x.c); return { k: 'play', hi: x.hi, t: ts.length ? (ts.includes(O.uid) ? O.uid : ts.find(u => !String(u).startsWith('H') && getC(s, u, pi)) || ts[0]) : null }; }
+  for (const c of [...P.board, P]) if (fn('canAttack')(s, pi, c.uid)) { const ts = fn('attackTargets')(s, c.uid); return { k: 'atk', a: c.uid, t: ts.includes(O.uid) ? O.uid : ts[0] }; }
+  return null;
+}
+const getC = (s, u, pi) => s.players[1 - pi].board.some(m => m.uid === u);
 function play(save, enc, lvl) {
   const s = fn('newGame')(fn('buildBattle')(save, enc));
   s.players[0].isAI = true;
   fn('aiMulligan')(s, 0); fn('aiMulligan')(s, 1); fn('beginPlay')(s);
   for (let n = 0; !s.over && n < 90; n++) {
     const pi = s.active, L = pi === 0 ? lvl : s.players[1].ai;
-    for (let k = 0; k < 45 && !s.over; k++) { const a = fn('aiChoose')(s, pi, L); if (!a) break; fn('applyAct')(s, pi, a); if (s.choice) fn('resolveChoice')(s, 0); }
+    for (let k = 0; k < 45 && !s.over; k++) { const a = L === 'F' ? faceChoose(s, pi) : fn('aiChoose')(s, pi, L); if (!a) break; fn('applyAct')(s, pi, a); if (s.choice) fn('resolveChoice')(s, 0); }
     if (!s.over) fn('endTurn')(s);
     s.events = [];
   }

@@ -93,6 +93,7 @@ function brief(save, enc) {
   say(enc.story);
   const teach = [...(enc.teaches || []), ...(enc.teachesAlso || [])].filter(k => !save.codex.includes(k) && KEYWORDS[k]);
   teach.forEach(k => say(`NEW: ${KEYWORDS[k].name}: ${KEYWORDS[k].text}`));
+  (enc.previews || []).filter(k => !save.codex.includes(k) && !teach.includes(k) && KEYWORDS[k]).forEach(k => say(`IN YOUR REWARDS: ${KEYWORDS[k].name}: ${KEYWORDS[k].text}`));
   const reward = save.cleared[enc.id] ? 'replay reward' : [fn('describeEncReward')(enc, save), enc.unlockPowers ? 'a new commander power' : '', enc.grant ? (enc.elite ? Object.keys(enc.grant).map(id => D(id).name).join(' + ') : 'a supply crate of new cards') : ''].filter(Boolean).join(' + ');
   say(`Reward: ${(reward || 'Training credit').replace(/<[^>]+>/g, '')}`);
   say(enc.fixedDeck ? 'This simulation uses a standard training deck.' : `Your deck: ${save.deck.length}/${fn('deckSizeFor')(save)} cards.`);
@@ -403,7 +404,7 @@ function main(argv) {
       if (!enc.fixedDeck && save.deck.length !== size) return say(`Your deck has ${save.deck.length}/${size} cards. It needs exactly ${size}.`);
       const easy = args.includes('--easy');
       if (easy && !(save.streak && save.streak.id === enc.id && save.streak.n >= (enc.boss ? 1 : 2))) return say('Retry on Cadet is offered after two losses in a row on the same mission (one, on a boss).');
-      [...(enc.teaches || []), ...(enc.teachesAlso || [])].forEach(k => { if (!save.codex.includes(k)) save.codex.push(k); });
+      [...(enc.teaches || []), ...(enc.teachesAlso || []), ...(enc.previews || [])].forEach(k => { if (!save.codex.includes(k)) save.codex.push(k); });
       persist();
       const nb = newBattle(save, enc, { easy }); writeJ(run, 'battle.json', nb);
       say(`Launching ${enc.id}: ${enc.name}${easy ? ' (Cadet retry)' : ''}.`);

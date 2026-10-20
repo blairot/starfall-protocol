@@ -246,7 +246,11 @@ function aiChoose(s, pi, level) {
   if (kill) return kill;
   const w = decisionWeights(s, pi);
   const base = evaluate(s, pi, w);
-  const acts = aiActions(s, pi);
+  // A commander swinging its weapon into a unit takes that unit's Attack back: don't trade
+  // a big chunk of your own Health for it (testers farmed enemy commanders this way).
+  const me = s.players[pi];
+  const acts = aiActions(s, pi).filter(a => !(a.k === 'atk' && a.a === me.uid && a.t !== s.players[1 - pi].uid
+    && atkOf(s, getChar(s, a.t)) * 3 > me.hp + me.armor));
   if (!acts.length) return null;
   const noise = AI_NOISE[level];
   let scored = acts.map(a => { const c = simulate(s, pi, a); return { a, v: evaluate(c, pi, w), c }; });

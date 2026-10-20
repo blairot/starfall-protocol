@@ -1023,6 +1023,8 @@ function openBriefing(enc) {
   ensureDecks(save);
   const teach = [...(enc.teaches || []), ...(enc.teachesAlso || [])];
   const fresh = teach.filter(k => !save.codex.includes(k));
+  // previews: mechanics on the cards in this mission's reward crate, not in its fight
+  const soon = (enc.previews || []).filter(k => !save.codex.includes(k) && !teach.includes(k));
   const hp = Math.round(e.hp * diff.hp);
   const power = e.power ? HEROPOWERS[e.power] : null;
   const rewardTxt = save.cleared[enc.id] ? (economyOpen(save) ? `${Math.round(ECON.replayCredits[encKind(enc)] * creditMultOf(save))} Credits + ${ECON.alloyReplay[encKind(enc)]} Alloy (replay)` : 'Training replay') : [describeEncReward(enc, save), enc.unlockPowers ? 'a new commander power' : '', enc.grant ? (enc.elite ? Object.keys(enc.grant).map(id => esc(D(id).name)).join(' + ') : 'a supply crate of new cards') : ''].filter(Boolean).join(' + ') || 'Training credit';
@@ -1040,6 +1042,7 @@ function openBriefing(enc) {
         ${intelHTML(save, e)}</div></div>
       <p class="story">${esc(enc.story)}</p>
       ${fresh.map(k => `<div class="newmech"><span class="pill new">New</span> <b>${esc(KEYWORDS[k].name)}</b> ${esc(KEYWORDS[k].text)}</div>`).join('')}
+      ${soon.map(k => `<div class="newmech"><span class="pill">In your rewards</span> <b>${esc(KEYWORDS[k].name)}</b> ${esc(KEYWORDS[k].text)}</div>`).join('')}
       <div class="brief-foot"><span class="muted">Reward:</span> ${rewardTxt}${save.cleared[enc.id] ? ' <span class="pill">Cleared</span>' : ''}</div>
       ${enc.fixedDeck ? '<div class="brief-foot muted">This simulation uses a standard training deck.</div>' : briefDeckHTML(save, enc, size, deckOk, tunedOn)}
     </div>
@@ -1070,7 +1073,7 @@ function openBriefing(enc) {
       Brief.result = null; Brief.use = false; openBriefing(enc);
     }
     if (a === 'go') {
-      SFX.init(); teach.forEach(k => { if (!save.codex.includes(k)) save.codex.push(k); });
+      SFX.init(); [...teach, ...soon].forEach(k => { if (!save.codex.includes(k)) save.codex.push(k); });
       UI.deckOverride = tunedOn ? { id: enc.id, deck: Brief.result.best.deck.slice() } : null;
       if (tunedOn) save.stats.tuned = (save.stats.tuned || 0) + 1;
       persist(); startBattle(enc);

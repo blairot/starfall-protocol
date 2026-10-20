@@ -13,7 +13,7 @@ const ECON = {
   odds: { common: 0.735, rare: 0.23, epic: 0.028, legendary: 0.007 },
   pityEpic: 15,        // an Epic is guaranteed at least once every 15 packs
   pityLegendary: 35,   // a Legendary at least once every 35 packs
-  freshChance: 0,      // chance a Common/Rare/Epic slot avoids cards you already own (Legendaries always avoid duplicates); duplicates become Scrap for crafting
+  freshChance: 0.35,   // chance a Common/Rare/Epic slot avoids cards you already own (Legendaries always avoid duplicates); duplicates become Scrap for crafting
   scrapValue: { common: 5, rare: 20, epic: 100, legendary: 400 },
   craftCost: { common: 40, rare: 100, epic: 400, legendary: 1600 },
   winCredits: { normal: 25, elite: 50, boss: 75 },      // a first clear always pays more than a replay
