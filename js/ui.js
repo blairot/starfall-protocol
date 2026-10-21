@@ -763,7 +763,7 @@ function endBattle() {
   Tip.hide();
   const won = s.winner === 0;
   Playtest.end(s, won ? 'win' : UI.retreat ? 'retreat' : 'loss'); UI.retreat = false;
-  const tally = Object.assign({}, UI.tally);
+  const tally = Object.assign({}, s.tally || {});
   // consecutive losses on the same mission, for the easier-retry offer
   save.streak = won ? null : { id: enc.id, n: save.streak && save.streak.id === enc.id ? save.streak.n + 1 : 1 };
   if (!won) {

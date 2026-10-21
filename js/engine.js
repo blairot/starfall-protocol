@@ -11,7 +11,17 @@ function D(id) { const d = CARDS[id]; if (!d) throw new Error('Unknown card: ' +
 function rnd(n) { return Math.floor(Math.random() * n); }
 function pick(a) { return a && a.length ? a[rnd(a.length)] : null; }
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-function ev(s, e) { if (!s.sim) s.events.push(e); }
+function ev(s, e) { if (!s.sim) { s.events.push(e); tallyEv(s, e); } }
+// Your battle stats, for contracts (s.tally): units deployed, kills, damage to the enemy commander, spells, powers,
+// commander attacks and cards played per faction.
+function tallyEv(s, e) {
+  const t = s.tally || (s.tally = {}), add = (k, n) => { t[k] = (t[k] || 0) + (n == null ? 1 : n); };
+  if (e.t === 'play' && e.pi === 0) { const d = CARDS[e.id]; if (d) { add('f_' + d.faction); if (d.type === 'unit') add('units'); if (d.type === 'spell' && !d.token) add('spells'); } }
+  else if (e.t === 'death' && e.pi === 1) add('kills');
+  else if (e.t === 'dmg' && e.uid === 'H1') add('face', e.n);
+  else if (e.t === 'power' && e.pi === 0) add('powers');
+  else if (e.t === 'attack' && e.from === 'H0') add('heroAttacks');
+}
 
 function mkCard(s, id, costMod) { return { uid: s.uid++, id, costMod: costMod || 0 }; }
 function isHero(c) { return !!c && typeof c.uid === 'string'; }

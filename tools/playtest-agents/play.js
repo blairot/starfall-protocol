@@ -60,6 +60,7 @@ function cardFull(id) {
 }
 const findCard = q => { q = String(q).toLowerCase(); return CARDS[q] ? q : Object.keys(CARDS).find(k => CARDS[k].name.toLowerCase() === q) || Object.keys(CARDS).find(k => CARDS[k].name.toLowerCase().includes(q)); };
 const deckCounts = deck => deck.reduce((m, id) => (m[id] = (m[id] || 0) + 1, m), {});
+const CARDS_COLLECTIBLE = () => Object.values(CARDS).filter(d => !d.token).length;
 
 // ---------------------------------------------------------------- campaign
 function loadSave(run) { const s = readJ(run, 'save.json'); if (!s) throw new Error(`No run "${run}". Start one with: new`); return s; }
@@ -70,7 +71,11 @@ function status(save) {
   else say('Supply Depot and Anchorage are locked until you graduate the Academy (mission 1-6).');
   say(`Deck: ${save.deck.length}/${size} cards${save.deck.length !== size ? '  << the deck must have exactly ' + size + ' to launch (use: deck autofill, or deck add/remove)' : ''}`);
   say(`Commander power: ${save.power ? HEROPOWERS[save.power].name + ' — ' + HEROPOWERS[save.power].text : 'none yet'}${save.powers.length > 1 ? ' (others owned: ' + save.powers.filter(p => p !== save.power).map(p => HEROPOWERS[p].name).join(', ') + ')' : ''}`);
-  say(`Collection: ${Object.values(save.coll).reduce((a, b) => a + b, 0)} cards, ${Object.keys(save.coll).length} different`);
+  say(`Collection: ${Object.values(save.coll).reduce((a, b) => a + b, 0)} cards, ${Object.keys(save.coll).length} different (of ${CARDS_COLLECTIBLE()} in the game)`);
+  if (econ) {
+    say(`Contracts (optional goals that pay Credits): ${save.contracts.map(c => `${g('CONTRACTS')[c.id].text} ${c.progress}/${g('CONTRACTS')[c.id].goal} (+${fn('contractRewardOf')(save, c.id)} Credits)`).join(' · ') || 'none'}`);
+    const up = fn('upgradesAvailable')(save); if (up) say(`Anchorage: ${up} upgrade(s) ready (command: station)`);
+  }
   if (save.pendingCrate) say(`!! A supply crate is waiting: choose one with "crate <card>": ${save.pendingCrate.map(id => D(id).name + ' (' + id + ')').join(' | ')}`);
   say('');
   say('STAR MAP (missions you can launch):');
@@ -227,8 +232,10 @@ function finish(run, save, b, s) {
   res.push({ m: enc.id, r: won ? 'win' : 'loss', turns: Math.ceil(s.turnNo / 2), hp: [s.players[0].hp, s.players[1].hp], easy: b.easy, at: new Date().toISOString() });
   writeJ(run, 'results.json', res);
   save.streak = won ? null : { id: enc.id, n: save.streak && save.streak.id === enc.id ? save.streak.n + 1 : 1 };
+  const tally = Object.assign({}, s.tally || {});
   if (!won) {
     save.stats.losses++;
+    fn('applyContracts')(save, tally).forEach(c => say(`Contract complete: ${g('CONTRACTS')[c.id].text} (+${fn('contractRewardOf')(save, c.id)} Credits)`));
     say(`== DEFEAT: ${enc.name}`);
     say('Your forces pull back to regroup. Adjust your deck in the Hangar and try again.');
     const hurt = Object.entries(s.hurt || {}).sort((x, y) => y[1] - x[1]).slice(0, 3);
@@ -240,6 +247,8 @@ function finish(run, save, b, s) {
   }
   const firstClear = !save.cleared[enc.id], prevSector = fn('highestSector')(save), DECK_SIZES_PREV = fn('deckSizeFor')(save);
   save.cleared[enc.id] = true; save.stats.wins++;
+  tally.wins = 1; if (enc.elite || enc.boss) tally.bigWins = 1;
+  const contractsDone = fn('applyContracts')(save, tally);
   const rw = fn('battleRewards')(save, enc, firstClear);
   save.credits += rw.credits;
   if (rw.packs) save.packs[rw.packTier] = (save.packs[rw.packTier] || 0) + rw.packs;
@@ -263,6 +272,7 @@ function finish(run, save, b, s) {
   if (rw.alloy) say(`+${rw.alloy} Alloy for Anchorage`);
   if (rw.scrap) say(`+${rw.scrap} Scrap`);
   if (rw.legendary) say(`Legendary acquired: ${cardText(rw.legendary)}`);
+  contractsDone.forEach(c => say(`Contract complete: ${g('CONTRACTS')[c.id].text} (+${fn('contractRewardOf')(save, c.id)} Credits)`));
   if (granted.length) say(`New cards: ${Object.entries(deckCounts(granted)).map(([id, n]) => D(id).name + (n > 1 ? ' ×' + n : '')).join(', ')}. ${loaded.length ? `HALCYON has loaded them into your deck for the next lesson${loaded.removed.length ? ', swapping out ' + loaded.removed.map(id => D(id).name).join(', ') : ''}. Change it any time in the Hangar.` : "They're in your collection; add them to a deck in the Hangar."}`);
   if (crate) { save.pendingCrate = crate; say(`SUPPLY CRATE: choose one card to keep (command: crate <card>). The others go back:`); crate.forEach(id => say(`  ${id}: ${cardText(id)}${fn('crateCopies')(id) > 1 ? ' (×' + fn('crateCopies')(id) + ')' : ''} · ${save.coll[id] ? 'you have ' + save.coll[id] : 'new'}`)); }
   unlocked.forEach(p => say(`New commander power: ${HEROPOWERS[p].name}: ${HEROPOWERS[p].text} (equip with: power set ${p})`));
@@ -278,6 +288,7 @@ Campaign:  new [--diff cadet|officer|admiral] [--name N] [--from <sector 2-6>]  
            deck   deck add <card> | deck remove <card> | deck autofill | deck clear   card <card>   codex
            power list | power set <id>   difficulty <cadet|officer|admiral>
            packs   buy <tier>   open <tier>   crate <card>   collection [filter]
+           station   upgrade <module>   craft <card>   scrap <card>   signature <card>
 Battle:    launch <mission> [--easy]   mulligan <n...> | keep   look
            play <handNo|"card name"> [target]   attack <attacker> <target>   power [target]   choose <n>   end   concede
 Targets:   E0 = enemy commander, E1..E7 = enemy units left to right; A0 = you, A1..A7 = your units.
@@ -380,12 +391,12 @@ function main(argv) {
     if (r.s.over) { say(''); finish(run, save, b, r.s); return persist(); }
     say(''); board(r.s, enc, b, r.turns); return writeJ(run, 'battle.json', b);
   }
-  if (b && ['launch', 'deck', 'buy', 'open', 'crate', 'difficulty'].includes(cmd) && !(cmd === 'deck' && !args.length)) return say('A battle is in progress. Finish it (or concede) first. Use: look');
+  if (b && ['launch', 'deck', 'buy', 'open', 'crate', 'difficulty', 'upgrade', 'craft', 'scrap', 'signature'].includes(cmd) && !(cmd === 'deck' && !args.length)) return say('A battle is in progress. Finish it (or concede) first. Use: look');
   switch (cmd) {
     case 'status': status(save); if (b) say(`\nBattle in progress: ${b.enc} (use: look)`); break;
     case 'brief': { const enc = ENC(args[0]); if (!enc) return say('Unknown mission.'); brief(save, enc); break; }
     case 'cutscene': cutscene(args[0]); break;
-    case 'card': { const id = findCard(args.join(' ')); if (!id) return say('No such card.'); say(cardFull(id)); say(`  You own ${save.coll[id] || 0}${save.deck.includes(id) ? ', ' + save.deck.filter(x => x === id).length + ' in your deck' : ''}.`); break; }
+    case 'card': { const id = findCard(args.join(' ')); if (!id) return say('No such card.'); say(cardFull(id)); say(`  You own ${save.coll[id] || 0}${save.deck.includes(id) ? ', ' + save.deck.filter(x => x === id).length + ' in your deck' : ''}.${fn('economyOpen')(save) ? ` Craft: ${fn('craftCostOf')(save, D(id).rarity)} Scrap${fn('setUnlocked')(save, D(id).tier) ? '' : ' (set not unlocked yet)'} · Scrap value: ${ECON.scrapValue[D(id).rarity]}` : ''}`); break; }
     case 'codex': save.codex.filter(k => KEYWORDS[k]).forEach(k => say(`${KEYWORDS[k].name}: ${KEYWORDS[k].text}`)); break;
     case 'collection': {
       const f = (args[0] || '').toLowerCase();
@@ -412,6 +423,17 @@ function main(argv) {
       save.powers.forEach(p => say(`${p}: ${HEROPOWERS[p].name} (${HEROPOWERS[p].cost}): ${HEROPOWERS[p].text}${p === save.power ? ' [equipped]' : ''}`)); break;
     }
     case 'difficulty': { if (!DIFFICULTY[args[0]]) return say('cadet, officer or admiral'); save.diff = args[0]; persist(); say(`Difficulty: ${DIFFICULTY[args[0]].name}: ${DIFFICULTY[args[0]].text}`); break; }
+    case 'station': {
+      if (!fn('stationOpen')(save)) return say('Anchorage unlocks after you graduate the Academy.');
+      const ST = g('STATION'); say(`ANCHORAGE · Alloy ${save.station.alloy}. Upgrade a module with: upgrade <module>`);
+      ST.order.forEach(id => { const m = ST.mods[id], lv = fn('stationLv')(save, id), cost = fn('nextCost')(save, id), cap = fn('modCap')(save, id);
+        say(`  ${id.padEnd(12)} ${m.name} Mk ${lv}/${m.max}${lv ? ' — now: ' + m.levels[lv - 1] : ''}${cost != null ? ` · next (${cost} Alloy${lv >= cap ? ', needs a stronger Reactor first' : ''}): ${m.levels[lv]}` : ' · fully upgraded'}${fn('canUpgrade')(save, id) ? ' [READY]' : ''}`); });
+      break;
+    }
+    case 'upgrade': { if (!fn('canUpgrade')(save, args[0])) return say('Can\'t upgrade that now (unknown module, not enough Alloy, maxed, or the Reactor must be upgraded first).'); fn('upgradeModule')(save, args[0]); persist(); const m = g('STATION').mods[args[0]]; say(`${m.name} upgraded to Mk ${fn('stationLv')(save, args[0])}: ${m.levels[fn('stationLv')(save, args[0]) - 1]} Alloy left: ${save.station.alloy}.`); break; }
+    case 'craft': { const id = findCard(args.join(' ')); if (!id) return say('No such card.'); if (!fn('canCraft')(save, id)) return say(`Can't craft ${D(id).name}: needs ${fn('craftCostOf')(save, D(id).rarity)} Scrap (you have ${save.scrap}), its set must be unlocked, and you can own at most ${fn('maxCopies')(D(id))}.`); fn('craftCard')(save, id); persist(); say(`Crafted ${D(id).name}. Scrap left: ${save.scrap}.`); break; }
+    case 'scrap': { const id = findCard(args.join(' ')); if (!id || !save.coll[id]) return say('You don\'t own that card.'); fn('scrapCard')(save, id); persist(); say(`Scrapped ${D(id).name} for ${ECON.scrapValue[D(id).rarity]} Scrap. Scrap: ${save.scrap}.`); break; }
+    case 'signature': { if (fn('stationLv')(save, 'armory') < 2) return say('A signature card needs the Armory at Mk 2 (station).'); const id = findCard(args.join(' ')); if (!id || !save.coll[id]) return say('You don\'t own that card.'); save.signature = id; persist(); say(`Signature card: ${D(id).name}. It starts in your opening hand when it's in your deck.`); break; }
     case 'packs': {
       if (!fn('economyOpen')(save)) return say('The Supply Depot unlocks after you graduate the Academy.');
       say(`Supply Depot · Credits ${save.credits} · a pack costs ${ECON.packPrice} Credits (${ECON.packSize} cards)`);
