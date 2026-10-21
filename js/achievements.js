@@ -26,6 +26,9 @@ const ACHIEVEMENTS = [
   { id: 'admiral', group: 'Mastery', name: "Admiral's Honours", text: 'Defeat a boss on Admiral difficulty.', reward: 75, test: (sv, b) => b && b.won && b.enc.boss && sv.diff === 'admiral' && !b.easy },
   { id: 'clean', group: 'Mastery', name: 'Clean Sweep', text: 'Clear a whole sector without losing a battle in it.', reward: 75,
     test: sv => SECTORS.some((x, i) => i > 0 && ENCOUNTERS.filter(e => e.sector === i && !e.elite).every(e => sv.cleared[e.id]) && !(sv.lostIn || {})[i]) },
+  // Proving Grounds (js/challenge.js)
+  { id: 'trial4', group: 'Proving Grounds', name: 'Proven', text: 'Win 4 trials in one Proving Grounds run.', reward: 50, test: sv => (sv.stats.chBest || 0) >= 4 || !!(sv.challenge && sv.challenge.wins >= 4) },
+  { id: 'trial8', group: 'Proving Grounds', name: 'Top of the Class', text: 'Win all 8 trials in one Proving Grounds run.', reward: 150, test: sv => (sv.stats.chBest || 0) >= 8 || !!(sv.challenge && sv.challenge.wins >= 8) },
   // battle feats
   { id: 'clear7', group: 'Battle', name: 'Clear Skies', text: 'Destroy 7 enemy units in one battle.', reward: 25, test: (sv, b) => b && b.won && ((b.s.tally || {}).kills || 0) >= 7 },
   { id: 'protocols', group: 'Battle', name: 'Protocol Officer', text: 'Cast 10 Protocols in one battle.', reward: 25, test: (sv, b) => b && b.won && ((b.s.tally || {}).spells || 0) >= 10 },
@@ -54,7 +57,7 @@ const ACHIEVEMENTS = [
 function achieve(save, battle) {
   if (!save) return [];
   save.ach = save.ach || {};
-  if (battle && !battle.won && battle.enc) (save.lostIn = save.lostIn || {})[battle.enc.sector] = true;
+  if (battle && !battle.won && battle.enc && !battle.enc.challenge) (save.lostIn = save.lostIn || {})[battle.enc.sector] = true;
   const got = [];
   for (const a of ACHIEVEMENTS) {
     if (save.ach[a.id]) continue;

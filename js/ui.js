@@ -211,9 +211,9 @@ function startBattle(enc, resumeState) {
   }
   const easy = UI.easyRetry === enc.id; UI.easyRetry = null; UI.easyRun = easy;
   const ov = UI.deckOverride && UI.deckOverride.id === enc.id ? { deck: UI.deckOverride.deck.slice() } : null;
-  const s = newGame(buildBattle(easy || ov ? Object.assign({}, App.save, ov, easy ? { diff: 'cadet' } : null) : App.save, enc));
+  const s = newGame(enc.challenge ? challengeBattle(App.save) : buildBattle(easy || ov ? Object.assign({}, App.save, ov, easy ? { diff: 'cadet' } : null) : App.save, enc));
   UI.s = s; UI.retreat = false;
-  Playtest.start(enc, enc.fixedDeck || (ov ? ov.deck : App.save.deck), { tuned: !!ov, easy });
+  Playtest.start(enc, enc.challenge ? App.save.challenge.deck : enc.fixedDeck || (ov ? ov.deck : App.save.deck), { tuned: !!ov, easy });
   aiMulligan(s, 1);
   renderBattle();
   if (enc.noMulligan) { launchPlay(); return; }
@@ -391,7 +391,7 @@ function renderBattle() {
   const seeCosts = stationLv(App.save, 'observatory') >= 3;
   const ehand = E.hand.map(c => `<i class="cback">${seeCosts ? `<em>${costOf(s, 1, c)}</em>` : ''}</i>`).join('');
   const crystals = Array.from({ length: Math.max(E.maxMana, E.mana) }, (_, k) => `<i class="${k < E.mana ? 'full' : ''}"></i>`).join('');
-  const kind = UI.enc.final ? 'Final' : UI.enc.boss ? 'Boss' : UI.enc.elite ? 'Elite' : 'Mission ' + UI.enc.id;
+  const kind = UI.enc.challenge ? `Trial ${UI.enc.trial}/${CHALLENGE.battles}` : UI.enc.final ? 'Final' : UI.enc.boss ? 'Boss' : UI.enc.elite ? 'Elite' : 'Mission ' + UI.enc.id;
   battleIntensity(s);
   const endCls = myTurn && !UI.busy ? (anyMoves(s) ? 'live' : 'live done') : 'wait';
   morphInto($('#stage-ui'), `
@@ -767,6 +767,7 @@ function endBattle() {
   const won = s.winner === 0;
   Playtest.end(s, won ? 'win' : UI.retreat ? 'retreat' : 'loss'); UI.retreat = false;
   const tally = Object.assign({}, s.tally || {});
+  if (enc.challenge) return endChallengeBattle(s, enc, won, tally);
   // consecutive losses on the same mission, for the easier-retry offer
   save.streak = won ? null : { id: enc.id, n: save.streak && save.streak.id === enc.id ? save.streak.n + 1 : 1 };
   if (!won) {
@@ -917,6 +918,108 @@ function openMap() {
   }
 }
 
+// ---------------------------------------------------------------- Proving Grounds (js/challenge.js)
+function chHull(run) { return `<span class="ch-hull" title="${run.lives} hull left">${Array.from({ length: CHALLENGE.lives }, (_, k) => `<i class="${k < run.lives ? 'on' : ''}"></i>`).join('')}</span>`; }
+function chDeckHTML(run) {
+  const curve = Array(8).fill(0); run.deck.forEach(id => curve[Math.min(7, D(id).cost)]++);
+  const top = Math.max(1, ...curve), units = run.deck.filter(id => D(id).type === 'unit').length;
+  const counts = {}; run.deck.forEach(id => counts[id] = (counts[id] || 0) + 1);
+  return `<div class="ch-deck"><div class="ch-curve">${curve.map((n, c) => `<div><i style="height:${n / top * 100}%"></i><b>${n || ''}</b><span>${c === 7 ? '7+' : c}</span></div>`).join('')}</div>
+    <div class="muted small">${run.deck.length} cards · ${units} units · ${run.deck.length - units} other</div>
+    <div class="ch-list">${Object.keys(counts).sort((a, b) => D(a).cost - D(b).cost || D(a).name.localeCompare(D(b).name)).map(id => `<span class="chip" data-card="${id}">${D(id).cost} · ${esc(D(id).name)}${counts[id] > 1 ? ' ×2' : ''}</span>`).join('')}</div></div>`;
+}
+function chPrizeLine(wins) { const pr = chPrize(wins); return [`${wins ? CHALLENGE.winCredits * wins * (wins + 1) / 2 : 0} Credits so far`, pr.keep ? 'keep one card' : 'keep a card at 3 wins', pr.packs ? `${pr.packs} ${esc(PACK_SETS[PACK_SETS.length - 1].name)}${pr.packs > 1 ? 's' : ''}` : 'a pack at 4 wins'].join(' · '); }
+function openChallenge() {
+  const save = App.save, run = save.challenge;
+  const wire = (m, fn) => { m.onclick = e => { const b = e.target.closest('[data-a],[data-pick],[data-power]'); if (b) fn(b, e); }; };
+  const later = '<button class="btn ghost" data-a="later">Later</button>', quit = '<button class="btn ghost" data-a="abandon">Abandon run</button>';
+  const common = b => { const a = b.dataset.a; if (a === 'later') { closeModal(); renderMap(); return true; }
+    if (a === 'abandon') { if (b.dataset.sure) { chAbandon(save); persist(); openChallenge(); } else { b.dataset.sure = 1; b.textContent = 'Abandon: are you sure?'; } return true; } return false; };
+  if (!run) {
+    const m = modal(`<div class="m-eyebrow">Challenge run</div><h2>The Proving Grounds</h2>
+      <p class="story">Okonkwo: "The Fleet runs its best through here. No collection, no favourites. You get a power, twenty cards off the shelf, and eight fights. Let's see what you're made of."</p>
+      <ul class="grad-list"><li><b>Draft:</b> choose a commander power, then pick 1 of 3 cards twenty times. Every set is in the draw.</li>
+      <li><b>Eight trials</b> against enemies from across the war, each with a random modifier. After each win, add a card to your deck.</li>
+      <li><b>${CHALLENGE.lives} hull points.</b> A loss costs one and re-rolls the trial. Lose them all and the run ends.</li>
+      <li><b>Rewards</b> go to your real collection: Credits for every win, keep one card from your run deck at 3 wins, a ${esc(PACK_SETS[PACK_SETS.length - 1].name)} at 4 wins and two at 8.</li></ul>
+      ${save.stats.chBest ? `<p class="muted">Runs played: ${save.stats.challenges || 0} · Best: ${save.stats.chBest}/${CHALLENGE.battles}</p>` : ''}
+      <div class="m-actions">${later}<button class="btn primary" data-a="go">Begin</button></div>`, 'wide');
+    return wire(m, b => { if (common(b)) return; if (b.dataset.a === 'go') { startChallenge(save); persist(); SFX.heal(); openChallenge(); } });
+  }
+  if (run.step === 'power') {
+    const m = modal(`<div class="m-eyebrow">Proving Grounds · Draft</div><h2>Choose a commander power</h2>
+      <div class="ch-powers">${run.powers.map(p => `<button class="btn ch-power" data-power="${p}">${powerIco(p)}<b>${esc(HEROPOWERS[p].name)}</b><span class="muted">${HEROPOWERS[p].cost} Energy: ${esc(HEROPOWERS[p].text)}</span></button>`).join('')}</div>
+      <div class="m-actions">${quit}${later}</div>`, 'wide');
+    return wire(m, b => { if (common(b)) return; if (b.dataset.power && chChoosePower(save, b.dataset.power)) { persist(); SFX.click(); openChallenge(); } });
+  }
+  if (run.step === 'draft' || run.step === 'reward') {
+    const draft = run.step === 'draft';
+    const m = modal(`<div class="m-eyebrow">Proving Grounds · ${draft ? `Draft pick ${run.deck.length + 1} of ${CHALLENGE.picks}` : `Spoils of trial ${run.at}`}</div>
+      <h2>${draft ? 'Pick one card for your deck' : 'Add one card to your deck'}</h2>
+      <p class="muted small">${TOUCH.on ? 'Press and hold' : 'Right-click'} a card to read it first.${draft ? '' : ' Spoils lean towards rarer cards.'}</p>
+      <div class="crate-row">${run.offer.map(id => `<button class="crate-card" data-pick="${id}">${cardHTML(id)}<span class="crate-own">${run.deck.includes(id) ? 'In deck ×' + run.deck.filter(x => x === id).length : D(id).rarity}</span></button>`).join('')}</div>
+      ${run.deck.length ? chDeckHTML(run) : ''}
+      <div class="m-actions">${quit}${later}${draft ? '' : '<button class="btn" data-a="skip">Skip</button>'}</div>`, 'wide');
+    return wire(m, b => {
+      if (common(b)) return;
+      const id = b.dataset.pick || null; if (!id && b.dataset.a !== 'skip') return;
+      if (draft ? chDraft(save, id) : chReward(save, id)) { persist(); SFX.click(); openChallenge(); }
+    });
+  }
+  if (run.step === 'fight') {
+    const enc = chEnc(save), e = enc.enemy;
+    const m = modal(`<div class="m-eyebrow">Proving Grounds · Trial ${run.at + 1} of ${CHALLENGE.battles}${run.at === CHALLENGE.battles - 1 ? ' · Final trial' : ''}</div>
+      <div class="ch-brief"><span class="nm-art" style='background-image:${portraitPlate(e.name, ENEMY_FACTION[enc.sector], ENEMY_ART[e.name])}'></span>
+        <div><h2>${esc(e.name)}</h2><div class="muted">${esc(SECTORS[enc.sector].name)} · ${esc(enc.name)}</div>
+        <div class="ch-status">${chHull(run)}<span><b>${run.wins}</b> won</span><span class="muted small">${chPrizeLine(run.wins)}</span></div></div></div>
+      <div class="ch-mods">${enc.mods.map(k => `<div class="ch-mod"><b>${esc(CH_MODS[k].name)}</b><span>${esc(CH_MODS[k].text)}</span></div>`).join('')}</div>
+      <p class="muted small">Your commander: ${CHALLENGE.hp} Health, ${powerIco(run.power)} ${esc(HEROPOWERS[run.power].name)}. A win pays ${CHALLENGE.winCredits * (run.wins + 1)} Credits.</p>
+      ${chDeckHTML(run)}
+      <div class="m-actions">${quit}${later}<button class="btn primary" data-a="launch">Launch</button></div>`, 'wide');
+    return wire(m, b => { if (common(b)) return; if (b.dataset.a === 'launch') { closeModal(); UI.s = null; startBattle(chEnc(save)); } });
+  }
+  // keep / done: the run is over
+  const pr = chPrize(run.wins), full = id => (save.coll[id] || 0) >= maxCopies(D(id));
+  const uniq = [...new Set(run.deck)].sort((a, b) => full(a) - full(b) || cardRating(b) - cardRating(a));
+  const m = modal(`<div class="m-eyebrow">Proving Grounds · Run complete</div><h2>${run.wins >= CHALLENGE.battles ? 'All eight trials cleared' : `${run.wins} trial${run.wins === 1 ? '' : 's'} won`}</h2>
+    <p class="muted">${chPrizeLine(run.wins)}</p>
+    ${pr.keep ? `<h3>Keep one card from your run deck</h3><div class="ch-keep">${uniq.map(id => `<button class="crate-card" data-pick="${id}">${cardHTML(id)}<span class="crate-own">${save.coll[id] ? 'You have ' + save.coll[id] : 'New'}</span></button>`).join('')}</div>`
+      : '<p>Win 3 trials to keep a card from your run deck.</p><div class="m-actions"><button class="btn primary" data-a="finish">Finish</button></div>'}`, 'wide');
+  wire(m, b => {
+    if (!b.dataset.pick && b.dataset.a !== 'finish') return;
+    const out = chFinish(save, b.dataset.pick); if (!out) return;
+    const earned = achieve(save); persist(); SFX.heal();
+    const r = modal(`<div class="m-eyebrow ok">Proving Grounds</div><h2>Run rewards</h2><div class="rewards">
+      ${out.packs ? `<div class="reward-chip rc-pack"><span class="rc-icon">${ico('pack')}</span><span>${esc(PACK_SETS[PACK_SETS.length - 1].name)}</span><b class="rc-val">+${out.packs} pack${out.packs > 1 ? 's' : ''}</b></div>` : ''}
+      ${out.kept ? `<div class="reward-chip"><span class="rc-icon">${ico('pack')}</span><span>${esc(D(out.kept).name)}</span><b class="rc-val">${out.scrap ? `+${out.scrap} Scrap (already owned)` : 'Added to collection'}</b></div>` : ''}
+      ${!out.packs && !out.kept ? '<p class="muted">Your Credits were paid after each win.</p>' : ''}</div>
+      ${earned.length ? `<div class="got"><b>Service record:</b> ${earned.map(a => `<span class="chip">${esc(a.name)}</span>`).join(' ')} <span class="muted">+${earned.reduce((n, a) => n + a.reward, 0)} Credits</span></div>` : ''}
+      <div class="m-actions">${out.packs ? '<button class="btn" data-a="open">Open packs</button>' : ''}<button class="btn primary" data-a="map">Star Map</button></div>`);
+    r.onclick = e => { const a = e.target.dataset.a; if (!a) return; closeModal(); if (a === 'open') openShop(openMap, true); else openMap(); };
+  });
+}
+function endChallengeBattle(s, enc, won, tally) {
+  const save = App.save;
+  if (won) { save.stats.wins++; tally.wins = 1; } else save.stats.losses++;
+  const done = applyContracts(save, tally);
+  const res = chResult(save, won) || { won, credits: 0, over: false };
+  const earned = achieve(save, { won, enc, s }); persist();
+  if (won) { SFX.win(); if (Music.stinger) Music.stinger('victory'); } else { SFX.lose(); if (Music.stinger) Music.stinger('defeat'); }
+  UI.s = null;
+  const run = save.challenge, lives = run ? run.lives : 0;
+  const line = won ? (res.over ? 'All eight trials cleared. The Proving Grounds have nothing left to teach you.' : `Trial ${enc.trial} cleared. ${CHALLENGE.battles - run.wins} to go.`)
+    : lives > 0 ? `Your hull takes the hit: ${lives} hull point${lives > 1 ? 's' : ''} left. The trial is re-rolled with a new modifier.` : 'Your hull is gone. The run ends here.';
+  const m = modal(`${paintedBanner(won ? 'screen-victory' : 'screen-defeat')}<div class="m-eyebrow ${won ? 'ok' : 'danger'}">${won ? 'Victory' : 'Defeat'} · Proving Grounds</div><h2>${esc(enc.enemy.name)}</h2>
+    <p>${line}</p>${run ? chHull(run) : ''}
+    ${!won ? hurtHTML(s) : ''}
+    ${res.credits || done.length ? `<div class="rewards">${res.credits ? `<div class="reward-chip"><span class="rc-icon">${ico('credits')}</span><span>Trial reward</span><b class="rc-val">+${res.credits} Credits</b></div>` : ''}${contractLines(done)}</div>` : ''}
+    ${earned.length ? `<div class="got"><b>Service record:</b> ${earned.map(a => `<span class="chip">${esc(a.name)}</span>`).join(' ')} <span class="muted">+${earned.reduce((n, a) => n + a.reward, 0)} Credits</span></div>` : ''}
+    ${rateHTML()}
+    <div class="m-actions"><button class="btn primary" data-a="go">Continue</button></div>`, 'wide');
+  wireRate(m);
+  m.onclick = e => { if (e.target.dataset.a === 'go') { closeModal(); showScreen('map'); renderMap(); openChallenge(); } };
+}
+
 // a route event: a short scene with a choice of routes (js/events.js)
 function openEvent(ev) {
   const save = App.save;
@@ -1009,6 +1112,10 @@ function renderMap() {
   const stn = stationOpen(save) ? (() => { const st = ensureStation(save), up = upgradesAvailable(save), tot = STATION.order.reduce((a, id) => a + STATION.mods[id].max, 0), have = STATION.order.reduce((a, id) => a + stationLv(save, id), 0);
     return `<div class="ops-card stn-teaser"><div class="oc-h">Anchorage</div><div class="oc-ct-t"><span>${ico('alloy')} <b>${st.alloy}</b> Alloy</span><span class="muted">${have}/${tot} systems</span></div><div class="meter"><i style="width:${have / tot * 100}%"></i></div>
       <button class="btn ${up ? 'primary' : ''} wide" data-nav="station">${up ? `Repairs ready (${up})` : 'Visit station'}</button></div>`; })() : '';
+  const chal = challengeOpen(save) ? (() => { const run = save.challenge;
+    return `<div class="ops-card chal-card"><div class="oc-h">Proving Grounds</div>${run ? `<div class="oc-ct-t"><span><b>${run.wins}</b>/${CHALLENGE.battles} trials won</span>${chHull(run)}</div>` : `<p class="muted small">Draft a deck from every set and survive eight trials. Rewards go to your collection.${save.stats.chBest ? ` Best run: ${save.stats.chBest}/${CHALLENGE.battles}.` : ''}</p>`}
+      <button class="btn ${run ? 'primary' : ''} wide" data-chal="1">${run ? 'Continue run' : 'Start a run'}</button></div>`; })()
+    : challengeTeaser(save) ? '<div class="ops-card chal-card locked"><div class="oc-h">Proving Grounds</div><p class="muted small">Finish the campaign to open challenge runs: draft a deck, survive eight trials.</p></div>' : '';
   morphInto($('#map'), `<div class="nav-shell">
     ${cmdBar(save, 'map')}
     <div class="g-strip">${strip}</div>
@@ -1020,12 +1127,13 @@ function renderMap() {
         ${nodes}${evNodes}
         ${shipAt ? `<div class="ship-marker" style="left:${shipAt[0]}%;top:${shipAt[1]}%" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12l16-7-5 7 5 7z"/></svg></div>` : ''}
       </section>
-      <aside class="ops">${nextCard}${stn}${contracts}${cmdr}</aside>
+      <aside class="ops">${nextCard}${chal}${stn}${contracts}${cmdr}</aside>
     </div></div>`);
   const gStrip = $('#map .g-strip'), onSec = gStrip && gStrip.querySelector('.gs.on');
   if (onSec && gStrip.scrollWidth > gStrip.clientWidth) gStrip.scrollLeft = onSec.offsetLeft - gStrip.offsetLeft - 12;
   $('#map').onclick = e => {
     const b = e.target.closest('[data-enc]'); if (b) { SFX.init(); SFX.click(); openBriefing(ENC[b.dataset.enc]); return; }
+    if (e.target.closest('[data-chal]')) { SFX.init(); SFX.click(); openChallenge(); return; }
     const ev = e.target.closest('[data-event]'); if (ev) { SFX.init(); SFX.click(); openEvent(EVENTS.find(x => x.id === ev.dataset.event)); return; }
     const s = e.target.closest('[data-sec]'); if (s) { SFX.click(); MapUI.sector = +s.dataset.sec; renderMap(); return; }
     cmdBarClick(e, openMap);

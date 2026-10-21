@@ -1602,3 +1602,24 @@ body.touch .inspect-hint { color: var(--t-3); }
 .lane.ev { stroke-dasharray: 3 4; }
 .ev-choices { display: grid; gap: 8px; margin: 14px 0 6px; }
 .ev-choice { text-align: left; justify-content: flex-start; white-space: normal; }
+
+/* 30. Proving Grounds (challenge runs) */
+.chal-card.locked { opacity: .7; }
+.ch-hull { display: inline-flex; gap: 4px; vertical-align: middle; }
+.ch-hull i { width: 14px; height: 8px; border-radius: 2px; background: var(--t-3, #444); opacity: .45; }
+.ch-hull i.on { background: hsl(var(--sec-h, 200) 80% 60%); opacity: 1; box-shadow: 0 0 8px hsl(var(--sec-h, 200) 80% 55% / .6); }
+.ch-powers { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin: 14px 0; }
+.ch-power { display: grid; gap: 6px; justify-items: center; text-align: center; white-space: normal; padding: 14px 12px; height: auto; }
+.ch-deck { margin: 12px 0 4px; }
+.ch-curve { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; height: 64px; align-items: end; max-width: 320px; }
+.ch-curve > div { display: grid; grid-template-rows: 1fr auto auto; height: 100%; text-align: center; font-size: 11px; }
+.ch-curve i { align-self: end; display: block; min-height: 2px; background: hsl(var(--sec-h, 200) 70% 55% / .75); border-radius: 2px 2px 0 0; }
+.ch-curve span { color: var(--t-2); }
+.ch-list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; max-height: 110px; overflow: auto; }
+.ch-brief { display: flex; gap: 14px; align-items: center; margin: 6px 0 10px; }
+.ch-brief .nm-art { width: 84px; height: 84px; flex: none; border-radius: 10px; background-size: cover; background-position: center; }
+.ch-brief h2 { margin: 0; }
+.ch-status { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+.ch-mods { display: grid; gap: 6px; margin: 8px 0; }
+.ch-mod { display: grid; gap: 2px; padding: 8px 10px; border-left: 3px solid hsl(var(--sec-h, 200) 75% 60%); background: rgb(255 255 255 / .04); border-radius: 4px; }
+.ch-keep { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-height: 52vh; overflow: auto; }
