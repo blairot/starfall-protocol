@@ -775,7 +775,7 @@ function endBattle() {
       <p>Your forces pull back to regroup. Adjust your deck in the Hangar and try again.</p>
       ${hurtHTML(s)}
       ${done.length ? `<div class="rewards">${contractLines(done)}</div>` : ''}
-      ${(enc.tips || []).length || s.hurt ? `<div class="advisor inline"><div class="adv-h">Advisor</div><div class="adv-t">${defeatAdvice(s, enc)}</div></div>` : ''}
+      ${(enc.tips || []).length || s.hurt ? `<div class="advisor inline"><div class="adv-h">Advisor</div><div class="adv-t">${defeatAdvice(s, enc, save)}</div></div>` : ''}
       ${offerEasy ? `<p class="muted">${save.streak.n > 1 ? `That's ${save.streak.n} losses in a row here.` : 'Bosses are tough.'} <b>Retry on Cadet</b> runs this one battle with weaker enemies and doesn't change your difficulty setting.</p>` : save.diff !== 'cadet' && save.stats.losses >= 3 ? '<p class="muted">Struggling? You can switch to Cadet difficulty in Settings at any time.</p>' : ''}
       ${rateHTML()}
       <div class="m-actions"><button class="btn" data-a="map">Back to Star Map</button><button class="btn" data-a="hangar">Hangar</button>${offerEasy ? '<button class="btn" data-a="easy">Retry on Cadet</button>' : ''}<button class="btn primary" data-a="retry">Retry</button></div>`);

@@ -142,7 +142,7 @@ function atkOf(s, c) {
 
 function spellPower(s, pi) {
   let n = 0; const p = s.players[pi];
-  for (const m of p.board) if (!m.silenced && alive(m) && m.kw.amplify) n += m.kw.amplify;
+  for (const m of p.board) if (alive(m) && m.kw.amplify) n += m.kw.amplify;
   for (const id of p.passives) { const ps = PASSIVES[id]; if (ps && ps.amplify) n += ps.amplify; }
   return n;
 }
@@ -344,10 +344,10 @@ function damage(s, src, tgt, n) {
     if (t.kw.barrier) { delete t.kw.barrier; ev(s, { t: 'shield', uid: t.uid }); return 0; }
     t.hp -= n;
     ev(s, { t: 'dmg', uid: t.uid, n });
-    if (sc && !isHero(sc) && sc.kw.toxic && !sc.silenced) t.dead = true;
+    if (sc && !isHero(sc) && sc.kw.toxic) t.dead = true;
     if (t.hp > 0 && !t.dead && !t.silenced) { const d = D(t.id); if (d.onDamaged) d.onDamaged(s, ctx(s, t.owner, t, { amount: n })); }
   }
-  if (sc && !isHero(sc) && sc.kw.siphon && !sc.silenced) heal(s, 'H' + sc.owner, n);
+  if (sc && !isHero(sc) && sc.kw.siphon) heal(s, 'H' + sc.owner, n);
   return n;
 }
 
@@ -366,7 +366,8 @@ function heal(s, tgt, n) {
   return got;
 }
 
-function gainArmor(s, pi, n) { const p = s.players[pi]; p.armor += n; ev(s, { t: 'armor', uid: p.uid, n }); }
+const MAX_ARMOR = 20;
+function gainArmor(s, pi, n) { const p = s.players[pi]; n = Math.max(0, Math.min(n, MAX_ARMOR - p.armor)); if (!n) return; p.armor += n; ev(s, { t: 'armor', uid: p.uid, n }); }
 
 function mkMinion(s, pi, id) {
   const d = D(id); const kw = {};
@@ -535,7 +536,7 @@ function checkOver(s) {
 function nextPhase(s, p) {
   s._phased = (s._phased || 0) + 1;
   const ph = PHASES[p.phases.shift()];
-  p.hp = p.maxHp = ph.hp; p.armor = ph.armor || 0; p.name = ph.name;
+  p.hp = p.maxHp = Math.round(ph.hp * (p.hpScale || 1)); p.armor = ph.armor || 0; p.name = ph.name;   // later phases scale with difficulty too
   p.power = ph.power ? { id: ph.power, used: 0 } : p.power;
   p.passives = (ph.passives || []).slice();
   p.frozen = false;

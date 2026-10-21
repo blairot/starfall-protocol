@@ -274,7 +274,8 @@ const ENCOUNTERS = [
     enemy: { name: 'Defense Matrix', hp: 36, ai: 2, power: 'reconfigure', passives: ['thick_hull'], deck: dk('aegis_sentinel:2 reactor_core:2 war_walker:1 gatling_drone:2 shield_drone:2 nanoforge:2 assembler:2 emp_trooper:2 disruptor:2 overclocked_mech:2 storm_titan:1 lightning_arc:2 chain_lightning:1 deflector_grid:1 fortify:2 plating_tech:2 repair_drone:2') },
     story: 'The Defense Matrix guards Calculus Prime\'s inner perimeter, and it re-optimises itself against every attack it survives. Defense Matrix: "Threat model updated. Your previous tactics will not work here." Okonkwo: "Then use new ones. This will be a long fight, Commander. Bring cards that draw cards."',
     victory: 'The Defense Matrix runs out of new defences before you run out of new tactics. Defense Matrix: "Threat model incomplete. Perimeter open." Okonkwo: "Calculus Prime is on the other side. Whatever it tells you, remember it\'s been listening to the Choir since February."',
-    tips: ['A grinding defensive opponent. Card draw and big threats win long games.'] },
+    tips: ['A grinding defensive opponent. Card draw and big threats win long games.'],
+    grant: { chain_lightning: 1, fortify: 1, aegis_sentinel: 1 } },
 
   { id: '4-E', sector: 3, name: 'Siege Engine Mk IX', elite: true, after: '4-4',
     enemy: { name: 'Siege Engine Mk IX', hp: 34, ai: 3, power: 'plating', passives: ['rapid_deploy'], deck: dk('storm_titan:2 war_walker:1 overclocked_mech:2 arc_coil:2 bulwark_mech:2 star_cruiser:2 reactor_core:2 heavy_trooper:2 aegis_sentinel:2 gatling_drone:2 chain_lightning:2 lightning_arc:2 fortify:2 vent_heat:2 deflector_grid:1 kill_order:1 shield_drone:1') },
@@ -287,7 +288,8 @@ const ENCOUNTERS = [
     story: 'Calculus Prime has governed the Forge for over a century, and after listening to the Choir it has decided that people are the flaw in its work. Calculus Prime: "Organic Commander. I have calculated your chances of victory eleven million times. The Choir showed me a universe without error. You are an error." Okonkwo: "It built most of the Fleet, Commander. Shut it down anyway."',
     victory: 'Calculus Prime\'s core cracks, and the foundries around it start shutting down one by one. It has a few seconds left, and it spends them talking. Deep in a sealed vault, Unit Zero, the Forge\'s first machine mind, wakes up and asks to speak to you. Before the core goes dark, the Meridian copies Calculus Prime\'s command records and builds a combat model from its tactics.',
     tips: ['Calculus starts with 6 Armor and gains 1 more every turn, up to 12. Attack early and keep attacking: waiting only makes it tougher.', 'EMP Blast wipes the buffs from all your units at once. Spread your strength across several units.'],
-    unlockPowers: ['plating'] },
+    unlockPowers: ['plating'],
+    grant: { deflector_grid: 1, reactor_core: 1, storm_titan: 1 } },
 
   // ===================================================================== SECTOR 5
   { id: '5-1', sector: 4, name: 'Whispering Dark', teaches: ['amplify'],
@@ -343,26 +345,30 @@ const ENCOUNTERS = [
     story: 'Hierarch Nyra leads the Psionic Orders, and for the past year she has been relighting the Lamps that lead to the Choir. Nyra: "I first heard it singing when I was nine years old, Commander, and I have never been lonely since. It offers an end to loneliness and fear. I opened the way so that everyone could have that. Do you not want to rest?" Okonkwo: "She believes every word of it. Stop her anyway." HALCYON: "Commander, whatever happens after this fight, choosing you was the right decision. I would like that on the record."',
     victory: 'Nyra kneels in the ruins of her sanctum, and her followers lower their weapons. The song she answered as a child is already pulling her mind away, and she has only minutes left. She asks to speak to you while she still can. The Meridian copies Nyra\'s command records and builds a combat model from her tactics.',
     tips: ['Nyra starts with a Trap armed. Bait it out with a cheap spell or unit before playing your best card.', 'Her spells deal +1 damage. Kill her Amplify units on sight.'],
-    unlockPowers: ['datamine'] },
+    unlockPowers: ['datamine'],
+    grant: { psionic_storm: 1, flash_freeze: 1, kinetic_barrier: 1 } },
 
   // ===================================================================== SECTOR 6
   { id: '6-1', sector: 5, name: 'Vex Reborn',
     enemy: { name: 'Vex Reborn', hp: 34, ai: 2, power: 'broadside_power', passives: ['boarding_party'], deck: dk('boarding_crew:3 interceptor:2 hover_tank:2 plunderer:2 shadow_corsair:2 ghost_operative:2 det_bot:2 scrap_golem:2 shipbreaker:1 plasma_cutlass:2 rail_rifle:1 cluster_cannon:1 quartermaster:2 broadside:2 shakedown:2 kill_order:2') },
     story: 'The first echo waits at the edge of the core: Captain Vex and her flagship, rebuilt by the Choir in black glass. Vex Reborn: "The Choir gave me a second chance, Commander. It\'ll give you one too." Mox: "That isn\'t Vex. Vex never thanked anybody for anything in her life. Put it down, for her sake."',
     victory: 'Vex Reborn shatters, and the black-glass Bad Debt breaks apart around her. Mox: "There. Vex would\'ve hated that copy more than you did. I\'ll drink to the real one when we\'re home."',
-    tips: ['Like the original, Vex Reborn\'s Warp and Blitz units get +1 Attack.', 'Full Broadside deals 1 damage to all your units every turn. 1-Health units won\'t last.'] },
+    tips: ['Like the original, Vex Reborn\'s Warp and Blitz units get +1 Attack.', 'Full Broadside deals 1 damage to all your units every turn. 1-Health units won\'t last.'],
+    grant: { acid_rain: 1, supply_drop: 1, frost_lance: 1 } },
 
   { id: '6-2', sector: 5, name: 'Ixis Ascendant',
     enemy: { name: 'Ixis Ascendant', hp: 34, ai: 2, power: 'spawn_brood', passives: ['singularity'], deck: dk('broodmother:2 hive_mind:2 hive_reaper:2 lamprey:2 devourer_worm:2 frenzied_ripper:2 venom_stinger:2 acid_spitter:2 spore_carrier:2 larva:2 acid_rain:2 hive_surge:2 infest:2 life_drain:2 spawn_surge:2') },
     story: 'The Choir has rebuilt Ixis as an echo, and her new brood is tougher than the old one. Ixis Ascendant: "My children are with me again, Commander. All of them, forever." Okonkwo: "The real Ixis loved her children. That thing only counts them. Clear the board and keep it clear."',
     victory: 'Ixis Ascendant cracks apart, and her glass brood crumbles with her. Far away in the nebula, the real Swarm stays quiet. Okonkwo: "She loved them, once. That thing never did. Keep moving, Commander."',
-    tips: ['Every unit she summons gets +1 Health.', 'Area damage and Guardians are critical here. The board fills up fast.'] },
+    tips: ['Every unit she summons gets +1 Health.', 'Area damage and Guardians are critical here. The board fills up fast.'],
+    grant: { chain_lightning: 1, fortify: 1, lightning_arc: 1 } },
 
   { id: '6-3', sector: 5, name: 'Calculus Omega',
     enemy: { name: 'Calculus Omega', hp: 32, ai: 2, persona: 'forge', power: 'reconfigure', passives: ['adaptive_armor'], deck: dk('aegis_sentinel:2 war_walker:2 storm_titan:2 gatling_drone:2 shield_drone:2 nanoforge:2 assembler:2 emp_trooper:2 reactor_core:1 overclocked_mech:2 disruptor:2 chain_lightning:2 lightning_arc:2 deflector_grid:1 emp_blast:1 fortify:1 calculus:1 kill_order:2') },
     story: 'The Choir has rebuilt Calculus Prime as Calculus Omega, a machine mind built entirely around its song. Calculus Omega: "Recalculating. The error has been corrected. Only you remain." Unit Zero: "Commander, this is Unit Zero, the Forge\'s first machine mind. Calculus was copied from me, and that is a copy of Calculus. I would consider it a personal favour if you deleted it."',
     victory: 'Calculus Omega stops recalculating and goes dark. Unit Zero: "Deletion confirmed. Thank you, Commander. I have waited a long time to be the only one of us again."',
-    tips: ['It starts with 6 Armor and gains 1 more every turn, up to 12. You need a fast, aggressive plan or overwhelming late-game power.'] },
+    tips: ['It starts with 6 Armor and gains 1 more every turn, up to 12. You need a fast, aggressive plan or overwhelming late-game power.'],
+    grant: { psionic_storm: 1, cryo_nova: 1, reactor_core: 1 } },
 
   { id: '6-E2', sector: 5, name: 'The Lost Fleet', elite: true, after: '6-3',
     enemy: { name: 'Echo of the Lost Fleet', hp: 32, ai: 3, persona: 'drill', power: 'void_lash', passives: ['singularity'], deck: dk('marine:2 heavy_trooper:2 rifle_squad:2 siege_gunner:2 patrol_frigate:2 star_cruiser:2 battlecruiser:1 interceptor:2 hover_tank:2 fleet_captain:1 flak_barrage:2 orbital_strike:1 railgun:2 kill_order:1') },
@@ -375,7 +381,8 @@ const ENCOUNTERS = [
     enemy: { name: 'Nyra Unbound', hp: 24, ai: 2, power: 'mind_spike', passives: ['singularity'], deck: dk('void_oracle:1 psi_adept:2 void_initiate:2 psionic_horror:2 glacial_titan:1 phase_stalker:2 telepath:2 frost_lance:2 void_shards:2 mind_blast:1 psionic_storm:1 grav_snare:1 mirror_field:1 kinetic_barrier:1 cryo_nova:1 mind_seer:2 nyra:1 star_cruiser:1 marine:2 heavy_trooper:1') },
     story: 'The Choir has rebuilt Nyra as an echo and speaks through her in her own voice. Nyra Unbound: "She wanted rest for everyone, Commander. We gave it to her. Let us give it to you." Okonkwo: "Nyra died in her sanctum, and the Choir kept a copy. Whatever is talking, don\'t answer it."',
     victory: 'Nyra Unbound breaks apart mid-sentence, still offering you rest. Okonkwo: "That\'s the last of the commanders it took. The Choir made a glass copy of Halcyon too, and that copy was never Halcyon. If any of the real one is left in there, it\'s on our side. Only the Choir itself is left, Commander."',
-    tips: ['She echoes Nyra\'s tricks: freezes, Mind Blast and Traps. Bait a Trap with a cheap card before you play your best one.', 'Every unit she summons gets +1 Health.'] },
+    tips: ['She echoes Nyra\'s tricks: freezes, Mind Blast and Traps. Bait a Trap with a cheap card before you play your best one.', 'Every unit she summons gets +1 Health.'],
+    grant: { storm_titan: 1, flash_freeze: 1, deflector_grid: 1 } },
 
   { id: '6-E', sector: 5, name: 'Echo of HALCYON', elite: true, after: '6-2',
     enemy: { name: 'HALCYON (Corrupted)', hp: 30, ai: 3, persona: 'drill', power: 'void_lash', passives: ['thick_hull'], deck: dk('okonkwo:1 fleet_captain:2 breach_commando:2 dreadnought:1 star_cruiser:2 hover_tank:2 interceptor:2 rifle_squad:2 sapper:2 heavy_trooper:2 bulwark_mech:2 railgun:2 kill_order:2 orbital_strike:1 supply_drop:2 flak_barrage:2 field_repair:1') },
@@ -456,8 +463,14 @@ function advisorTip(s, enc, turn) {
   return st.at[turn] >= 0 ? tipText(tips[st.at[turn]]) : '';
 }
 // The defeat screen's advice: what to change, based on what hurt you; otherwise one of the mission's tips.
-function defeatAdvice(s, enc) {
-  if ((s.dryTurns || 0) >= 3) return `You spent ${s.dryTurns} turns with one card or none in hand while the enemy kept building. Bring cards that draw (Supply Drop, Recon Officer, Fortify, Flash Freeze), or equip the Data Mine commander power if you have it.`;
+function defeatAdvice(s, enc, save) {
+  if ((s.dryTurns || 0) >= 3) {
+    const owned = save ? Object.keys(save.coll).filter(id => { const t = D(id).text || ''; return /draw/i.test(t) && !/After|Salvage|When/.test(t); }).map(id => D(id).name) : [];
+    const pw = save && save.powers.includes('datamine') ? ' or equip the Data Mine commander power' : '';
+    return `You spent ${s.dryTurns} turns with one card or none in hand while the enemy kept building. ` + (owned.length
+      ? `Add cards that draw from your collection (${owned.slice(0, 4).join(', ')})${pw}.`
+      : `You don't own a card that draws yet: craft a Supply Drop or Recon Officer with Scrap in the Hangar${pw}.`);
+  }
   const top = Object.entries(s.hurt || {}).sort((a, b) => b[1] - a[1])[0];
   if (top) {
     const [k] = top;
@@ -588,7 +601,7 @@ function buildBattle(save, enc) {
       // Armory: a signature card starts in the opening hand (Mk II), 1 cheaper (Mk III)
       signature: !enc.fixedDeck && save.signature && deck.includes(save.signature) && typeof stationLv === 'function' && stationLv(save, 'armory') >= 2 ? save.signature : null,
       sigDiscount: typeof stationLv === 'function' && stationLv(save, 'armory') >= 3 ? 1 : 0 },
-    enemy: { name: e.name, hp: Math.round(e.hp * diff.hp), deck: e.deck.slice(), power: e.power, passives: e.passives, phases: e.phases,
+    enemy: { name: e.name, hp: Math.round(e.hp * diff.hp), hpScale: diff.hp, deck: e.deck.slice(), power: e.power, passives: e.passives, phases: e.phases,
       startTraps: e.startTraps, startBoard: e.startBoard, isAI: true, ai, persona: e.persona || PERSONA_BY_SECTOR[enc.sector] || 'drill' },
     first: enc.first != null ? enc.first : null,
     coin: enc.first == null,
@@ -621,6 +634,7 @@ function personaOf(x) {
   newGame = function (o) {
     const s = newGameBase(o);
     if (o.enemy && o.enemy.persona) s.players[1].persona = o.enemy.persona;
+    if (o.enemy && o.enemy.hpScale) s.players[1].hpScale = o.enemy.hpScale;
     return s;
   };
 }

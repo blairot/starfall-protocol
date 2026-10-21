@@ -233,7 +233,7 @@ function finish(run, save, b, s) {
     say('Your forces pull back to regroup. Adjust your deck in the Hangar and try again.');
     const hurt = Object.entries(s.hurt || {}).sort((x, y) => y[1] - x[1]).slice(0, 3);
     if (hurt.length) say('What hurt you most: ' + hurt.map(([k, n]) => `${k} ${n} damage`).join(' · '));
-    { const adv = fn('defeatAdvice')(s, enc); if (adv) say(`Advisor: ${adv.replace(/<[^>]+>/g, '')}`); }
+    { const adv = fn('defeatAdvice')(s, enc, save); if (adv) say(`Advisor: ${adv.replace(/<[^>]+>/g, '')}`); }
     if (save.streak.n >= (enc.boss ? 1 : 2) && save.diff !== 'cadet' && !b.easy) say(`${save.streak.n > 1 ? `That's ${save.streak.n} losses in a row here.` : 'Bosses are tough.'} You may retry this one battle on Cadet (weaker enemies): launch ${enc.id} --easy`);
     else if (save.diff !== 'cadet' && save.stats.losses >= 3) say('Struggling? You can switch to Cadet difficulty in Settings at any time (command: difficulty cadet).');
     return;
