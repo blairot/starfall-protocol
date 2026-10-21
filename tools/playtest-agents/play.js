@@ -230,8 +230,8 @@ function finish(run, save, b, s) {
     say('Your forces pull back to regroup. Adjust your deck in the Hangar and try again.');
     const hurt = Object.entries(s.hurt || {}).sort((x, y) => y[1] - x[1]).slice(0, 3);
     if (hurt.length) say('What hurt you most: ' + hurt.map(([k, n]) => `${k} ${n} damage`).join(' · '));
-    if ((enc.tips || []).length) say(`Advisor: ${enc.tips[Math.floor(Math.random() * enc.tips.length)].replace(/<[^>]+>/g, '')}`);
-    if (save.streak.n >= (enc.boss ? 1 : 2) && save.diff !== 'cadet') say(`That's ${save.streak.n} losses in a row here. You may retry this one battle on Cadet (weaker enemies): launch ${enc.id} --easy`);
+    { const adv = fn('defeatAdvice')(s, enc); if (adv) say(`Advisor: ${adv.replace(/<[^>]+>/g, '')}`); }
+    if (save.streak.n >= (enc.boss ? 1 : 2) && save.diff !== 'cadet') say(`${save.streak.n > 1 ? `That's ${save.streak.n} losses in a row here.` : 'Bosses are tough.'} You may retry this one battle on Cadet (weaker enemies): launch ${enc.id} --easy`);
     else if (save.diff !== 'cadet' && save.stats.losses >= 3) say('Struggling? You can switch to Cadet difficulty in Settings at any time (command: difficulty cadet).');
     return;
   }
@@ -365,7 +365,7 @@ function main(argv) {
         const id = findCard(args.slice(1).join(' ')); if (!id) return say('No such card.');
         if (args[0] === 'add') { const have = save.coll[id] || 0, used = save.deck.filter(x => x === id).length; if (used >= have) return say(`You only own ${have} ${D(id).name}.`); if (save.deck.length >= size) return say(`The deck is full (${size}). Remove a card first.`); save.deck.push(id); }
         else { const k = save.deck.indexOf(id); if (k < 0) return say(`${D(id).name} is not in your deck.`); save.deck.splice(k, 1); }
-        persist(); say(`${args[0] === 'add' ? 'Added' : 'Removed'} ${D(id).name}. Deck: ${save.deck.length}/${size}.`); break;
+        save.deckEdited = true; persist(); say(`${args[0] === 'add' ? 'Added' : 'Removed'} ${D(id).name}. Deck: ${save.deck.length}/${size}.`); break;
       }
       if (args[0] === 'autofill') { fn('autoFillDeck')(save, size); persist(); say(`Filled empty slots. Deck: ${save.deck.length}/${size}.`); }
       if (args[0] === 'clear') { save.deck = []; persist(); say(`Deck cleared. 0/${size}.`); break; }

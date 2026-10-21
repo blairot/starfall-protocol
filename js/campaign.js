@@ -35,7 +35,7 @@ const ENCOUNTERS = [
     victory: 'HALCYON: "Simulation complete. You won. The drone pilot has been informed, and is taking it well, being software. Next, I will teach you to set things on fire from a distance."',
     tips: [
       'You have <b>1 Energy</b> (the crystals on the right). If a card in your hand costs 1, click it to deploy it. Then press <b>End Turn</b>: you get more Energy every turn.',
-      'Units can attack the turn <i>after</i> they arrive. Click your glowing unit, then click a target. Click the enemy commander\'s portrait to hit them directly.',
+      { need: 'unit', text: 'Units can attack the turn <i>after</i> they arrive. Click your glowing unit, then click a target. Click the enemy commander\'s portrait to hit them directly.' },
       'When units fight, each deals its Attack (yellow) to the other\'s Health (red). Destroying enemy units keeps your commander safe.',
       'You gain 1 more Energy each turn, up to 10, so bigger cards become playable later. Try to spend it all every turn.',
       'Bring the enemy commander to 0 Health to win. Hover over any card to read it.',
@@ -63,7 +63,7 @@ const ENCOUNTERS = [
     tips: [
       'Units with <b>Guardian</b> (shown with a shielded frame) must be attacked first. You can\'t hit the commander or other units until they fall.',
       'Spells ignore Guardian. A Plasma Bolt can still hit the commander directly.',
-      'Only Guardians block. Your other units do not stop enemies attacking your commander. The Shield Trooper and Barricade HALCYON gave you are Guardians: use them to protect yourself.',
+      { need: 'guardian', text: 'Only Guardians block. Your other units do not stop enemies attacking your commander. The Shield Trooper and Barricade HALCYON gave you are Guardians: use them to protect yourself.' },
     ],
     grant: { field_engineer: 1, sapper: 1, dig_in: 1 }, unlockPowers: ['repair', 'pulse'] },
 
@@ -111,8 +111,8 @@ const ENCOUNTERS = [
     story: 'A raider tollmaster is blocking the only charted safe lane into the Belt. Tollmaster: "Pay the toll, Fleet, or we take it out of your hull. Captain Vex gets her cut either way, so don\'t take it personal." Okonkwo: "The Fleet does not pay tolls to raiders, Commander. Go through him." Your deck now holds 20 cards.',
     victory: 'The Tollmaster\'s guns go quiet, and the safe lane into the Belt is open. Tollmaster: "Fine, no toll. Vex is going to hear about this, Fleet." Okonkwo: "Good. Let her."',
     tips: [
-      'A coin flip decides who goes first. Going second gives you an extra card and an <b>Energy Cell</b>, worth 1 extra Energy once.',
-      'Use the Energy Cell to play a 2-cost card on turn 1, or to reach a key card a turn early.',
+      { need: 'energyCell', text: 'A coin flip decides who goes first. Going second gives you an extra card and an <b>Energy Cell</b>, worth 1 extra Energy once.' },
+      { need: 'energyCell', text: 'Use the Energy Cell to play a 2-cost card on turn 1, or to reach a key card a turn early.' },
       'Boarding Crew has Blitz. Expect early trades.',
     ],
     grant: { shock_baton: 2, plasma_cutlass: 1, harpoon_gun: 1 } },
@@ -148,7 +148,7 @@ const ENCOUNTERS = [
 
   { id: '2-4', sector: 1, name: 'Ghost Signal', teaches: ['cloak'],
     enemy: { name: 'Sable, Smuggler Queen', hp: 28, ai: 2, power: 'pulse', deck: dk('smuggler:3 shadow_corsair:2 ghost_operative:1 smoke_screen:2 boarding_crew:2 scrap_rat:2 marine:2 rifle_squad:2 hover_tank:2 plasma_bolt:2') },
-    story: 'Sable, a smuggler who trades in secrets, knows where Vex\'s flagship is. She makes contact on a ghost signal, a message bounced between a dozen dead wrecks so nobody can trace it, and she only sells to people who survive meeting her. Sable: "Vex\'s coordinates? Expensive. Not money, Commander. I want to see if you\'re worth betting on. My ships run dark, so you\'ll see them when they shoot you." Mox: "She means that. Shoot back fast. She also brokered the bounty on your head, so don\'t feel bad about it."',
+    story: 'Sable, a smuggler who trades in secrets, knows where Vex\'s flagship is. She makes contact on a ghost signal, a message bounced between a dozen dead wrecks so nobody can trace it, and she only sells to people who survive meeting her. Sable: "Vex\'s coordinates? Expensive. Not money, Commander. I want to see if you\'re worth betting on. My ships run dark, so you\'ll see them when they shoot you." Mox: "She means that. Shoot back fast. She brokers bounties too, so don\'t feel bad about it."',
     victory: 'Sable\'s dark ships drop their cloaks one by one, and a set of coordinates arrives on a ghost signal nobody could trace. Sable: "Vex\'s flagship, parked beside Lamp 9. I\'d say good luck, but I\'ve seen you fight." Mox: "That\'s the nicest thing Sable has ever said to anyone."',
     tips: [
       '<b>Cloak</b> units can\'t be attacked or targeted until they attack. Area damage like Flak Barrage still hits them.',
@@ -210,8 +210,8 @@ const ENCOUNTERS = [
 
   { id: '3-4', sector: 2, name: 'Apex Predator',
     enemy: { name: 'Ripper Alpha', hp: 32, ai: 2, power: 'mutagen', deck: dk('frenzied_ripper:3 hive_reaper:2 devourer_worm:2 acid_spitter:2 venom_stinger:2 rapid_mutation:2 toxic_spitter:2 blood_leech:2 chitin_guard:2 lamprey:2 hover_tank:2 toxic_spitter:2') },
-    story: 'The biggest Swarm hunter the Fleet has ever recorded is picking off your scouts, and its brood grows stronger the longer the fight drags on. Okonkwo: "The scouts call it the Alpha. Nobody who got close enough came back with a better name. Kill it in one blow, Commander. If you only hurt it, you just make it angry."',
-    victory: 'The Alpha goes down in one blow, which was the only way it was going to go down. Okonkwo: "The scouts would like to suggest a better name for it now. Most of their suggestions aren\'t printable."',
+    story: 'The biggest Swarm hunter the Fleet has ever recorded is picking off your scouts, and its brood grows stronger the longer the fight drags on. Okonkwo: "The scouts call it the Alpha. Nobody who got close enough came back with a better name. Kill the brood as fast as it grows, Commander, or it buries you."',
+    victory: 'The Alpha finally goes down, and its brood scatters without it. Okonkwo: "The scouts would like to suggest a better name for it now. Most of their suggestions aren\'t printable."',
     tips: ['Frenzied Ripper gains +2 Attack whenever it survives damage. Kill it in one hit or leave it alone.', 'Devourer Worm destroys a friendly unit and takes its Attack and Health. Keep removal ready.'] },
 
   { id: '3-E', sector: 2, name: 'The Hivewarden', elite: true, after: '3-3',
@@ -429,21 +429,42 @@ function encUnlocked(save, e) {
 function sectorUnlocked(save, si) { return si === 0 || !!save.cleared[ENCOUNTERS.find(e => e.sector === si - 1 && e.boss).id]; }
 function highestSector(save) { let h = 0; for (let i = 0; i < SECTORS.length; i++) if (sectorUnlocked(save, i)) h = i; return h; }
 function deckSizeFor(save) { return DECK_SIZES[highestSector(save)]; }
-// Advisor: each tip shows for one of your turns, in order. A tip that names a card waits until
-// that card is in your hand or on the battlefield. Once every tip has been shown, the Advisor
+// Advisor: each tip shows for one of your turns, in order. A tip waits until it applies: one that
+// names a card waits for that card to be in your hand or on the battlefield, and one written as
+// { text, need } waits for its condition (ADVISOR_NEEDS). Once every tip has been shown, the Advisor
 // goes quiet instead of repeating the last one. State lives on the battle (s._adv) so it resumes.
+const tipText = t => (typeof t === 'string' ? t : t.text);
+const ADVISOR_NEEDS = {
+  unit: s => s.players[0].board.length > 0,                                                          // you have a unit to command
+  guardian: s => [...s.players[0].hand, ...s.players[0].board].some(c => (CARDS[c.id].kw || []).includes('guardian')),
+  energyCell: s => s.players[0].hand.some(c => c.id === 'energy_cell'),                              // you went second
+};
 function advisorTip(s, enc, turn) {
   const tips = (enc && enc.tips) || []; if (!tips.length || !s || s.over) return '';
   const st = s._adv || (s._adv = { shown: [], at: {} });
   if (st.at[turn] === undefined) {
     const P = s.players[0], E = s.players[1];
     const seen = new Set([...P.hand, ...P.board, ...E.board].map(c => CARDS[c.id] && CARDS[c.id].name));
-    const named = t => { const plain = t.replace(/<[^>]+>/g, ''); return CARD_LIST.filter(d => !d.token && d.name.length > 4 && plain.includes(d.name)).map(d => d.name); };
-    const i = tips.findIndex((t, k) => { if (st.shown.includes(k)) return false; const n = named(t); return !n.length || n.some(x => seen.has(x)); });
+    const named = t => { const plain = tipText(t).replace(/<[^>]+>/g, ''); return CARD_LIST.filter(d => d.name.length > 4 && plain.includes(d.name)).map(d => d.name); };
+    const fits = t => { if (t.need && ADVISOR_NEEDS[t.need] && !ADVISOR_NEEDS[t.need](s)) return false; const n = named(t); return t.need || !n.length || n.some(x => seen.has(x)); };
+    const i = tips.findIndex((t, k) => !st.shown.includes(k) && fits(t));
     st.at[turn] = i; if (i >= 0) st.shown.push(i);
   }
-  return st.at[turn] >= 0 ? tips[st.at[turn]] : '';
+  return st.at[turn] >= 0 ? tipText(tips[st.at[turn]]) : '';
 }
+// The defeat screen's advice: what to change, based on what hurt you; otherwise one of the mission's tips.
+function defeatAdvice(s, enc) {
+  const top = Object.entries(s.hurt || {}).sort((a, b) => b[1] - a[1])[0];
+  if (top) {
+    const [k] = top;
+    if (/Fatigue/.test(k)) return 'You ran out of cards. Win sooner, or add cards that draw.';
+    if (/spells and powers|Card effects/.test(k)) return 'Their spells and powers did the most damage. Keep your Health higher, and finish the fight before they add up.';
+    if (/\(attacking\)/.test(k) || CARD_LIST.some(d => d.type === 'gear' && d.name === k)) return 'Their commander did the damage. Guardians stop weapon attacks too.';
+    return `Their units did most of the damage, led by <b>${k}</b>. Next time, destroy their units before racing for the commander, and keep a Guardian out when your Health is low.`;
+  }
+  const t = pick(enc.tips || []); return t ? tipText(t) : '';
+}
+
 function nextEncounter(save) { return ENCOUNTERS.find(e => !e.elite && !save.cleared[e.id]) || null; }
 
 function maxCopies(d) { return d.rarity === 'legendary' ? 1 : 2; }
@@ -456,6 +477,7 @@ function academyLoad(save, ids) {
   for (const id of ids) {
     if (deck.filter(x => x === id).length >= (save.coll[id] || 0)) continue;
     if (deck.length >= size) {
+      if (save.deckEdited) continue;   // you built this deck yourself: leave it alone
       const n = {}; deck.forEach(x => { if (!keep.has(x)) n[x] = (n[x] || 0) + 1; });
       const out = Object.keys(n).sort((a, b) => n[b] - n[a] || D(a).cost - D(b).cost)[0];
       if (!out) break;

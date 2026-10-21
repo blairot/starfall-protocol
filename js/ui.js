@@ -774,8 +774,8 @@ function endBattle() {
       <p>Your forces pull back to regroup. Adjust your deck in the Hangar and try again.</p>
       ${hurtHTML(s)}
       ${done.length ? `<div class="rewards">${contractLines(done)}</div>` : ''}
-      ${(enc.tips || []).length ? `<div class="advisor inline"><div class="adv-h">Advisor</div><div class="adv-t">${pick(enc.tips)}</div></div>` : ''}
-      ${offerEasy ? `<p class="muted">That's ${save.streak.n} losses in a row here. <b>Retry on Cadet</b> runs this one battle with weaker enemies and doesn't change your difficulty setting.</p>` : save.diff !== 'cadet' && save.stats.losses >= 3 ? '<p class="muted">Struggling? You can switch to Cadet difficulty in Settings at any time.</p>' : ''}
+      ${(enc.tips || []).length || s.hurt ? `<div class="advisor inline"><div class="adv-h">Advisor</div><div class="adv-t">${defeatAdvice(s, enc)}</div></div>` : ''}
+      ${offerEasy ? `<p class="muted">${save.streak.n > 1 ? `That's ${save.streak.n} losses in a row here.` : 'Bosses are tough.'} <b>Retry on Cadet</b> runs this one battle with weaker enemies and doesn't change your difficulty setting.</p>` : save.diff !== 'cadet' && save.stats.losses >= 3 ? '<p class="muted">Struggling? You can switch to Cadet difficulty in Settings at any time.</p>' : ''}
       ${rateHTML()}
       <div class="m-actions"><button class="btn" data-a="map">Back to Star Map</button><button class="btn" data-a="hangar">Hangar</button>${offerEasy ? '<button class="btn" data-a="easy">Retry on Cadet</button>' : ''}<button class="btn primary" data-a="retry">Retry</button></div>`);
     wireRate(m);
@@ -1217,10 +1217,10 @@ function renderHangar() {
       const id = add.dataset.add, d = D(id), used = inDeck[id] || 0;
       if (save.deck.length >= size) toast(`Deck is full (${size}). Remove a card first.`);
       else if (used >= Math.min(save.coll[id], maxCopies(d))) toast(used >= maxCopies(d) ? `Max ${maxCopies(d)} cop${maxCopies(d) > 1 ? 'ies' : 'y'} per deck.` : 'You don\'t own more copies.');
-      else { save.deck.push(id); SFX.click(); persist(); renderHangar(); }
+      else { save.deck.push(id); save.deckEdited = true; SFX.click(); persist(); renderHangar(); }
       return;
     }
-    if (rm) { const i = save.deck.indexOf(rm.dataset.rm); if (i >= 0) save.deck.splice(i, 1); SFX.click(); persist(); renderHangar(); return; }
+    if (rm) { const i = save.deck.indexOf(rm.dataset.rm); if (i >= 0) { save.deck.splice(i, 1); save.deckEdited = true; } SFX.click(); persist(); renderHangar(); return; }
     if (f) { Hangar.filter = f.dataset.f; renderHangar(); return; }
     if (c) { Hangar.cost = +c.dataset.c; renderHangar(); return; }
     if (pw) { save.power = pw.dataset.pw; persist(); renderHangar(); return; }
