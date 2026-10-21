@@ -457,6 +457,7 @@ function advisorTip(s, enc, turn) {
 }
 // The defeat screen's advice: what to change, based on what hurt you; otherwise one of the mission's tips.
 function defeatAdvice(s, enc) {
+  if ((s.dryTurns || 0) >= 3) return `You spent ${s.dryTurns} turns with one card or none in hand while the enemy kept building. Bring cards that draw (Supply Drop, Recon Officer, Fortify, Flash Freeze), or equip the Data Mine commander power if you have it.`;
   const top = Object.entries(s.hurt || {}).sort((a, b) => b[1] - a[1])[0];
   if (top) {
     const [k] = top;
@@ -556,7 +557,7 @@ function autoFillDeck(save, size, score) {
       if (worst >= 0) deck[worst] = id;
     });
   // pass 4: card draw. A 25-30 card deck wants a few cards that draw, or it runs dry in long late-game fights.
-  const draws = id => /draw/i.test(D(id).text || '');
+  const draws = id => { const t = D(id).text || ''; return /draw/i.test(t) && !/After|Salvage|When/.test(t); };
   const wantDraw = size >= 25 ? 3 : size >= 20 ? 2 : 0;
   [...new Set(avail)].filter(id => draws(id) && !deck.includes(id)).sort((a, b) => rate(b) - rate(a)).forEach(id => {
     if (deck.filter(draws).length >= wantDraw) return;

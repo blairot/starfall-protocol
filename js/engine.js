@@ -103,6 +103,7 @@ function startTurn(s) {
 function endTurn(s) {
   if (s.over) return;
   const pi = s.active, p = s.players[pi];
+  if (pi === 0 && !s.sim && s.turnNo > 8 && p.hand.length <= 1) s.dryTurns = (s.dryTurns || 0) + 1;   // running on empty
   fire(s, 'turnEnd', pi);
   resolve(s);
   if (s.over) return;

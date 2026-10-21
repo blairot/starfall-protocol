@@ -22,6 +22,8 @@ const DIFF = arg('diff', 'officer'), GAMES = +arg('games', 40), LEVELS = arg('le
 const TUNE = process.argv.includes('--tune'), target = e => e.boss ? 55 : e.elite ? 45 : e.sector >= 2 ? 65 : 0;
 
 const G = { console, Date, JSON, performance: { now: () => Date.now() }, setTimeout, clearTimeout };
+// --seed <n>: the same packs, crates and games every run, so two rule versions can be compared fairly (A/B)
+if (arg('seed', null) != null) { let st = +arg('seed') | 0; G.Math = Object.create(Math); G.Math.random = () => { st = (st + 0x6D2B79F5) | 0; let t = Math.imul(st ^ (st >>> 15), 1 | st); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 G.window = G; vm.createContext(G);
 for (const f of ['build', 'engine', 'cards', 'strategies', 'ai', 'campaign', 'economy', 'station', 'decks', 'lore', 'cinematics'])
   vm.runInContext(fs.readFileSync(path.join(ROOT, 'js', f + '.js'), 'utf8'), G, { filename: f + '.js' });
