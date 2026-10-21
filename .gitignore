@@ -42,3 +42,4 @@ video/BRIEF*.md
 # AI playtester scratch runs (campaign saves and battle logs)
 tools/playtest-agents/runs/
 tools/sim/out/
+art/BRIEF5.md
