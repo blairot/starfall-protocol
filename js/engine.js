@@ -347,8 +347,8 @@ function damage(s, src, tgt, n) {
   const sc = src != null ? getChar(s, src) : null;
   if (isHero(t)) {
     const a = Math.min(t.armor, n); t.armor -= a; t.hp -= (n - a);
-    ev(s, { t: 'dmg', uid: t.uid, n });
-    if (t.i === 0 && !s.sim) hurtBy(s, sc, n);
+    ev(s, { t: 'dmg', uid: t.uid, n, soak: a });
+    if (t.i === 0 && !s.sim && n > a) hurtBy(s, sc, n - a);   // the defeat screen counts Health lost, not Armor
     fire(s, 'onHeroDamaged', t.i, { amount: n });
   } else {
     if (t.kw.barrier) { delete t.kw.barrier; ev(s, { t: 'shield', uid: t.uid }); return 0; }

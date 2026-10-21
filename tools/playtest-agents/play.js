@@ -144,7 +144,9 @@ function describe(s, evs, nm) {
       case 'play': lines.push(e.pi === 1 && D(e.id).type === 'trap' ? `${who(e.pi)} armed a hidden Trap.` : `${who(e.pi)} played ${D(e.id).name}${e.tgt != null && nm[e.tgt] ? ' on ' + nm[e.tgt] : ''}.`); break;
       case 'power': { const p = s.players[e.pi].power; lines.push(`${who(e.pi)} used ${p ? HEROPOWERS[p.id].name : 'their power'}.`); break; }
       case 'attack': lines.push(`${n(e.from)} attacked ${n(e.to)}.`); break;
-      case 'dmg': lines.push(`  ${n(e.uid)} took ${e.n} damage.`); break;
+      case 'dmg': lines.push(`  ${n(e.uid)} took ${e.n} damage${e.soak ? ` (${e.soak} absorbed by Armor)` : ''}.`); break;
+      case 'shield': lines.push(`  ${n(e.uid)}'s Barrier absorbed the hit and broke.`); break;
+      case 'armor': lines.push(`  ${n(e.uid)} gained ${e.n} Armor.`); break;
       case 'heal': lines.push(`  ${n(e.uid)} healed ${e.n}.`); break;
       case 'death': lines.push(`  ${n(e.uid)} was destroyed.`); break;
       case 'trap': lines.push(`${e.pi === 0 ? 'Your' : 'Enemy'} Trap fired: ${D(e.id).name}.`); break;

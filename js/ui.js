@@ -701,7 +701,8 @@ async function playEvents() {
         break;
       }
       case 'dmg': {
-        if (floater(e.uid, '-' + e.n, 'dmg')) pending = true;
+        const hit = e.n - (e.soak || 0), txt = e.soak ? (hit ? `-${hit} · ${e.soak} blocked` : `${e.soak} blocked`) : '-' + e.n;
+        if (floater(e.uid, txt, hit ? 'dmg' : 'armor')) pending = true;
         const c = centerOf(e.uid); if (c) FX.spark(c.x, c.y, { color: FX_COLORS.dmg, count: 6 + e.n * 2, speed: 3 + e.n * 0.4, life: 26 });
         if (typeof e.uid === 'string' && e.n >= 3 || e.n >= 6) { shakeStage(e.n); if (e.n >= 5) SFX.bigHit(); }
         break;
