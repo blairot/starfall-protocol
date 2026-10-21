@@ -79,7 +79,7 @@ const ENCOUNTERS = [
     ],
     grant: { interceptor: 1, hover_tank: 1, strike_fighter: 1 }, teachesAlso: ['mulligan'] },
 
-  { id: '1-E', sector: 0, name: 'Sim: Iron Wall', elite: true, after: '1-4', teachesAlso: ['armor'],
+  { id: '1-E', bossCard: 'bastion_protocol', sector: 0, name: 'Sim: Iron Wall', elite: true, after: '1-4', teachesAlso: ['armor'],
     enemy: { name: 'Sim Bastion', hp: 24, ai: 1, passives: ['thick_hull'], power: 'repair', deck: dk('barricade:2 shield_trooper:2 bulwark_mech:2 heavy_trooper:2 medic_bot:2 marine:2 dreadnought:1 field_repair:1 dig_in:1') },
     story: 'An optional stress test against the Bastion, a heavily armoured simulated fortress. HALCYON: "Most cadets do not get through this one. I tell them so beforehand, as motivation. It rarely helps. The reward is worth the bruises."',
     victory: 'HALCYON: "Stress test complete. The Bastion\'s armour failed before you did. I have added this to the list of things cadets told me could not be done." The Dreadnought is yours: something heavy of your own.',
@@ -117,7 +117,7 @@ const ENCOUNTERS = [
     ],
     grant: { shock_baton: 2, plasma_cutlass: 1, harpoon_gun: 1 } },
 
-  { id: '2-E2', teachesAlso: ['salvage'], sector: 1, name: 'Salvage Rights', elite: true, after: '2-1',
+  { id: '2-E2', bossCard: 'breaker_jun', teachesAlso: ['salvage'], sector: 1, name: 'Salvage Rights', elite: true, after: '2-1',
     enemy: { name: 'Breaker Jun', hp: 28, persona: 'drill', ai: 2, power: 'drone', passives: ['rapid_deploy'], deck: dk('scrap_rat:2 boarding_crew:2 det_bot:2 mine_layer:2 salvage_crew:2 cargo_hauler:2 scrap_golem:2 shipbreaker:1 harpoon_gun:2 shock_baton:1 echo_protocol:2 black_market:1') },
     story: 'Breaker Jun runs the biggest salvage crew in the Belt, and Jun\'s people are the ones who pulled the reactor injectors out of Anchorage. Now they want the rest of the station. Jun: "Nobody\'s lived on that wreck in seventy years, Fleet. Salvage law says it\'s ours." A second voice cuts into the channel: Mad Mox, who runs the salvage crews for Captain Vex and has never liked Jun. Mox: "Mox here, Meridian. Salvage law says whoever\'s still standing. Jun starts every fight with extra power and a lot of junk. Clear the junk first."',
     victory: 'Jun\'s crew pulls back to their cutters and leaves the stolen parts behind, including two reactor injectors with Anchorage\'s serial numbers. Mox: "Keep the shipbreaker too. Call it back rent."',
@@ -156,7 +156,7 @@ const ENCOUNTERS = [
     ],
     grant: { broadside: 1, quartermaster: 1, gunrunner: 1 } },
 
-  { id: '2-E', sector: 1, name: 'Bounty: Kade', elite: true, after: '2-3',
+  { id: '2-E', bossCard: 'kade', sector: 1, name: 'Bounty: Kade', elite: true, after: '2-3',
     enemy: { name: 'Kade the Bounty Hunter', hp: 30, ai: 2, persona: 'forge', passives: ['veteran_crew'], power: 'blade', deck: dk('plasma_cutlass:2 rail_rifle:1 harpoon_gun:2 gunrunner:2 quartermaster:2 boarding_crew:2 ion_lancer:2 interceptor:2 hover_tank:2 ghost_operative:1 shakedown:2') },
     story: 'Someone has put a price on your head, and Kade, the best bounty hunter in the Belt, has taken the contract. Mox: "The bounty went out through Sable\'s network, paid with Vex\'s money. Kade has never missed a contract. You don\'t have to take this fight. But Kade will find you eventually, so you might as well pick the time."',
     victory: 'Kade\'s ship pulls away with its guns cold. Kade: "First contract I\'ve ever handed back. Keep your head, Commander. Somebody else will want it." Mox: "Forty-one for forty-one, then you. Kade will be hearing about that for years."',
@@ -187,7 +187,7 @@ const ENCOUNTERS = [
     ],
     grant: { acid_rain: 1, venom_stinger: 2, acid_spitter: 1 } },
 
-  { id: '3-E2', sector: 2, name: 'Spore Garden', elite: true, after: '3-1',
+  { id: '3-E2', bossCard: 'spore_mother', sector: 2, name: 'Spore Garden', elite: true, after: '3-1',
     enemy: { name: 'Spore Mother', hp: 30, ai: 2, power: 'mutagen', startBoard: ['spore_carrier'], deck: dk('spore_carrier:2 venom_stinger:2 acid_spitter:2 toxic_spitter:2 blood_leech:2 larva:2 broodmother:1 lamprey:2 life_drain:2 rapid_mutation:2 acid_rain:1 hive_surge:1') },
     story: 'A Spore Mother is a Swarm creature the size of a frigate that seeds the nebula with spores. The spores grow into food for the brood, and this one has filled a whole asteroid field. Okonkwo: "Burn the garden and the brood goes hungry. It already has two spore carriers out when you arrive, and almost everything it grows is Toxic. Don\'t let your big units take hits from small ones."',
     victory: 'The garden burns, and the brood in this part of the nebula loses its food supply. Okonkwo\'s biologists want samples. You send them the acid rain glands, sealed in three layers of containment.',
@@ -214,7 +214,7 @@ const ENCOUNTERS = [
     victory: 'The Alpha finally goes down, and its brood scatters without it. Okonkwo: "The scouts would like to suggest a better name for it now. Most of their suggestions aren\'t printable."',
     tips: ['Frenzied Ripper gains +2 Attack whenever it survives damage. Kill it in one hit or leave it alone.', 'Devourer Worm destroys a friendly unit and takes its Attack and Health. Keep removal ready.'] },
 
-  { id: '3-E', sector: 2, name: 'The Hivewarden', elite: true, after: '3-3',
+  { id: '3-E', bossCard: 'hivewarden', sector: 2, name: 'The Hivewarden', elite: true, after: '3-3',
     enemy: { name: 'The Hivewarden', hp: 32, ai: 2, passives: ['brood_growth'], power: 'spawn_brood', deck: dk('broodmother:2 hive_mind:2 lamprey:2 hive_reaper:2 chitin_guard:2 spore_carrier:2 larva:2 venom_stinger:2 acid_rain:1 hive_surge:2 infest:2 rapid_mutation:2 frenzied_ripper:2') },
     story: 'The Hivewarden is an ancient guardian beast, older than the Swarm Wars, the Fleet\'s long war that ended with the Swarm fenced inside this nebula. Its brood grows stronger every turn it lives. Okonkwo: "I saw it once from the bridge of my old ship, the Aurora. We had orders to leave it alone, and I was glad of them. You have no such orders. This fight is optional."',
     victory: 'The Hivewarden falls, and its brood stops growing. Okonkwo: "We had orders to leave that thing alone because we were afraid of it. I\'ll add a line to the Aurora\'s old log. Somebody should know it\'s done."',
@@ -249,7 +249,7 @@ const ENCOUNTERS = [
     tips: ['<b>EMP</b> wipes a unit back to its basic card: no keywords, no buffs, no text. Great against Toxic, Guardian or big buffed units.', 'Don\'t stack buffs on one unit while EMP is around.'],
     grant: { emp_trooper: 2, disruptor: 2, fortify: 1 } },
 
-  { id: '4-E2', sector: 3, name: 'Recall Order', elite: true, after: '4-2',
+  { id: '4-E2', bossCard: 'recall_foreman', sector: 3, name: 'Recall Order', elite: true, after: '4-2',
     enemy: { name: 'Recall Foreman', hp: 28, ai: 2, power: 'reconfigure', passives: ['thick_hull'], startBoard: ['repair_drone'], deck: dk('shield_drone:2 plating_tech:2 repair_drone:2 assembler:2 nanoforge:2 aegis_sentinel:2 reactor_core:1 gatling_drone:2 emp_trooper:2 fortify:2 deflector_grid:1 war_walker:1 overdrive:2') },
     story: 'The Forge has issued a "recall" for every Fleet ship it built, and a Recall Foreman has seized the frigate FS Kittiwake for "maintenance". Its crew is still aboard. Okonkwo: "That foreman has heavy armour and a repair drone already working. Kill the drone first, or you will be shooting at the same hull plates all day."',
     victory: 'The Kittiwake\'s crew retake their ship and limp toward Fleet space. Her captain sends over the Forge war walker that was guarding their hangar, with a note: "We don\'t have room for it. You do."',
@@ -277,7 +277,7 @@ const ENCOUNTERS = [
     tips: ['A grinding defensive opponent. Card draw and big threats win long games.'],
     grant: { chain_lightning: 1, fortify: 1, aegis_sentinel: 1 } },
 
-  { id: '4-E', sector: 3, name: 'Siege Engine Mk IX', elite: true, after: '4-4',
+  { id: '4-E', bossCard: 'siege_engine', sector: 3, name: 'Siege Engine Mk IX', elite: true, after: '4-4',
     enemy: { name: 'Siege Engine Mk IX', hp: 34, ai: 3, power: 'plating', passives: ['rapid_deploy'], deck: dk('storm_titan:2 war_walker:1 overclocked_mech:2 arc_coil:2 bulwark_mech:2 star_cruiser:2 reactor_core:2 heavy_trooper:2 aegis_sentinel:2 gatling_drone:2 chain_lightning:2 lightning_arc:2 fortify:2 vent_heat:2 deflector_grid:1 kill_order:1 shield_drone:1') },
     story: 'The Siege Engine Mk IX is a prototype war machine that has sat running in a sealed bay for a century, and it starts every fight a step ahead. Okonkwo: "The Fleet ordered that walker in 2187 and then couldn\'t pay for it. It\'s been waiting for orders ever since, and the Choir finally gave it some. This fight is optional, but I\'d rather it wasn\'t behind us."',
     victory: 'The Siege Engine Mk IX shuts down for the first time in a century. Okonkwo: "Ordered in 2187, decommissioned in 2291. I\'ll tell Procurement the order is finally closed."',
@@ -299,7 +299,7 @@ const ENCOUNTERS = [
     tips: ['<b>Amplify +N</b>: while this unit is alive, its owner\'s spells deal N extra damage. Kill Amplify units before the big spell lands.'],
     grant: { void_initiate: 2, psi_adept: 1, void_shards: 2 } },
 
-  { id: '5-E2', sector: 4, name: 'The Kept Lamp', elite: true, after: '5-1',
+  { id: '5-E2', bossCard: 'lampkeeper', sector: 4, name: 'The Kept Lamp', elite: true, after: '5-1',
     enemy: { name: 'Lampkeeper Sorrel', hp: 33, ai: 2, power: 'corrupt', startTraps: ['mirror_field', 'kinetic_barrier'], deck: dk('void_initiate:2 cryo_sentry:2 mind_seer:2 telepath:2 psi_adept:2 void_oracle:1 glacial_titan:1 frost_lance:2 cryo_nova:2 mind_blast:2 foresight:2 kinetic_barrier:1 mirror_field:1') },
     story: 'Lampkeeper Sorrel is one of Nyra\'s oldest followers. She guards a Lamp the Orders switched back on last year, and every day it stays lit makes the road to the Choir a little easier. Okonkwo: "Shut that Lamp down. Sorrel fights with ice and two Traps already armed, and she weakens your best unit every turn. Play your cheap cards into the Traps first."',
     victory: 'The Lamp goes dark again. Sorrel surrenders and asks only to be allowed to watch it cool. Her guards leave behind a crate of their best Protocols.',
@@ -334,7 +334,7 @@ const ENCOUNTERS = [
     tips: ['<b>Mind Control</b> effects steal your units. Against Dominate, your biggest unit is your biggest risk.', 'Stolen units can\'t attack the turn they\'re taken.'],
     grant: { phase_stalker: 2, psionic_horror: 1, dominate: 1 } },
 
-  { id: '5-E', sector: 4, name: 'The Null Choir', elite: true, after: '5-4',
+  { id: '5-E', bossCard: 'null_choir', sector: 4, name: 'The Null Choir', elite: true, after: '5-4',
     enemy: { name: 'The Null Choir', hp: 28, ai: 3, power: 'mind_spike', passives: ['void_resonance'], startTraps: ['psionic_null'], deck: dk('void_oracle:1 psi_adept:2 void_initiate:2 psionic_horror:2 void_shards:3 frost_lance:3 mind_blast:1 psionic_storm:1 cryo_nova:1 grav_snare:1 mirror_field:1 sniper_mine:1 glacial_titan:1 bulwark_mech:2 telepath:2 mind_seer:2 recon_officer:1 marine:2') },
     story: 'The Null Choir are psionics who gave themselves to the Choir willingly, and now they speak only in unison, with its voice. Null Choir: "Join us, Commander. It is quiet in here." Okonkwo: "That is what the Choir does to people who say yes. The rest of the Orders consider them dead. This fight is optional."',
     victory: 'The Null Choir falls silent all at once, the way it spoke. Okonkwo: "The Orders mourned them the day they said yes to the Choir. Let\'s make sure nobody else has to."',
@@ -370,7 +370,7 @@ const ENCOUNTERS = [
     tips: ['It starts with 6 Armor and gains 1 more every turn, up to 12. You need a fast, aggressive plan or overwhelming late-game power.'],
     grant: { psionic_storm: 1, cryo_nova: 1, reactor_core: 1 } },
 
-  { id: '6-E2', sector: 5, name: 'The Lost Fleet', elite: true, after: '6-3',
+  { id: '6-E2', bossCard: 'lost_fleet', sector: 5, name: 'The Lost Fleet', elite: true, after: '6-3',
     enemy: { name: 'Echo of the Lost Fleet', hp: 32, ai: 3, persona: 'drill', power: 'void_lash', passives: ['singularity'], deck: dk('marine:2 heavy_trooper:2 rifle_squad:2 siege_gunner:2 patrol_frigate:2 star_cruiser:2 battlecruiser:1 interceptor:2 hover_tank:2 fleet_captain:1 flak_barrage:2 orbital_strike:1 railgun:2 kill_order:1') },
     story: 'During the Starfall, the Choir took more than a thousand ships out of the lanes. Here at the core it has rebuilt some of them as echoes in black glass, flying their old Fleet formations with nobody aboard. Okonkwo: "Those are our ships, Commander. Some of those names are on the memorial at Concord. Put them to rest. They fight like a Fleet battle group, and the Choir makes every one of them a little tougher."',
     victory: 'The echo ships break apart, and their black glass drifts back into the dark. The Meridian logs every hull number it can read. Okonkwo: "Send me the list. Their families have waited long enough."',
@@ -384,7 +384,7 @@ const ENCOUNTERS = [
     tips: ['She echoes Nyra\'s tricks: freezes, Mind Blast and Traps. Bait a Trap with a cheap card before you play your best one.', 'Every unit she summons gets +1 Health.'],
     grant: { storm_titan: 1, flash_freeze: 1, deflector_grid: 1 } },
 
-  { id: '6-E', sector: 5, name: 'Echo of HALCYON', elite: true, after: '6-2',
+  { id: '6-E', bossCard: 'halcyon', sector: 5, name: 'Echo of HALCYON', elite: true, after: '6-2',
     enemy: { name: 'HALCYON (Corrupted)', hp: 30, ai: 3, persona: 'drill', power: 'void_lash', passives: ['thick_hull'], deck: dk('okonkwo:1 fleet_captain:2 breach_commando:2 dreadnought:1 star_cruiser:2 hover_tank:2 interceptor:2 rifle_squad:2 sapper:2 heavy_trooper:2 bulwark_mech:2 railgun:2 kill_order:2 orbital_strike:1 supply_drop:2 flak_barrage:2 field_repair:1') },
     story: 'An Academy training signal is broadcasting from the core in HALCYON\'s voice: it is the Choir\'s echo of HALCYON, running one last simulation. HALCYON (Corrupted): "Cadet. Final evaluation. I will be your opponent." Okonkwo: "That is the copy the Choir made when Halcyon went into the song. It knows every simulation Halcyon ever ran, including the ones built from my records. Beat it anyway. Halcyon would insist. This fight is optional."',
     victory: 'The corrupted simulation ends with a perfect copy of HALCYON\'s old words: "Evaluation complete." The echo shatters before it can give a result. Okonkwo: "Halcyon would have given you one. It would have been a pass."',

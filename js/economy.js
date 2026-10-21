@@ -48,9 +48,10 @@ const PACK_SETS = [
   { tier: 3, name: 'Hive Pack', sub: 'Swarm set', hue: 105 },
   { tier: 4, name: 'Forge Pack', sub: 'Synthetic set', hue: 185 },
   { tier: 5, name: 'Void Pack', sub: 'Psionic set', hue: 275 },
+  { tier: 6, name: 'Singularity Pack', sub: 'Choir set', hue: 320 },
 ];
-function setCards(tier) { return CARD_LIST.filter(d => !d.token && d.tier === tier); }
-function setUnlocked(save, tier) { return tier - 1 <= highestSector(save) && tier <= 5; }
+function setCards(tier) { return CARD_LIST.filter(d => !d.token && !d.reward && d.tier === tier); }   // reward Legendaries only come from their mission
+function setUnlocked(save, tier) { return tier - 1 <= highestSector(save) && tier <= PACK_SETS.length; }
 
 // ---------------------------------------------------------------- collection
 // Adds one copy; copies beyond the deck limit become Scrap. Returns scrap gained.
@@ -60,7 +61,7 @@ function gainCard(save, id) {
   save.coll[id] = (save.coll[id] || 0) + 1;
   return 0;
 }
-function canCraft(save, id) { const d = D(id); return !d.token && setUnlocked(save, d.tier) && (save.coll[id] || 0) < maxCopies(d) && save.scrap >= craftCostOf(save, d.rarity); }
+function canCraft(save, id) { const d = D(id); return !d.token && !d.reward && setUnlocked(save, d.tier) && (save.coll[id] || 0) < maxCopies(d) && save.scrap >= craftCostOf(save, d.rarity); }
 function craftCard(save, id) { if (!canCraft(save, id)) return false; save.scrap -= craftCostOf(save, D(id).rarity); save.coll[id] = (save.coll[id] || 0) + 1; save.stats.crafted = (save.stats.crafted || 0) + 1; return true; }
 function scrapCard(save, id) {
   const d = D(id); if (!(save.coll[id] > 0)) return false;
@@ -168,7 +169,7 @@ function applyContracts(save, tally) {
 
 // ---------------------------------------------------------------- battle payouts
 function encKind(enc) { return enc.boss ? 'boss' : enc.elite ? 'elite' : 'normal'; }
-function packTierFor(enc) { return Math.min(5, enc.sector + 1); }
+function packTierFor(enc) { return Math.min(PACK_SETS.length, enc.sector + 1); }
 
 // The economy opens when the Academy is complete (HALCYON defeated), so the
 // tutorial only hands out the cards it is teaching.
