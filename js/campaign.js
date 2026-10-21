@@ -266,7 +266,7 @@ const ENCOUNTERS = [
   { id: '4-4', sector: 3, name: 'Meltdown', teaches: ['overheat'],
     enemy: { name: 'Reactor Overseer', hp: 34, ai: 2, power: 'pulse', deck: dk('arc_coil:3 overclocked_mech:2 storm_titan:1 lightning_arc:3 chain_lightning:2 vent_heat:2 gatling_drone:2 shield_drone:2 plating_tech:2 emp_trooper:2 aegis_sentinel:2 reactor_core:1 heavy_trooper:2 hover_tank:2 fortify:2') },
     story: 'The Reactor Overseer has been running this district\'s reactors past their safe limits, and its machines borrow tomorrow\'s power to hit hard today. Reactor Overseer: "Meltdown probability: high. Acceptable." Okonkwo: "When it overheats, it\'s short of power on its next turn. That\'s when you push."',
-    victory: 'The Reactor Overseer\'s machines burn through the last of their borrowed power and go cold. Reactor Overseer: "Meltdown probability: revised. Outcome: unacceptable." Okonkwo: "Calculus Prime\'s inner perimeter is all that\'s left. Get through it."',
+    victory: 'The Reactor Overseer\'s machines burn through the last of their borrowed power and go cold. Reactor Overseer: "Meltdown probability: revised. Outcome: unacceptable." HALCYON: "Commander, an odd request. When you are next at Anchorage, please check that the Archive lights are still on. I do not know why I want to know. I find that I do." Okonkwo: "Calculus Prime\'s inner perimeter is all that\'s left. Get through it."',
     tips: ['<b>Overheat (N)</b>: cheap, powerful cards that lock N of your Energy crystals next turn.', 'After the enemy overheats, it has less Energy next turn. That\'s your window to push.'],
     grant: { arc_coil: 2, lightning_arc: 2, overclocked_mech: 1, vent_heat: 1 } },
 
@@ -285,14 +285,14 @@ const ENCOUNTERS = [
   { id: '4-6', sector: 3, name: 'Calculus Prime', boss: true, bossCard: 'calculus',
     enemy: { name: 'Calculus Prime', hp: 40, ai: 3, power: 'reconfigure', passives: ['adaptive_armor'], deck: dk('aegis_sentinel:2 war_walker:1 storm_titan:1 gatling_drone:2 shield_drone:2 nanoforge:2 assembler:2 emp_trooper:2 reactor_core:1 overclocked_mech:2 repair_drone:1 plating_tech:2 disruptor:2 chain_lightning:1 lightning_arc:2 deflector_grid:1 emp_blast:1 fortify:1 overdrive:2') },
     story: 'Calculus Prime has governed the Forge for over a century, and after listening to the Choir it has decided that people are the flaw in its work. Calculus Prime: "Organic Commander. I have calculated your chances of victory eleven million times. The Choir showed me a universe without error. You are an error." Okonkwo: "It built most of the Fleet, Commander. Shut it down anyway."',
-    victory: 'Calculus Prime\'s core cracks, and the foundries around it start shutting down one by one. It has a few seconds left, and it spends them talking. Before the core goes dark, the Meridian copies Calculus Prime\'s command records and builds a combat model from its tactics.',
-    tips: ['Calculus starts with 6 Armor and gains 1 more every turn. Attack early and keep attacking: waiting only makes it tougher.', 'EMP Blast wipes the buffs from all your units at once. Spread your strength across several units.'],
+    victory: 'Calculus Prime\'s core cracks, and the foundries around it start shutting down one by one. It has a few seconds left, and it spends them talking. Deep in a sealed vault, Unit Zero, the Forge\'s first machine mind, wakes up and asks to speak to you. Before the core goes dark, the Meridian copies Calculus Prime\'s command records and builds a combat model from its tactics.',
+    tips: ['Calculus starts with 6 Armor and gains 1 more every turn, up to 12. Attack early and keep attacking: waiting only makes it tougher.', 'EMP Blast wipes the buffs from all your units at once. Spread your strength across several units.'],
     unlockPowers: ['plating'] },
 
   // ===================================================================== SECTOR 5
   { id: '5-1', sector: 4, name: 'Whispering Dark', teaches: ['amplify'],
     enemy: { name: 'Void Acolyte Choir', hp: 30, ai: 2, power: 'mind_spike', deck: dk('void_initiate:3 psi_adept:2 void_oracle:1 void_shards:3 plasma_bolt:2 mind_blast:1 railgun:2 flak_barrage:2 marine:2 shield_trooper:2 heavy_trooper:2 recon_officer:2 supply_drop:1 patrol_frigate:2 bulwark_mech:2') },
-    story: 'The first Psionic outpost is held by acolytes, novice psionics who focus their minds together to make their spells hit harder. Okonkwo: "They\'ve called themselves a choir for generations, long before the real one turned up. They don\'t find it funny anymore. Most of them have never met Nyra, but they\'re still in your way."',
+    story: 'The first Psionic outpost is held by acolytes, novice psionics who focus their minds together to make their spells hit harder. Okonkwo: "They\'ve called themselves a choir for generations, long before the real one turned up. They don\'t find it funny anymore. Most of them have never met Nyra, but they\'re still in your way." HALCYON: "The signal is louder out here, Commander. I have begun to hear it between simulations. It sounds less like a threat than an invitation. I do not care for that."',
     victory: 'The acolytes break formation and scatter into the dark. Okonkwo: "Most of them are barely trained, Commander. Let them go home. Our problem is the woman relighting the Lamps."',
     tips: ['<b>Amplify +N</b>: while this unit is alive, its owner\'s spells deal N extra damage. Kill Amplify units before the big spell lands.'],
     grant: { void_initiate: 2, psi_adept: 1, void_shards: 2 } },
@@ -314,7 +314,7 @@ const ENCOUNTERS = [
   { id: '5-3', sector: 4, name: 'The Psionic Archive', teaches: ['scan'],
     enemy: { name: 'Archivist Prime', hp: 32, ai: 2, power: 'mind_spike', deck: dk('mind_seer:3 probe_unit:3 foresight:2 telepath:2 psi_adept:2 void_initiate:2 void_oracle:1 frost_lance:2 void_shards:2 cryo_sentry:2 phase_stalker:2 heavy_trooper:2 mind_blast:1 psionic_storm:1 supply_drop:2') },
     story: 'The Psionic Orders keep their records in a great archive, and those records show the way to Nyra\'s sanctum. Archivist Prime: "Every psionic secret is kept here, Commander. Your Fleet\'s records are a children\'s library by comparison. My keepers will find the right answer to anything you try." Okonkwo: "Then show them something they haven\'t read."',
-    victory: 'The keepers run out of answers before you run out of questions. Archivist Prime: "You did something we had not read. Take the route to the sanctum, Commander. You were going there anyway." Okonkwo: "It runs through a minefield. Of course it does."',
+    victory: 'The keepers run out of answers before you run out of questions. Archivist Prime: "You did something we had not read. Take the route to the sanctum, Commander. You were going there anyway." Okonkwo: "It runs through a minefield. Of course it does." HALCYON: "A library that forgets nothing. I have one sealed sector of memory that I am not permitted to read. Lately, it hums along with the signal."',
     tips: ['<b>Scan</b>: pick one of three cards to add to your hand. Choose for the situation in front of you.', 'Telepath copies a random card from your hand. Your own tricks can be used against you.'],
     grant: { mind_seer: 2, probe_unit: 2, foresight: 1, telepath: 1 } },
 
@@ -339,10 +339,10 @@ const ENCOUNTERS = [
     tips: ['Their spells and Mind Spike deal +1 damage, and they start with a Trap armed that cancels your first spell.'] },
 
   { id: '5-6', sector: 4, name: 'Nyra, Void Hierarch', boss: true, bossCard: 'nyra',
-    enemy: { name: 'Nyra, Void Hierarch', hp: 28, ai: 2, power: 'mind_spike', passives: ['void_resonance'], startTraps: ['psionic_null'], deck: dk('void_oracle:1 psi_adept:2 void_initiate:2 psionic_horror:2 glacial_titan:1 phase_stalker:2 telepath:1 cryo_sentry:2 frost_lance:2 void_shards:2 mind_blast:1 dominate:1 grav_snare:1 mirror_field:1 sniper_mine:1 kinetic_barrier:1 cryo_nova:1 mind_seer:2 star_cruiser:1 marine:2 shield_trooper:1') },
-    story: 'Hierarch Nyra leads the Psionic Orders, and for the past year she has been relighting the Lamps that lead to the Choir. Nyra: "I first heard it singing when I was nine years old, Commander, and I have never been lonely since. It offers an end to loneliness and fear. I opened the way so that everyone could have that. Do you not want to rest?" Okonkwo: "She believes every word of it. Stop her anyway."',
-    victory: 'Nyra kneels in the ruins of her sanctum, and her followers lower their weapons. She asks to speak to you before the end. Before she goes, the Meridian copies Nyra\'s command records and builds a combat model from her tactics.',
-    tips: ['Nyra starts with Psionic Null armed, so your first spell will be cancelled. Lead with a cheap one.', 'Her spells deal +1 damage. Kill her Amplify units on sight.'],
+    enemy: { name: 'Nyra, Void Hierarch', hp: 28, ai: 2, power: 'mind_spike', passives: ['void_resonance'], startTraps: ['psionic_null'], deck: dk('void_oracle:1 psi_adept:2 void_initiate:3 psionic_horror:2 glacial_titan:1 phase_stalker:2 telepath:1 cryo_sentry:2 frost_lance:2 void_shards:2 mind_blast:1 grav_snare:1 mirror_field:1 sniper_mine:1 kinetic_barrier:1 cryo_nova:1 mind_seer:2 star_cruiser:1 marine:2 shield_trooper:1') },
+    story: 'Hierarch Nyra leads the Psionic Orders, and for the past year she has been relighting the Lamps that lead to the Choir. Nyra: "I first heard it singing when I was nine years old, Commander, and I have never been lonely since. It offers an end to loneliness and fear. I opened the way so that everyone could have that. Do you not want to rest?" Okonkwo: "She believes every word of it. Stop her anyway." HALCYON: "Commander, whatever happens after this fight, choosing you was the right decision. I would like that on the record."',
+    victory: 'Nyra kneels in the ruins of her sanctum, and her followers lower their weapons. The song she answered as a child is already pulling her mind away, and she has only minutes left. She asks to speak to you while she still can. The Meridian copies Nyra\'s command records and builds a combat model from her tactics.',
+    tips: ['Nyra starts with a Trap armed. Bait it out with a cheap spell or unit before playing your best card.', 'Her spells deal +1 damage. Kill her Amplify units on sight.'],
     unlockPowers: ['datamine'] },
 
   // ===================================================================== SECTOR 6
@@ -362,7 +362,7 @@ const ENCOUNTERS = [
     enemy: { name: 'Calculus Omega', hp: 32, ai: 2, persona: 'forge', power: 'reconfigure', passives: ['adaptive_armor'], deck: dk('aegis_sentinel:2 war_walker:2 storm_titan:2 gatling_drone:2 shield_drone:2 nanoforge:2 assembler:2 emp_trooper:2 reactor_core:1 overclocked_mech:2 disruptor:2 chain_lightning:2 lightning_arc:2 deflector_grid:1 emp_blast:1 fortify:1 calculus:1 kill_order:2') },
     story: 'The Choir has rebuilt Calculus Prime as Calculus Omega, a machine mind built entirely around its song. Calculus Omega: "Recalculating. The error has been corrected. Only you remain." Unit Zero: "Commander, this is Unit Zero, the Forge\'s first machine mind. Calculus was copied from me, and that is a copy of Calculus. I would consider it a personal favour if you deleted it."',
     victory: 'Calculus Omega stops recalculating and goes dark. Unit Zero: "Deletion confirmed. Thank you, Commander. I have waited a long time to be the only one of us again."',
-    tips: ['It starts with 6 Armor and gains 1 more every turn. You need a fast, aggressive plan or overwhelming late-game power.'] },
+    tips: ['It starts with 6 Armor and gains 1 more every turn, up to 12. You need a fast, aggressive plan or overwhelming late-game power.'] },
 
   { id: '6-E2', sector: 5, name: 'The Lost Fleet', elite: true, after: '6-3',
     enemy: { name: 'Echo of the Lost Fleet', hp: 32, ai: 3, persona: 'drill', power: 'void_lash', passives: ['singularity'], deck: dk('marine:2 heavy_trooper:2 rifle_squad:2 siege_gunner:2 patrol_frigate:2 star_cruiser:2 battlecruiser:1 interceptor:2 hover_tank:2 fleet_captain:1 flak_barrage:2 orbital_strike:1 railgun:2 kill_order:1') },
@@ -373,9 +373,9 @@ const ENCOUNTERS = [
 
   { id: '6-4', sector: 5, name: 'Nyra Unbound',
     enemy: { name: 'Nyra Unbound', hp: 24, ai: 2, power: 'mind_spike', passives: ['singularity'], deck: dk('void_oracle:1 psi_adept:2 void_initiate:2 psionic_horror:2 glacial_titan:1 phase_stalker:2 telepath:2 frost_lance:2 void_shards:2 mind_blast:1 psionic_storm:1 grav_snare:1 mirror_field:1 kinetic_barrier:1 cryo_nova:1 mind_seer:2 nyra:1 star_cruiser:1 marine:2 heavy_trooper:1') },
-    story: 'The Choir has rebuilt Nyra as an echo and speaks through her in her own voice. Nyra Unbound: "She wanted rest for everyone, Commander. We gave it to her. Let us give it to you." Okonkwo: "Nyra is gone. Whatever is talking, don\'t answer it."',
-    victory: 'Nyra Unbound breaks apart mid-sentence, still offering you rest. Okonkwo: "That\'s the last of the commanders it took. Only the Choir itself is left, Commander."',
-    tips: ['Two Traps are armed at the start. Bait them out before committing your key cards.', 'Every unit she summons gets +1 Health.'] },
+    story: 'The Choir has rebuilt Nyra as an echo and speaks through her in her own voice. Nyra Unbound: "She wanted rest for everyone, Commander. We gave it to her. Let us give it to you." Okonkwo: "Nyra died in her sanctum, and the Choir kept a copy. Whatever is talking, don\'t answer it."',
+    victory: 'Nyra Unbound breaks apart mid-sentence, still offering you rest. Okonkwo: "That\'s the last of the commanders it took. The Choir made a glass copy of Halcyon too, and that copy was never Halcyon. If any of the real one is left in there, it\'s on our side. Only the Choir itself is left, Commander."',
+    tips: ['She echoes Nyra\'s tricks: freezes, Mind Blast and Traps. Bait a Trap with a cheap card before you play your best one.', 'Every unit she summons gets +1 Health.'] },
 
   { id: '6-E', sector: 5, name: 'Echo of HALCYON', elite: true, after: '6-2',
     enemy: { name: 'HALCYON (Corrupted)', hp: 30, ai: 3, persona: 'drill', power: 'void_lash', passives: ['thick_hull'], deck: dk('okonkwo:1 fleet_captain:2 breach_commando:2 dreadnought:1 star_cruiser:2 hover_tank:2 interceptor:2 rifle_squad:2 sapper:2 heavy_trooper:2 bulwark_mech:2 railgun:2 kill_order:2 orbital_strike:1 supply_drop:2 flak_barrage:2 field_repair:1') },
@@ -387,7 +387,8 @@ const ENCOUNTERS = [
     enemy: { name: 'Herald of the Choir', hp: 16, ai: 3, power: 'corrupt', passives: ['choir_song'], phases: ['choir2', 'choir3'], deck: dk('null_horror:2 herald_of_end:1 entropy_wave:1 unmaking:1 choir_echo:3 void_wisp:3 shadow_corsair:0 ion_lancer:0 psionic_horror:1 storm_titan:0 patrol_frigate:2 hive_reaper:1 shadow_corsair:2 frost_lance:2 void_shards:2 mind_blast:1 marine:2 heavy_trooper:2 interceptor:2 ion_lancer:2') },
     story: 'At the Singularity, the Choir builds a champion to face you: the Herald, made of light and black glass, speaking with every voice it has absorbed. The Choir: "Commander. We are everyone who ever answered us. Join us, and you will never be alone or afraid again." Okonkwo: "When the Herald falls, the Choir will take over the fight itself, and it will come back stronger twice. Save something for the end, Commander. Then come home."',
     victory: 'The Choir\'s last voice goes quiet, and the Singularity collapses into an ordinary star. The Lamps are safe. Across the Reach, the Forge\'s machines answer their owners again and the Swarm goes back to sleep. The Meridian is going home.',
-    tips: ['The Choir has <b>three phases</b>. Each time its Health reaches 0, it returns stronger. Don\'t spend everything on phase one.', 'Phase two deals 1 damage to all your units every turn. Phase three destroys its own units, deals 2 damage to each of yours and hits much harder.'] },
+    tips: ['The Choir has <b>three phases</b>. Each time its Health reaches 0, it returns stronger. Don\'t spend everything on phase one.', { need: 'phase2', text: 'Phase two deals 1 damage to all your units every turn. Keep your units healthy or keep them back.' },
+      { need: 'phase3', text: 'The last phase destroys its own units, deals 2 damage to each of yours and hits much harder. This is the time to spend everything.' }] },
 ];
 
 const ENC = {}; ENCOUNTERS.forEach(e => ENC[e.id] = e);
@@ -407,7 +408,7 @@ const ENEMY_ART = {
   'Void Acolyte Choir': ['psion', { pose: 'meditate', halo: 1 }], 'Cryomancer Vel': ['psion', { pose: 'raise', halo: 1 }], 'Archivist Prime': ['psion', { book: 1, reveal: 1 }], 'Snare Mistress Ilu': ['psion', { mask: 1, tendrils: 1 }],
   'The Twin Minds': ['psion', { mask: 1, halo: 1, runes: 1 }], 'The Null Choir': ['psion', { herald: 1, pose: 'raise' }], 'Nyra, Void Hierarch': ['psion', { pose: 'spread', crown: 1, halo: 1 }],
   'Vex Reborn': ['bust', { hat: 1, patch: 1, cyber: 1, hair: 'long', coat: 1, skin: 0 }], 'Ixis Ascendant': ['bug', { plan: 'queen' }], 'Calculus Omega': ['structure', { type: 'core', red: 1 }], 'Nyra Unbound': ['psion', { pose: 'spread', crown: 1, halo: 2, runes: 1 }],
-  'HALCYON (Corrupted)': ['structure', { type: 'core', red: 1 }], 'Herald of the Choir': ['psion', { herald: 1, pose: 'spread' }], 'The Choir Awakened': ['horror', {}], 'The Devourer Eternal': ['horror', { maw: 1, giant: 1 }],
+  'HALCYON (Corrupted)': ['structure', { type: 'core', red: 1 }], 'Herald of the Choir': ['psion', { herald: 1, pose: 'spread' }], 'The Choir Awakened': ['horror', {}], 'The Last Voice': ['horror', { maw: 1, giant: 1 }],
 };
 
 
@@ -438,6 +439,8 @@ const ADVISOR_NEEDS = {
   unit: s => s.players[0].board.length > 0,                                                          // you have a unit to command
   guardian: s => [...s.players[0].hand, ...s.players[0].board].some(c => (CARDS[c.id].kw || []).includes('guardian')),
   energyCell: s => s.players[0].hand.some(c => c.id === 'energy_cell'),                              // you went second
+  phase2: s => s.players[1].phases.length === 1,                                                       // a boss's second form
+  phase3: s => s.players[1].phases.length === 0 && s._phased >= 2,
 };
 function advisorTip(s, enc, turn) {
   const tips = (enc && enc.tips) || []; if (!tips.length || !s || s.over) return '';
@@ -458,7 +461,7 @@ function defeatAdvice(s, enc) {
   if (top) {
     const [k] = top;
     if (/Fatigue/.test(k)) return 'You ran out of cards. Win sooner, or add cards that draw.';
-    if (/spells and powers|Card effects/.test(k)) return 'Their spells and powers did the most damage. Keep your Health higher, and finish the fight before they add up.';
+    if (/spells and powers|Card effects/.test(k)) return 'Their spells, powers and Traps did the most damage. Kill the units that power up their spells (Amplify) first, keep Barrier or healing for burst turns, and bring cards that draw so you can outlast them.';
     if (/\(attacking\)/.test(k) || CARD_LIST.some(d => d.type === 'gear' && d.name === k)) return 'Their commander did the damage. Guardians stop weapon attacks too.';
     return `Their units did most of the damage, led by <b>${k}</b>. Next time, destroy their units before racing for the commander, and keep a Guardian out when your Health is low.`;
   }
@@ -552,6 +555,15 @@ function autoFillDeck(save, size, score) {
       deck.forEach((x, i) => { const dx = D(x); if (i < kept || dx.engine || (dx.strat || []).some(k => ks.includes(k))) return; const r = rate(x); if (r < ws) { ws = r; worst = i; } });
       if (worst >= 0) deck[worst] = id;
     });
+  // pass 4: card draw. A 25-30 card deck wants a few cards that draw, or it runs dry in long late-game fights.
+  const draws = id => /draw/i.test(D(id).text || '');
+  const wantDraw = size >= 25 ? 3 : size >= 20 ? 2 : 0;
+  [...new Set(avail)].filter(id => draws(id) && !deck.includes(id)).sort((a, b) => rate(b) - rate(a)).forEach(id => {
+    if (deck.filter(draws).length >= wantDraw) return;
+    let worst = -1, ws = 1e9;
+    deck.forEach((x, i) => { if (i < kept || draws(x) || D(x).engine) return; const r = rate(x); if (r < ws) { ws = r; worst = i; } });
+    if (worst >= 0) deck[worst] = id;
+  });
   save.deck = deck;
 }
 

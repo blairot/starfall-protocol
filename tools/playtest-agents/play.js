@@ -128,10 +128,11 @@ function uidOf(s, ref) {
 function describe(s, evs, nm) {
   const who = pi => (pi === 0 ? 'You' : s.players[1].name);
   const lines = [];
+  evs.forEach(e => { if (e.t === 'summon' && nm[e.uid] == null) nm[e.uid] = (e.pi === 0 ? 'your ' : 'enemy ') + D(e.id).name; });
   for (const e of evs) {
     const n = u => nm[u] || '?';
     switch (e.t) {
-      case 'play': lines.push(`${who(e.pi)} played ${D(e.id).name}${e.tgt != null && nm[e.tgt] ? ' on ' + nm[e.tgt] : ''}.`); break;
+      case 'play': lines.push(e.pi === 1 && D(e.id).type === 'trap' ? `${who(e.pi)} armed a hidden Trap.` : `${who(e.pi)} played ${D(e.id).name}${e.tgt != null && nm[e.tgt] ? ' on ' + nm[e.tgt] : ''}.`); break;
       case 'power': { const p = s.players[e.pi].power; lines.push(`${who(e.pi)} used ${p ? HEROPOWERS[p.id].name : 'their power'}.`); break; }
       case 'attack': lines.push(`${n(e.from)} attacked ${n(e.to)}.`); break;
       case 'dmg': lines.push(`  ${n(e.uid)} took ${e.n} damage.`); break;
@@ -167,7 +168,7 @@ function rebuild(b) {
   fn('aiMulligan')(s, 1);
   let nm = names(s), log = [], turns = 0;
   const enemyTurn = () => {
-    for (let n = 0; n < 45 && !s.over; n++) { const a = fn('aiChoose')(s, 1, s.players[1].ai); if (!a) break; nm = Object.assign(nm, names(s)); fn('applyAct')(s, 1, a); }
+    for (let n = 0; n < 45 && !s.over; n++) { const a = fn('aiChoose')(s, 1, s.players[1].ai); if (!a) break; nm = Object.assign(names(s), nm); fn('applyAct')(s, 1, a); }
     if (!s.over) fn('endTurn')(s);
   };
   if (b.mull === null) return { s, log, phase: 'mulligan', turns };
@@ -177,11 +178,13 @@ function rebuild(b) {
   turns = 1; log = describe(s, s.events, Object.assign(nm, names(s))); s.events = [];
   for (const a of b.actions) {
     nm = names(s); s.events = [];
-    if (a.k === 'end') { fn('endTurn')(s); nm = Object.assign(nm, names(s)); if (!s.over) enemyTurn(); turns++; }
+    if (a.k === 'end') { fn('endTurn')(s); nm = Object.assign(names(s), nm); if (!s.over) enemyTurn(); turns++; }
     else if (a.k === 'concede') { s.over = true; s.winner = 1; }
     else if (a.k === 'choose') fn('resolveChoice')(s, a.i);
-    else fn('applyAct')(s, 0, a);
-    log = describe(s, s.events, Object.assign(nm, names(s)));
+    else if (a.k === 'play') fn('playCard')(s, 0, a.hi, a.t);
+    else if (a.k === 'pow') fn('usePower')(s, 0, a.t);
+    else fn('attack')(s, a.a, a.t);
+    log = describe(s, s.events, Object.assign(names(s), nm));
   }
   return { s, log, phase: s.over ? 'over' : 'play', turns };
 }
@@ -231,11 +234,11 @@ function finish(run, save, b, s) {
     const hurt = Object.entries(s.hurt || {}).sort((x, y) => y[1] - x[1]).slice(0, 3);
     if (hurt.length) say('What hurt you most: ' + hurt.map(([k, n]) => `${k} ${n} damage`).join(' · '));
     { const adv = fn('defeatAdvice')(s, enc); if (adv) say(`Advisor: ${adv.replace(/<[^>]+>/g, '')}`); }
-    if (save.streak.n >= (enc.boss ? 1 : 2) && save.diff !== 'cadet') say(`${save.streak.n > 1 ? `That's ${save.streak.n} losses in a row here.` : 'Bosses are tough.'} You may retry this one battle on Cadet (weaker enemies): launch ${enc.id} --easy`);
+    if (save.streak.n >= (enc.boss ? 1 : 2) && save.diff !== 'cadet' && !b.easy) say(`${save.streak.n > 1 ? `That's ${save.streak.n} losses in a row here.` : 'Bosses are tough.'} You may retry this one battle on Cadet (weaker enemies): launch ${enc.id} --easy`);
     else if (save.diff !== 'cadet' && save.stats.losses >= 3) say('Struggling? You can switch to Cadet difficulty in Settings at any time (command: difficulty cadet).');
     return;
   }
-  const firstClear = !save.cleared[enc.id], prevSector = fn('highestSector')(save);
+  const firstClear = !save.cleared[enc.id], prevSector = fn('highestSector')(save), DECK_SIZES_PREV = fn('deckSizeFor')(save);
   save.cleared[enc.id] = true; save.stats.wins++;
   const rw = fn('battleRewards')(save, enc, firstClear);
   save.credits += rw.credits;
@@ -263,7 +266,7 @@ function finish(run, save, b, s) {
   if (granted.length) say(`New cards: ${Object.entries(deckCounts(granted)).map(([id, n]) => D(id).name + (n > 1 ? ' ×' + n : '')).join(', ')}. ${loaded.length ? `HALCYON has loaded them into your deck for the next lesson${loaded.removed.length ? ', swapping out ' + loaded.removed.map(id => D(id).name).join(', ') : ''}. Change it any time in the Hangar.` : "They're in your collection; add them to a deck in the Hangar."}`);
   if (crate) { save.pendingCrate = crate; say(`SUPPLY CRATE: choose one card to keep (command: crate <card>). The others go back:`); crate.forEach(id => say(`  ${id}: ${cardText(id)}${fn('crateCopies')(id) > 1 ? ' (×' + fn('crateCopies')(id) + ')' : ''} · ${save.coll[id] ? 'you have ' + save.coll[id] : 'new'}`)); }
   unlocked.forEach(p => say(`New commander power: ${HEROPOWERS[p].name}: ${HEROPOWERS[p].text} (equip with: power set ${p})`));
-  if (newSector) say(`Deck size increased to ${fn('deckSizeFor')(save)}. Add ${Math.max(0, fn('deckSizeFor')(save) - save.deck.length)} cards before your next battle. A new pack set is at the Supply Depot.`);
+  if (newSector && fn('deckSizeFor')(save) > DECK_SIZES_PREV) say(`Deck size increased to ${fn('deckSizeFor')(save)}. Add ${Math.max(0, fn('deckSizeFor')(save) - save.deck.length)} cards before your next battle. A new pack set is at the Supply Depot.`);
   if (graduated) say('Training complete. Three things are now open: Supply Depot (spend Credits on packs of new cards); Crafting (spare copies become Scrap; spend Scrap in the Hangar on the cards you want); Anchorage (your forward base; spend Alloy there on upgrades). Each is explained in the Archive (command: codex). Battles and contracts earn Credits and Alloy from now on.');
   if (fn('economyOpen')(save)) say(`Wallet: ${save.credits} Credits · ${save.scrap} Scrap · ${fn('ensureStation')(save).alloy} Alloy · unopened packs: ${Object.values(save.packs).reduce((a, c) => a + c, 0)}`);
   if (CINE_AFTER[enc.id] && firstClear) say(`A cutscene plays now. Watch it with: cutscene ${CINE_AFTER[enc.id]}`);
@@ -276,7 +279,7 @@ Campaign:  new [--diff cadet|officer|admiral] [--name N] [--from <sector 2-6>]  
            power list | power set <id>   difficulty <cadet|officer|admiral>
            packs   buy <tier>   open <tier>   crate <card>   collection [filter]
 Battle:    launch <mission> [--easy]   mulligan <n...> | keep   look
-           play <handNo> [target]   attack <attacker> <target>   power [target]   choose <n>   end   concede
+           play <handNo|"card name"> [target]   attack <attacker> <target>   power [target]   choose <n>   end   concede
 Targets:   E0 = enemy commander, E1..E7 = enemy units left to right; A0 = you, A1..A7 = your units.
            Each unit also has a fixed tag like #34 that never changes: use it when chaining several commands.`;
 
@@ -350,7 +353,9 @@ function main(argv) {
     else if (cmd === 'choose') { if (!s.choice) return say('There is no choice to make.'); const i = +args[0] - 1; if (!(i >= 0 && i < s.choice.opts.length)) return say('Pick one of the listed numbers.'); a = { k: 'choose', i }; }
     else if (s.choice) return say('First choose a card: choose <n>.');
     else if (cmd === 'play') {
-      const hi = +args[0] - 1, c = s.players[0].hand[hi];
+      let hi = +args[0] - 1;
+      if (isNaN(hi)) { const q = String(args[0]).toLowerCase(); hi = s.players[0].hand.findIndex(x => D(x.id).name.toLowerCase() === q || x.id === q); if (hi < 0) hi = s.players[0].hand.findIndex(x => D(x.id).name.toLowerCase().includes(q)); }
+      const c = s.players[0].hand[hi];
       if (!c) return say(`No card ${args[0]} in your hand.`);
       if (!fn('canPlay')(s, 0, hi)) return say(`Can't play ${D(c.id).name}: ${fn('whyCantPlay')(s, 0, hi)}`);
       const tg = fn('cardTargets')(s, 0, c); let t;
@@ -450,5 +455,6 @@ function main(argv) {
   }
 }
 
+process.stdout.on('error', e => { if (e.code === 'EPIPE') process.exit(0); });   // output piped into head/tail and closed early
 try { main(process.argv.slice(2)); } catch (e) { out.push('ERROR: ' + (e && e.stack || e)); }
 process.stdout.write(out.join('\n') + '\n');

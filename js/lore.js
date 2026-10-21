@@ -179,7 +179,7 @@ const LORE = {
     herald: { name: "Herald of the Choir", role: "The Choir's champion",
       body: "The Herald is the champion the Choir builds when it needs to fight in person: a figure of light and teeth made from the minds it has absorbed. It isn't the Choir itself, only the body the Choir fights with. Knock it down and the Choir builds it again, because it has plenty of minds to spare." },
     choir: { name: "The Choir", role: "Intelligence at the galactic core",
-      body: "The Choir is a single vast mind at the centre of the galaxy. It calls to people through the warp lanes on the Lamps' radio band, and to anyone listening it sounds like thousands of voices singing together. It offers each listener whatever they want most; it promised Vex the whole Belt. Those who accept are absorbed, and the Choir can rebuild them as echoes in black glass. When it is badly hurt it stops making offers and fights as the Devourer Eternal, which is what the Choir is underneath: an enormous, patient hunger." },
+      body: "The Choir is a single vast mind at the centre of the galaxy. It calls to people through the warp lanes on the Lamps' radio band, and to anyone listening it sounds like thousands of voices singing together. It offers each listener whatever they want most; it promised Vex the whole Belt. Those who accept are absorbed, and the Choir can rebuild them as echoes in black glass. When it is badly hurt it stops making offers and fights as the Last Voice: a frightened mind pulling every voice back into itself, because it never learned to let anyone go." },
   },
 
   // ------------------------------------------------------------------ Anchorage modules

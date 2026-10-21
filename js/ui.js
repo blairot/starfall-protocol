@@ -673,7 +673,8 @@ async function playEvents() {
     switch (e.t) {
       case 'play': {
         const d = D(e.id);
-        logLine(`${who(e.pi)} played <b>${esc(d.name)}</b>${e.tgt != null && UI.names[e.tgt] ? ` on ${nm(e.tgt)}` : ''}`);
+        if (e.pi === 1 && d.type === 'trap') logLine(`${who(e.pi)} armed a hidden Trap`);
+        else logLine(`${who(e.pi)} played <b>${esc(d.name)}</b>${e.tgt != null && UI.names[e.tgt] ? ` on ${nm(e.tgt)}` : ''}`);
         if (e.pi === 1) { await flush(); d.type === 'spell' ? SFX.spell() : SFX.play(); await showCardFlash(e.id, d.type === 'trap' ? 'Enemy arms a Trap' : e.id === 'energy_cell' ? 'Enemy spends its Energy Cell: +1 Energy' : 'Enemy plays',d.type === 'trap' ? 'trapflash hidden-card' : ''); }
         if (d.type === 'spell' || (d.type === 'unit' && e.tgt != null)) {
           const from = centerOf('H' + e.pi), to = e.tgt != null ? centerOf(e.tgt) : null;
@@ -767,7 +768,7 @@ function endBattle() {
   save.streak = won ? null : { id: enc.id, n: save.streak && save.streak.id === enc.id ? save.streak.n + 1 : 1 };
   if (!won) {
     save.stats.losses++;
-    const offerEasy = save.streak.n >= (enc.boss ? 1 : 2) && save.diff !== 'cadet';
+    const offerEasy = save.streak.n >= (enc.boss ? 1 : 2) && save.diff !== 'cadet' && !UI.easyRun;
     const done = applyContracts(save, tally);
     persist(); SFX.lose(); if (Music.stinger) Music.stinger('defeat');
     const m = modal(`${paintedBanner('screen-defeat')}<div class="m-eyebrow danger">Defeat</div><h2>${esc(enc.name)}</h2>
@@ -822,7 +823,7 @@ function endBattle() {
     <div class="crate-row">${crate.map(id => `<button class="crate-card" data-crate="${id}" aria-label="Keep ${esc(D(id).name)}">${cardHTML(id)}<span class="crate-own">${crateCopies(id) > 1 ? '×' + crateCopies(id) + ' · ' : ''}${save.coll[id] ? 'You have ' + save.coll[id] : 'New'}</span></button>`).join('')}</div>
     <p class="muted small">${TOUCH.on ? 'Press and hold' : 'Right-click'} a card to read it first. The other two go back to the quartermaster.</p></div>`);
   unlocked.forEach(p => bits.push(`<div class="got power-got"><b>New commander power:</b> ${powerIco(p)} ${esc(HEROPOWERS[p].name)}: ${esc(HEROPOWERS[p].text)} <span class="muted">Equip it in the Hangar.</span></div>`));
-  if (newSector) bits.push(`<div class="got"><b>Deck size increased to ${deckSizeFor(save)}.</b> <span class="muted">Add ${Math.max(0, deckSizeFor(save) - save.deck.length)} cards in the Hangar before your next battle. A new pack set is available at the Supply Depot.</span></div>`);
+  if (newSector && DECK_SIZES[highestSector(save)] > DECK_SIZES[prevSector]) bits.push(`<div class="got"><b>Deck size increased to ${deckSizeFor(save)}.</b> <span class="muted">Add ${Math.max(0, deckSizeFor(save) - save.deck.length)} cards in the Hangar before your next battle. A new pack set is available at the Supply Depot.</span></div>`);
   if (graduated) bits.push('<div class="got"><b>Training complete. Three things are now open:</b><ul class="grad-list"><li><b>Supply Depot:</b> spend Credits on packs of new cards.</li><li><b>Crafting:</b> spare copies become Scrap; spend Scrap in the Hangar on the cards you want.</li><li><b>Anchorage:</b> your forward base. Spend Alloy there on upgrades.</li></ul><span class="muted">Each is explained in the Archive. Battles and contracts earn Credits and Alloy from now on.</span></div>');
   const unopened = unopenedPacks(save);
   const m = modal(`${paintedBanner('screen-victory')}<div class="m-eyebrow ok">Victory</div><h2>${esc(enc.name)}</h2>

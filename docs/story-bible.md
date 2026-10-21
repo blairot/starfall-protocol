@@ -31,7 +31,7 @@ The player is a new Fleet Academy graduate. HALCYON passes them, Admiral Okonkwo
 - **Ixis, Brood Queen**: hatched 2240, the first queen known to speak. She kept the Swarm quiet for fifty years and let it hear the Choir in 2290.
 - **Calculus Prime**: Forge governor since 2163, copied from **Unit Zero**. It matched the 2291 signal to its own Starfall sensor logs and judged organics the error. Unit Zero was never networked, so it never heard the song.
 - **Nyra, Void Hierarch**: heard the song at nine on a dark-lane crossing (2241) and answered. Hierarch since 2272. From 2290 she relit the coreward Lamps (the "door"). She sincerely believes she offers rest.
-- **The Choir / Herald of the Choir / The Devourer Eternal**: the song, the champion it builds, and the hunger underneath.
+- **The Choir / Herald of the Choir / The Last Voice**: the song, the champion it builds, and the hunger underneath.
 - Reborn bosses (Vex Reborn, Ixis Ascendant, Calculus Omega, Nyra Unbound, HALCYON Corrupted) are Choir **echoes** rebuilt in black glass, not resurrections.
 
 ## Anchorage

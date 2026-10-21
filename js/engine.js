@@ -93,7 +93,7 @@ function startTurn(s) {
   p.mana = Math.max(0, p.maxMana - p.locked);
   if (p.power) p.power.used = 0;
   p.heroAttacks = 0; p.spells = 0; p.played = 0;
-  for (const m of p.board) { m.sick = false; m.attacks = 0; }
+  for (const m of p.board) { m.sick = false; m.stolen = false; m.attacks = 0; }
   ev(s, { t: 'turn', pi });
   draw(s, pi, 1);
   fire(s, 'turnStart', pi);
@@ -245,6 +245,7 @@ function canAttack(s, pi, uid) {
     return c.heroAttacks < (twin ? 2 : 1);
   }
   if (c.attacks >= (c.kw.twin ? 2 : 1)) return false;
+  if (c.stolen) return false;   // taken this turn: it can't attack until its new owner's next turn
   if (c.sick && !c.kw.warp && !c.kw.blitz) return false;
   if (c.cantAttack) return false;
   return attackTargets(s, uid).length > 0;
@@ -312,6 +313,7 @@ function usePower(s, pi, tgt) {
 // ---------------------------------------------------------------- traps
 function trapCheck(s, owner, kind, info) {
   if (s.sim) return false; // the AI never "sees" hidden traps when planning
+  if (kind === 'spell' && info && info.card && info.card.id === 'energy_cell') return false;   // the Energy Cell is too small to bait a Trap
   const p = s.players[owner]; let cancel = false;
   for (const t of p.traps.slice()) {
     const d = D(t.id); if (d.trap !== kind) continue;
@@ -436,7 +438,7 @@ function steal(s, m, newOwner) {
   const from = s.players[m.owner], to = s.players[newOwner];
   from.board.splice(from.board.indexOf(m), 1);
   if (to.board.length >= MAX_BOARD) { from.grave.push(m.id); ev(s, { t: 'death', uid: m.uid, pi: m.owner, id: m.id }); return; }
-  m.owner = newOwner; m.sick = true; m.attacks = 0; to.board.push(m);
+  m.owner = newOwner; m.sick = true; m.stolen = true; m.attacks = 0; to.board.push(m);
   ev(s, { t: 'steal', uid: m.uid, pi: newOwner });
 }
 
@@ -458,7 +460,13 @@ function transform(s, m, id) {
 
 // Scan (discover): the human picks from up to three options; AIs pick the best.
 function scan(s, pi, pool, then) {
-  const uniq = [...new Set(pool)];
+  let uniq = [...new Set(pool)];
+  if (s.players[pi].isAI) {
+    const fac = {}; [...s.players[pi].deck, ...s.players[pi].hand].forEach(c => { const f = D(c.id).faction; fac[f] = (fac[f] || 0) + 1; });
+    const main = Object.keys(fac).sort((a, b) => fac[b] - fac[a])[0];
+    const own = uniq.filter(id => D(id).faction === main || D(id).faction === 'neutral');
+    if (own.length >= 3) uniq = own;
+  }
   const opts = shuffle(uniq).slice(0, 3);
   if (!opts.length) return;
   const p = s.players[pi];
@@ -524,6 +532,7 @@ function checkOver(s) {
 }
 
 function nextPhase(s, p) {
+  s._phased = (s._phased || 0) + 1;
   const ph = PHASES[p.phases.shift()];
   p.hp = p.maxHp = ph.hp; p.armor = ph.armor || 0; p.name = ph.name;
   p.power = ph.power ? { id: ph.power, used: 0 } : p.power;

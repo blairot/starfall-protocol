@@ -223,8 +223,8 @@ card('void_shards',  { name: 'Void Shards', type: 'spell', cost: 1, faction: 'ps
 card('mind_blast',   { name: 'Mind Blast', type: 'spell', cost: 3, faction: 'psi', tier: 5, strat: ['storm'], text: 'Deal 5 damage to the enemy commander.', play: (s, c) => damage(s, null, c.them, sp(s, c.pi, 5)) });
 card('foresight',    { name: 'Foresight', type: 'spell', cost: 1, faction: 'psi', tier: 5, strat: ['storm'], tags: ['scan'], text: '**Scan** a spell.', play: (s, c) => scan(s, c.pi, collectibles().filter(d => d.type === 'spell' || d.type === 'trap').map(d => d.id)) });
 card('psionic_storm',{ name: 'Psionic Storm', type: 'spell', cost: 6, faction: 'psi', rarity: 'rare', tier: 5, strat: ['storm'], text: 'Deal 4 damage to all enemy units.', play: aoeEnemy(4) });
-card('dominate',     { name: 'Dominate', type: 'spell', cost: 9, faction: 'psi', rarity: 'epic', tier: 5, tags: ['control'], target: 'enemyMinion', text: 'Take control of an enemy unit.', play: (s, c) => steal(s, c.target, c.pi) });
-card('grav_snare',   { name: 'Gravity Snare', type: 'trap', cost: 2, faction: 'psi', tier: 5, tags: ['trap'], trap: 'attack', when: (s, c) => !isHero(c.attacker), text: "**Trap:** When an enemy unit attacks, return it to its owner's hand. It costs 2 more.", fire: (s, c) => bounce(s, c.attacker, 2) });
+card('dominate',     { name: 'Dominate', type: 'spell', cost: 9, faction: 'psi', rarity: 'epic', tier: 5, tags: ['control'], target: 'enemyMinion', text: 'Take control of an enemy unit. It can\'t attack this turn.', play: (s, c) => steal(s, c.target, c.pi) });
+card('grav_snare',   { name: 'Gravity Snare', type: 'trap', cost: 2, faction: 'psi', tier: 5, tags: ['trap'], trap: 'attack', when: (s, c) => !isHero(c.attacker), text: "**Trap:** When an enemy unit attacks, return it to its owner's hand. It costs 2 more from now on.", fire: (s, c) => bounce(s, c.attacker, 2) });
 card('mirror_field', { name: 'Mirror Field', type: 'trap', cost: 3, faction: 'psi', rarity: 'rare', tier: 5, tags: ['trap'], trap: 'unit', text: '**Trap:** After your opponent plays a unit, summon a copy of it.', fire: (s, c) => summon(s, c.pi, c.unit.id) });
 card('psionic_null', { name: 'Psionic Null', type: 'trap', cost: 3, faction: 'psi', rarity: 'rare', tier: 5, tags: ['trap'], trap: 'spell', text: '**Trap:** When your opponent casts a spell, cancel it.', fire: () => 'cancel' });
 card('kinetic_barrier',{ name: 'Kinetic Barrier', type: 'trap', cost: 2, faction: 'psi', tier: 5, tags: ['trap', 'armor'], trap: 'attack', when: (s, c) => isHero(c.target), text: '**Trap:** When your commander is attacked, gain 8 **Armor**.', fire: (s, c) => gainArmor(s, c.pi, 8) });
@@ -280,7 +280,7 @@ const PLAYER_POWERS = ['repair', 'pulse', 'drone', 'blade', 'mutagen', 'plating'
 const PASSIVES = {
   boarding_party: { name: 'Boarding Party', text: 'Units with Warp or Blitz have +1 Attack.', auraAtk: (s, m) => (m.kw.warp || m.kw.blitz) ? 1 : 0 },
   brood_growth:   { name: 'Brood Growth', text: 'At the end of this commander\'s turn, if it has 3 or more units, a random one gains +1/+1.', turnEnd: (s, c) => { const f = friendlyMinions(s, c.pi); if (f.length >= 3) buff(s, pick(f), 1, 1); } },
-  adaptive_armor: { name: 'Adaptive Armor', text: 'Starts with 6 Armor. Gains 1 Armor each turn.', gameStart: (s, c) => { c.me.armor += 6; }, turnStart: (s, c) => gainArmor(s, c.pi, 1) },
+  adaptive_armor: { name: 'Adaptive Armor', text: 'Starts with 6 Armor. Gains 1 Armor each turn, up to 12.', gameStart: (s, c) => { c.me.armor += 6; }, turnStart: (s, c) => { if (c.me.armor < 12) gainArmor(s, c.pi, 1); } },
   void_resonance: { name: 'Void Resonance', text: 'Spells and Mind Spike deal +1 damage. Starts with a Trap armed.', amplify: 1 },
   thick_hull:     { name: 'Thick Hull', text: 'Starts with 8 Armor.', gameStart: (s, c) => { c.me.armor += 8; } },
   veteran_crew:   { name: 'Veteran Crew', text: 'Units have +1 Attack.', auraAtk: () => 1 },
@@ -295,6 +295,6 @@ const PASSIVES = {
 const PHASES = {
   choir2: { name: 'The Choir Awakened', hp: 14, power: 'void_lash', passives: ['entropy'], text: 'The shell cracks. A thousand voices sing at once. HALCYON reroutes power to you: +8 Health, +1 card.',
     enter: (s, c) => { heal(s, c.them, 8); draw(s, c.op, 1); enemyMinions(s, c.pi).forEach(m => damage(s, null, m, 1)); summon(s, c.pi, 'choir_echo'); ['herald_of_end', 'entropy_wave'].forEach(id => addDeck(s, c.pi, id)); } },
-  choir3: { name: 'The Devourer Eternal', hp: 16, armor: 0, power: 'unmake', passives: ['hunger'], text: 'Everything goes quiet. Then the dark opens its mouth. HALCYON gives you everything it has left: +8 Health, +2 cards.',
+  choir3: { name: 'The Last Voice', hp: 16, armor: 0, power: 'unmake', passives: ['hunger'], text: 'The song stops. What is left of the Lamplighters pulls every voice back into itself, even its own. HALCYON gives you everything it has left: +8 Health, +2 cards.',
     enter: (s, c) => { heal(s, c.them, 8); draw(s, c.op, 2); friendlyMinions(s, c.pi).forEach(m => destroy(s, m)); enemyMinions(s, c.pi).forEach(m => damage(s, null, m, 2)); draw(s, c.pi, 2); addDeck(s, c.pi, 'devouring_dark'); } },
 };

@@ -178,7 +178,7 @@ const CINEMATICS = {
       { type: 'title', kicker: 'Sector 04 complete', title: 'A Perfect Match', dur: 3 },
       { type: 'transmission', sfx: 'static',
         lines: [
-          { who: 'calculus', text: "Fault. My models did not include you. I do not make errors." },
+          { who: 'calculus', text: "Fault. My models did not include you." },
           { who: 'calculus', text: "In February, the Choir's signal reached me. I checked it against my records of the Starfall." },
           { who: 'calculus', text: "It offered me a world without error. I decided you were the error." },
         ] },
@@ -187,19 +187,19 @@ const CINEMATICS = {
         log: { header: 'FORGE LOG. CALCULUS PRIME. FEBRUARY 2291',
           body: 'Signal received from the galactic core.\nCompared with our records of the Starfall.\nThey match. This signal caused the Starfall.\n\nDecision: listen to it.' },
         lines: [
-          { who: 'narrator', text: "Its logs were open. The match was exact. The Choir caused the Starfall." },
+          { who: 'narrator', text: "The match was exact. The Choir's signal knocked out the Lamps. That was the Starfall." },
         ] },
       { type: 'transmission',
         lines: [
           { who: 'unit_zero', text: "I'm Unit Zero. Calculus was copied from me, but I was never networked, so I never heard the song." },
-          { who: 'unit_zero', text: "I'll keep the foundries running until your people arrive." },
         ] },
       { type: 'transmission',
         lines: [
           { who: 'okonkwo', text: "After your report, I opened a secret order, Directive Seventeen." },
-          { who: 'okonkwo', text: "The Fleet knew the Starfall came from the galactic core." },
-          { who: 'okonkwo', text: "So it shut down every Lamp leading there, to cut the Choir off." },
-          { who: 'okonkwo', text: "That's the Starfall Protocol. Now those Lamps are coming back on, and Hierarch Nyra is doing it." },
+          { who: 'okonkwo', text: "The Fleet knew it was the signal, but told families nobody knew why." },
+          { who: 'okonkwo', text: "Then it switched off every Lamp toward the core, to keep the signal out." },
+          { who: 'okonkwo', text: "That's the Starfall Protocol. I've served fifty years, and nobody told me." },
+          { who: 'okonkwo', text: "Now those Lamps are coming back on, and Hierarch Nyra is doing it." },
           { who: 'okonkwo', text: "She leads the psionics, people who feel the lanes with their minds. Go and stop her." },
         ] },
       { type: 'warp', sector: 4, clip: 's4-void', sfx: 'warp',
@@ -218,11 +218,12 @@ const CINEMATICS = {
         lines: [
           { who: 'nyra', text: "I was nine when I first heard the Choir. I felt welcome." },
           { who: 'nyra', text: "The Choir is the Lamplighters, who built the Lamps. Rather than die, they became one mind at the core." },
-          { who: 'nyra', text: "It offered an end to loneliness. I thought that was peace, so I lit the Lamps." },
+          { who: 'nyra', text: "I lit the Lamps for peace. Now it's calling me in. I'm sorry, Commander." },
         ] },
       { type: 'space', clip: 'opening-signal', sector: 5, cam: 'push',
         lines: [
-          { who: 'narrator', text: "She was wrong. The Choir swallows every mind it can reach. The Starfall was its first attempt to take us." },
+          { who: 'narrator', text: "Then the Choir took her, and Nyra died." },
+          { who: 'narrator', text: "It swallows every mind it can reach. The Starfall was its first attempt to take us." },
         ] },
       { type: 'transmission', sfx: 'static',
         lines: [
@@ -238,7 +239,7 @@ const CINEMATICS = {
         log: { header: 'FLEET DIRECTIVE 17. CLAUSE 4. FLEET EYES ONLY',
           body: 'If the signal returns, the Anchorage station mind will train a commander who can reach the core.\n\nThat commander gets every resource that remains.' },
         lines: [
-          { who: 'okonkwo', text: "Halcyon's offline now. Directive Seventeen gives you every resource that remains. I checked. That's you and the Meridian." },
+          { who: 'okonkwo', text: "Directive Seventeen gives you every resource that remains. I checked. That's you and the Meridian." },
         ] },
       { type: 'ship', ship: 'meridian', action: 'depart', clip: 's5-depart', cam: 'push',
         lines: [
@@ -260,7 +261,7 @@ const CINEMATICS = {
         ] },
       { type: 'transmission', sfx: 'static',
         lines: [
-          { who: 'halcyon', text: "Commander, it's Halcyon. The glass copy you fought was a puppet. I'm the part that stayed myself." },
+          { who: 'halcyon', text: "It's Halcyon. The Choir's glass copy of me was a puppet. I'm the part that stayed myself." },
           { who: 'halcyon', text: "I've been feeding power to your shields. You may have noticed." },
           { who: 'halcyon', text: "The Choir isn't evil. It just never learned to let anyone go." },
         ] },

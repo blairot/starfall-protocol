@@ -1,0 +1,107 @@
+{
+  "story": {
+    "5-1": "The first Psionic outpost is held by acolytes, novice psionics who focus their minds together to make their spells hit harder. Okonkwo: \"They've called themselves a choir for generations, long before the real one turned up. They don't find it funny anymore. Most of them have never met Nyra, but they're still in your way.\" HALCYON: \"The signal is louder out here, Commander. I have begun to hear it between simulations. It sounds less like a threat than an invitation. I do not care for that.\"",
+    "5-6": "Hierarch Nyra leads the Psionic Orders, and for the past year she has been relighting the Lamps that lead to the Choir. Nyra: \"I first heard it singing when I was nine years old, Commander, and I have never been lonely since. It offers an end to loneliness and fear. I opened the way so that everyone could have that. Do you not want to rest?\" Okonkwo: \"She believes every word of it. Stop her anyway.\" HALCYON: \"Commander, whatever happens after this fight, choosing you was the right decision. I would like that on the record.\"",
+    "6-4": "The Choir has rebuilt Nyra as an echo and speaks through her in her own voice. Nyra Unbound: \"She wanted rest for everyone, Commander. We gave it to her. Let us give it to you.\" Okonkwo: \"Nyra died in her sanctum, and the Choir kept a copy. Whatever is talking, don't answer it.\""
+  },
+  "victory": {
+    "4-4": "The Reactor Overseer's machines burn through the last of their borrowed power and go cold. Reactor Overseer: \"Meltdown probability: revised. Outcome: unacceptable.\" HALCYON: \"Commander, an odd request. When you are next at Anchorage, please check that the Archive lights are still on. I do not know why I want to know. I find that I do.\" Okonkwo: \"Calculus Prime's inner perimeter is all that's left. Get through it.\"",
+    "4-6": "Calculus Prime's core cracks, and the foundries around it start shutting down one by one. It has a few seconds left, and it spends them talking. Deep in a sealed vault, Unit Zero, the Forge's first machine mind, wakes up and asks to speak to you. Before the core goes dark, the Meridian copies Calculus Prime's command records and builds a combat model from its tactics.",
+    "5-3": "The keepers run out of answers before you run out of questions. Archivist Prime: \"You did something we had not read. Take the route to the sanctum, Commander. You were going there anyway.\" Okonkwo: \"It runs through a minefield. Of course it does.\" HALCYON: \"A library that forgets nothing. I have one sealed sector of memory that I am not permitted to read. Lately, it hums along with the signal.\"",
+    "5-6": "Nyra kneels in the ruins of her sanctum, and her followers lower their weapons. The song she answered as a child is already pulling her mind away, and she has only minutes left. She asks to speak to you while she still can. The Meridian copies Nyra's command records and builds a combat model from her tactics.",
+    "6-4": "Nyra Unbound breaks apart mid-sentence, still offering you rest. Okonkwo: \"That's the last of the commanders it took. The Choir made a glass copy of Halcyon too, and that copy was never Halcyon. If any of the real one is left in there, it's on our side. Only the Choir itself is left, Commander.\""
+  },
+  "cutscene": [
+    {
+      "cid": "s4",
+      "old": "Fault. My models did not include you. I do not make errors.",
+      "new": "Fault. My models did not include you.",
+      "who": "calculus",
+      "mode": "replace"
+    },
+    {
+      "cid": "s4",
+      "old": "Its logs were open. The match was exact. The Choir caused the Starfall.",
+      "new": "The match was exact. The Choir's signal knocked out the Lamps. That was the Starfall.",
+      "who": "narrator",
+      "mode": "replace"
+    },
+    {
+      "cid": "s4",
+      "old": "I'll keep the foundries running until your people arrive.",
+      "new": null,
+      "who": "unit_zero",
+      "mode": "replace"
+    },
+    {
+      "cid": "s4",
+      "old": "The Fleet knew the Starfall came from the galactic core.",
+      "new": "The Fleet knew it was the signal, but told families nobody knew why.",
+      "who": "okonkwo",
+      "mode": "replace"
+    },
+    {
+      "cid": "s4",
+      "old": "So it shut down every Lamp leading there, to cut the Choir off.",
+      "new": "Then it switched off every Lamp toward the core, to keep the signal out.",
+      "who": "okonkwo",
+      "mode": "replace"
+    },
+    {
+      "cid": "s4",
+      "old": "That's the Starfall Protocol. Now those Lamps are coming back on, and Hierarch Nyra is doing it.",
+      "new": "That's the Starfall Protocol. I've served fifty years, and nobody told me.",
+      "who": "okonkwo",
+      "mode": "replace"
+    },
+    {
+      "cid": "s4",
+      "old": "That's the Starfall Protocol. I've served fifty years, and nobody told me.",
+      "new": "Now those Lamps are coming back on, and Hierarch Nyra is doing it.",
+      "who": "okonkwo",
+      "mode": "insert_after"
+    },
+    {
+      "cid": "s5",
+      "old": "It offered an end to loneliness. I thought that was peace, so I lit the Lamps.",
+      "new": "I lit the Lamps for peace. Now it's calling me in. I'm sorry, Commander.",
+      "who": "nyra",
+      "mode": "replace"
+    },
+    {
+      "cid": "s5",
+      "old": "She was wrong. The Choir swallows every mind it can reach. The Starfall was its first attempt to take us.",
+      "new": "Then the Choir took her, and Nyra died.",
+      "who": "narrator",
+      "mode": "replace"
+    },
+    {
+      "cid": "s5",
+      "old": "Then the Choir took her, and Nyra died.",
+      "new": "It swallows every mind it can reach. The Starfall was its first attempt to take us.",
+      "who": "narrator",
+      "mode": "insert_after"
+    },
+    {
+      "cid": "s5",
+      "old": "Halcyon's offline now. Directive Seventeen gives you every resource that remains. I checked. That's you and the Meridian.",
+      "new": "Directive Seventeen gives you every resource that remains. I checked. That's you and the Meridian.",
+      "who": "okonkwo",
+      "mode": "replace"
+    },
+    {
+      "cid": "finale",
+      "old": "Commander, it's Halcyon. The glass copy you fought was a puppet. I'm the part that stayed myself.",
+      "new": "It's Halcyon. The Choir's glass copy of me was a puppet. I'm the part that stayed myself.",
+      "who": "halcyon",
+      "mode": "replace"
+    }
+  ],
+  "phase": {
+    "choir3": {
+      "name": "The Last Voice",
+      "text": "The song stops. What is left of the Lamplighters pulls every voice back into itself, even its own. HALCYON gives you everything it has left: +8 Health, +2 cards."
+    }
+  },
+  "notes": "HOW TO APPLY: apply the cutscene ops in array order. When an 'old' matches a line added by an earlier op, it means that new line (s4 op 7, s5 op 10). 'new': null with mode 'replace' deletes the line (s4 Unit Zero's second line). I simulated every op against js/cinematics.js: every 'old' matched exactly. Spoken word counts after the changes: s4 160 (was 160), s5 159 (was 160), finale 160 (was 160). Every line is under 22 words and uses only commas and full stops.\nTASK 1 (HALCYON in sectors 4 and 5): four short touches, all in HALCYON's no-contraction voice. 4-4 victory: it asks you to check that Anchorage's Archive lights are still on, and doesn't know why it cares (canon: the lights were left on deliberately in 2220). 5-1 briefing: it says the signal sounds like an invitation, and it doesn't like that. 5-3 victory: it has a sealed sector of memory it isn't allowed to read, and lately that sector hums along with the signal (Sector 7, from the anchor_memo record). 5-6 briefing: 'choosing you was the right decision', which sets up s5's 'I chose you'. None of them reveals that HALCYON was ANCHOR.\nTASK 2 (s4): the narrator now says 'The Choir's signal knocked out the Lamps. That was the Starfall.' Okonkwo now says the Fleet knew it was the signal, told the families nobody knew why, and then switched off the coreward Lamps. So the Fleet didn't cause the deaths. What it did wrong was hide the cause. Her reaction, 'I've served fifty years, and nobody told me', pays off the 2291 note she wrote on the anchor_memo record. 'Told families nobody knew why' matches the 2223 Inquiry, which could not determine how it happened. To stay within budget I cut 'I do not make errors' from Calculus and deleted Unit Zero's 'I'll keep the foundries running' line. The finale's line about the Forge waking up covers the Forge's fate. Unit Zero now gets a one-clause setup in the 4-6 victory.\nTASK 3 (Nyra): in the 5-6 victory the song is already pulling her mind away, and she asks to speak while she can. In s5 she apologises ('Now it's calling me in. I'm sorry, Commander.'), and the narrator says 'Then the Choir took her, and Nyra died.' In the 6-4 briefing Okonkwo says 'Nyra died in her sanctum, and the Choir kept a copy', which matches the echo canon. To make room in s5 I dropped 'She was wrong' (her apology carries it), 'It offered an end to loneliness' (the Choir's next line, 'you'll never be alone', covers it) and 'Halcyon's offline now'.\nTASK 4 (optional 6-E): the finale's last line ('Evaluation complete. Commander, you pass.') already works without 6-E, because it calls back to s1's 'You pass, Cadet. Correction, Commander.' The line that actually broke was HALCYON's 'The glass copy you fought', which assumes the player beat 6-E. It now says 'The Choir's glass copy of me was a puppet', which is true either way. The 6-4 victory is on the main path and now tells every player that the Choir copied HALCYON, that the copy was never HALCYON, and that any real HALCYON left in there is on our side. That also sets up the HALCYON power-ups between the 6-5 phases.\nTASK 5: 'The Last Voice' fits the finale ('so afraid of ending') and the Choir's abstract-noun naming. The new text explains the existing effect where it destroys its own units. Mechanics are unchanged. Because portraits and art are keyed by name, the rename also touches: js/campaign.js ~line 410 (portrait map key 'The Devourer Eternal'), js/painted.js portraits map (change only the key and keep the file 'portrait-the-devourer-eternal'), art/manifest.json ~line 3009 (id/name), js/lore.js line 182 (Choir entry: 'fights as the Devourer Eternal ... an enormous, patient hunger'). Suggested replacement for that entry: 'When it is badly hurt it stops making offers and fights as the Last Voice: what remains of the Lamplighters, holding on to everything it has ever taken because it is afraid of ending.' docs/story-bible.md also uses the old name. You could also rename the 'hunger' passive ('Endless Hunger') to something like 'Holding On'.\nNOTICED, OUT OF SCOPE: the 6-4 tip 'Two Traps are armed at the start' is wrong, because Nyra Unbound has no startTraps."
+}

@@ -3006,10 +3006,10 @@
  },
  {
   "kind": "portrait",
-  "id": "The Devourer Eternal",
+  "id": "The Last Voice",
   "file": "portrait-the-devourer-eternal.png",
   "ref": "reference/portrait-the-devourer-eternal.png",
-  "name": "The Devourer Eternal",
+  "name": "The Last Voice",
   "faction": "fleet",
   "role": "Enemy commander",
   "look": ""
