@@ -262,7 +262,9 @@ const Cinema = (() => {
 // clip in video/loop). One <video> per clip, always playing; mount() moves it into
 // whichever element currently asks for it (data-loop), so redraws never restart it.
 // ============================================================================
-const PORTRAIT_LOOPS = { 'HALCYON': 'halcyon-idle', 'HALCYON (Corrupted)': 'halcyon-corrupted' };
+// a loop only plays once its clip exists (js/videos.js); until then the portrait stays a still
+const PORTRAIT_LOOPS = { 'HALCYON': 'halcyon-idle', 'HALCYON (Corrupted)': 'halcyon-corrupted', 'Ixis, Brood Queen': 'ixis-idle',
+  'Calculus Prime': 'calculus-idle', 'The Choir Awakened': 'choir-idle', 'Nyra, Void Hierarch': 'nyra-idle' };
 const PortraitLoop = (() => {
   const pool = {};
   const clipFor = name => { const c = name && PORTRAIT_LOOPS[name]; return c && !REDUCED && Cinema.videoSrc(c) ? c : null; };

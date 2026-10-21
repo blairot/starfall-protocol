@@ -15,7 +15,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 SRC = os.path.join(ROOT, 'video', 'incoming')
 SIZES = {'1080': (1920, 1080, 24), '720': (1280, 720, 27)}   # width, height, quality (lower = better, bigger)
 # portrait loops (a character's portrait brought to life, shown in square frames): clip -> horizontal centre of the face (0..1)
-LOOPS = {'halcyon-idle': 0.51, 'halcyon-corrupted': 0.5}
+LOOPS = {'halcyon-idle': 0.51, 'halcyon-corrupted': 0.5, 'ixis-idle': 0.5, 'calculus-idle': 0.5, 'choir-idle': 0.5, 'nyra-idle': 0.5}
 LOOP_SIZE, LOOP_CRF, LOOP_BLEND = 480, 26, 0.5   # pixels square, quality, seconds of crossfade that hides the loop seam
 
 
