@@ -169,7 +169,13 @@ function aiActions(s, pi) {
   const acts = [], p = s.players[pi];
   p.hand.forEach((c, hi) => {
     if (!canPlay(s, pi, hi)) return;
-    const ts = cardTargets(s, pi, c);
+    let ts = cardTargets(s, pi, c);
+    // EMP: never wipe your own unit unless it has nothing to lose (a unit card with no other target still plays)
+    if ((D(c.id).tags || []).includes('emp')) {
+      const mine = u => { const m = p.board.find(x => x.uid === u); return m && !m.silenced && (D(m.id).text || Object.keys(m.kw || {}).some(k => m.kw[k])); };
+      const keep = ts.filter(u => !mine(u));
+      if (keep.length) ts = keep; else if (D(c.id).type !== 'unit') return;
+    }
     if (ts.length) ts.forEach(t => acts.push({ k: 'play', hi, t, id: c.id }));
     else acts.push({ k: 'play', hi, t: null, id: c.id });
   });

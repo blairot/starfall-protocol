@@ -54,7 +54,7 @@ function cardText(id, costNow) {
 function cardFull(id) {
   const d = D(id);
   const lines = [cardText(id), `  id: ${id} · faction: ${d.faction}${d.strat ? ' · strategy: ' + d.strat : ''}`];
-  (d.kw || []).forEach(k => KEYWORDS[k] && lines.push(`  ${KEYWORDS[k].name}: ${KEYWORDS[k].text}`));
+  [...new Set([...(d.kw || []), ...(d.tags || []), ...(d.kwRef || [])])].forEach(k => KEYWORDS[k] && lines.push(`  ${KEYWORDS[k].name}: ${KEYWORDS[k].text}`));
   if (d.flavor) lines.push(`  "${d.flavor.replace(/^"|"$/g, '')}"`);
   return lines.join('\n');
 }
@@ -102,6 +102,9 @@ function brief(save, enc) {
   (enc.previews || []).filter(k => !save.codex.includes(k) && !teach.includes(k) && KEYWORDS[k]).forEach(k => say(`IN YOUR REWARDS: ${KEYWORDS[k].name}: ${KEYWORDS[k].text}`));
   const reward = save.cleared[enc.id] ? 'replay reward' : [fn('describeEncReward')(enc, save), enc.unlockPowers ? 'a new commander power' : '', enc.grant ? (enc.elite ? Object.keys(enc.grant).map(id => D(id).name).join(' + ') : 'a supply crate of new cards') : ''].filter(Boolean).join(' + ');
   say(`Reward: ${(reward || 'Training credit').replace(/<[^>]+>/g, '')}`);
+  const obs = fn('stationLv')(save, 'observatory');
+  if (obs && !enc.fixedDeck) { const cnt = {}; e.deck.forEach(id => cnt[id] = (cnt[id] || 0) + 1); const ids = obs >= 2 ? Object.keys(cnt).sort((a, b) => D(a).cost - D(b).cost) : Object.keys(cnt).sort((a, b) => fn('cardRating')(b) - fn('cardRating')(a)).slice(0, 4);
+    say(`DEEP-SCAN INTEL (Observatory Mk ${obs}): ${obs >= 2 ? 'full deck list' : 'key cards'}: ${ids.map(id => D(id).name + (obs >= 2 && cnt[id] > 1 ? ' x' + cnt[id] : '')).join(', ')}`); }
   say(enc.fixedDeck ? 'This simulation uses a standard training deck.' : `Your deck: ${save.deck.length}/${fn('deckSizeFor')(save)} cards.`);
 }
 function cutscene(cid) {
@@ -152,7 +155,7 @@ function describe(s, evs, nm) {
       case 'phase': lines.push(`!! ${e.name} rises! ${e.text || ''}`); break;
       case 'equip': lines.push(`${who(e.pi)} equipped ${D(e.id).name}.`); break;
       case 'freeze': lines.push(`  ${n(e.uid)} was frozen.`); break;
-      case 'silence': lines.push(`  ${n(e.uid)} was silenced.`); break;
+      case 'silence': lines.push(`  ${n(e.uid)} was hit by EMP (card text, buffs and keywords wiped).`); break;
       case 'transform': lines.push(`  ${n(e.uid)} was transformed.`); break;
       case 'bounce': lines.push(`  ${n(e.uid)} returned to hand.`); break;
       case 'summon': if (!evs.some(x => x.t === 'play' && x === e)) { /* summoned by an effect */ } break;
@@ -259,7 +262,7 @@ function finish(run, save, b, s) {
   if (rw.alloy) fn('ensureStation')(save).alloy += rw.alloy;
   if (rw.scrap) save.scrap += rw.scrap;
   if (rw.legendary) fn('gainCard')(save, rw.legendary);
-  const crate = firstClear ? fn('crateChoice')(enc) : null, granted = [];
+  const crate = firstClear ? fn('crateChoice')(enc, save) : null, granted = [];
   if (firstClear && enc.grant && !crate) Object.entries(enc.grant).forEach(([id, n]) => { fn('grantCard')(save, id, n); for (let k = 0; k < n; k++) granted.push(id); });
   const loaded = firstClear && enc.sector === 0 && !enc.elite && granted.length ? fn('academyLoad')(save, [...new Set(granted)]) : [];
   const unlocked = [];
@@ -291,7 +294,7 @@ Campaign:  new [--diff cadet|officer|admiral] [--name N] [--from <sector 2-6>]  
            deck   deck add <card> | deck remove <card> | deck autofill | deck clear   card <card>   codex
            power list | power set <id>   difficulty <cadet|officer|admiral>
            packs   buy <tier>   open <tier>   crate <card>   collection [filter]
-           station   upgrade <module>   craft <card>   scrap <card>   signature <card>   achievements   event <id> [n]
+           station   upgrade <module>   craft <card>   scrap <card>   signature <card>   achievements   event <id> [n]   archive [n]
 Battle:    launch <mission> [--easy]   mulligan <n...> | keep   look
            play <handNo|"card name"> [target]   attack <attacker> <target>   power [target]   choose <n>   end   concede
 Targets:   E0 = enemy commander, E1..E7 = enemy units left to right; A0 = you, A1..A7 = your units.
@@ -374,6 +377,7 @@ function main(argv) {
       if (!fn('canPlay')(s, 0, hi)) return say(`Can't play ${D(c.id).name}: ${fn('whyCantPlay')(s, 0, hi)}`);
       const tg = fn('cardTargets')(s, 0, c); let t;
       if (tg.length) { t = args[1] ? uidOf(s, args[1]) : null; if (!t && !D(c.id).targetOptional) return say(`${D(c.id).name} needs a target: ${tg.map(u => refOf(s, u)).join(' ')}`); if (t && !tg.includes(t)) return say(`Not a valid target. Valid: ${tg.map(u => refOf(s, u)).join(' ')}`); }
+      if (D(c.id).target && !tg.length) say(`(No valid target right now, so ${D(c.id).name}'s targeted effect does nothing.)`);
       a = { k: 'play', hi, t };
     } else if (cmd === 'attack') {
       const at = uidOf(s, args[0]), t = uidOf(s, args[1]);
@@ -434,10 +438,17 @@ function main(argv) {
       break;
     }
     case 'upgrade': { if (!fn('canUpgrade')(save, args[0])) return say('Can\'t upgrade that now (unknown module, not enough Alloy, maxed, or the Reactor must be upgraded first).'); fn('upgradeModule')(save, args[0]); fn('achieve')(save).forEach(x => say(`SERVICE RECORD: ${x.name} +${x.reward} Credits`)); persist(); const m = g('STATION').mods[args[0]]; say(`${m.name} upgraded to Mk ${fn('stationLv')(save, args[0])}: ${m.levels[fn('stationLv')(save, args[0]) - 1]} Alloy left: ${save.station.alloy}.`); break; }
-    case 'craft': { const id = findCard(args.join(' ')); if (!id) return say('No such card.'); if (!fn('canCraft')(save, id)) return say(`Can't craft ${D(id).name}: needs ${fn('craftCostOf')(save, D(id).rarity)} Scrap (you have ${save.scrap}), its set must be unlocked, and you can own at most ${fn('maxCopies')(D(id))}.`); fn('craftCard')(save, id); fn('achieve')(save).forEach(x => say(`SERVICE RECORD: ${x.name} +${x.reward} Credits`)); persist(); say(`Crafted ${D(id).name}. Scrap left: ${save.scrap}.`); break; }
-    case 'scrap': { const id = findCard(args.join(' ')); if (!id || !save.coll[id]) return say('You don\'t own that card.'); fn('scrapCard')(save, id); persist(); say(`Scrapped ${D(id).name} for ${ECON.scrapValue[D(id).rarity]} Scrap. Scrap: ${save.scrap}.`); break; }
+    case 'craft': { if (!args.length) return say('Usage: craft <card name or id>'); const id = findCard(args.join(' ')); if (!id) return say('No such card.'); if (!fn('canCraft')(save, id)) return say(`Can't craft ${D(id).name}: needs ${fn('craftCostOf')(save, D(id).rarity)} Scrap (you have ${save.scrap}), its set must be unlocked, and you can own at most ${fn('maxCopies')(D(id))}.`); fn('craftCard')(save, id); fn('achieve')(save).forEach(x => say(`SERVICE RECORD: ${x.name} +${x.reward} Credits`)); persist(); say(`Crafted ${D(id).name}. Scrap left: ${save.scrap}.`); break; }
+    case 'scrap': { if (!args.length) return say('Usage: scrap <card name or id>'); const id = findCard(args.join(' ')); if (!id || !save.coll[id]) return say('You don\'t own that card.'); fn('scrapCard')(save, id); persist(); say(`Scrapped ${D(id).name} for ${ECON.scrapValue[D(id).rarity]} Scrap. Scrap: ${save.scrap}.`); break; }
     case 'signature': { if (fn('stationLv')(save, 'armory') < 2) return say('A signature card needs the Armory at Mk 2 (station).'); const id = findCard(args.join(' ')); if (!id || !save.coll[id]) return say('You don\'t own that card.'); save.signature = id; persist(); say(`Signature card: ${D(id).name}. It starts in your opening hand when it's in your deck.`); break; }
     case 'achievements': { const done = save.ach || {}; say(`SERVICE RECORD ${Object.keys(done).length}/${g('ACHIEVEMENTS').length} (each pays Credits):`); g('ACHIEVEMENTS').forEach(a => { const pr = !done[a.id] && a.progress ? a.progress(save) : null; say(`  ${done[a.id] ? '[x]' : '[ ]'} ${a.name} (+${a.reward}): ${a.text}${pr ? ` ${pr[0]}/${pr[1]}` : ''}`); }); break; }
+    case 'archive': {
+      const lim = fn('archiveLimit')(save), recs = (g('LORE').archive || []);
+      say(`ARCHIVE (Archive module Mk ${fn('stationLv')(save, 'archive')}): ${Math.min(lim, recs.length)} of ${recs.length} records recovered.`);
+      recs.slice(0, lim).forEach((r, k) => say(args[0] == k + 1 ? `== ${r.title}
+${r.body}` : `  ${k + 1}. ${r.title}`));
+      if (lim && args[0] == null) say('Read one with: archive <n>'); break;
+    }
     case 'event': {
       const ev = g('EVENTS').find(e => e.id === args[0]); if (!ev) return say('No such event. Your status lists the ones on the map.');
       if (!fn('eventOpen')(save, ev)) return say('That stop is not on your route yet.'); if (fn('eventDone')(save, ev)) return say('You have already been there.');
@@ -451,11 +462,11 @@ function main(argv) {
     }
     case 'packs': {
       if (!fn('economyOpen')(save)) return say('The Supply Depot unlocks after you graduate the Academy.');
-      say(`Supply Depot · Credits ${save.credits} · a pack costs ${ECON.packPrice} Credits (${ECON.packSize} cards)`);
+      say(`Supply Depot · Credits ${save.credits} · a pack costs ${fn('packPriceOf')(save)} Credits (${ECON.packSize} cards)`);
       PACK_SETS.forEach((p, i) => { if (fn('setUnlocked')(save, i + 1)) say(`  tier ${i + 1}: ${p.name}${save.packs[i + 1] ? ' · you have ' + save.packs[i + 1] + ' unopened' : ''}`); });
       break;
     }
-    case 'buy': { const t = +args[0]; if (!fn('economyOpen')(save) || !fn('setUnlocked')(save, t)) return say('That pack is not available.'); if (save.credits < ECON.packPrice) return say(`Not enough Credits (${save.credits}/${ECON.packPrice}).`); save.credits -= ECON.packPrice; save.packs[t] = (save.packs[t] || 0) + 1; persist(); say(`Bought a ${PACK_SETS[t - 1].name}. Credits left: ${save.credits}.`); break; }
+    case 'buy': { const t = +args[0]; if (!fn('economyOpen')(save) || !fn('setUnlocked')(save, t)) return say('That pack is not available.'); const price = fn('packPriceOf')(save); if (save.credits < price) return say(`Not enough Credits (${save.credits}/${price}).`); save.credits -= price; save.packs[t] = (save.packs[t] || 0) + 1; persist(); say(`Bought a ${PACK_SETS[t - 1].name}. Credits left: ${save.credits}.`); break; }
     case 'open': {
       const t = +args[0]; if (!save.packs[t]) return say('No unopened pack of that tier.');
       seed(Math.floor(Math.random() * 2 ** 31) ^ Date.now());

@@ -17,7 +17,7 @@ const STATION = {
     fabricator:  { name: 'Fabricator', icon: 'wrench', pos: [79, 30], max: 3, cost: [30, 70, 120],
       levels: ['Crafting costs 10% less Scrap.', 'Crafting costs 20% less Scrap.', 'Crafting costs 30% less Scrap.'] },
     dock:        { name: 'Trade Dock', icon: 'dock', pos: [88, 63], max: 3, cost: [30, 70, 120],
-      levels: ['Battles pay 10% more Credits.', 'Battles pay 20% more Credits.', 'Battles pay 30% more Credits, and Supply Packs cost 90.'] },
+      levels: ['Battles pay 10% more Credits.', 'Battles pay 20% more Credits.', 'Battles pay 30% more Credits, and Supply Packs cost 110.'] },
     comms:       { name: 'Comms Array', icon: 'antenna', pos: [50, 13], max: 3, cost: [30, 70, 120],
       levels: ['A third contract slot.', 'Contracts pay 50% more Credits.', 'A fourth contract slot.'] },
     observatory: { name: 'Deep-Scan Observatory', icon: 'scope', pos: [12, 63], max: 3, cost: [30, 70, 120],

@@ -802,7 +802,7 @@ function endBattle() {
   if (rw.alloy) ensureStation(save).alloy += rw.alloy;
   if (rw.scrap) save.scrap += rw.scrap;
   const legendScrap = rw.legendary ? gainCard(save, rw.legendary) : 0;
-  const granted = [], crate = firstClear ? crateChoice(enc) : null;
+  const granted = [], crate = firstClear ? crateChoice(enc, save) : null;
   if (firstClear && enc.grant && !crate) Object.entries(enc.grant).forEach(([id, n]) => { grantCard(save, id, n); for (let k = 0; k < n; k++) granted.push(id); });
   const loaded = firstClear && enc.sector === 0 && !enc.elite && granted.length ? academyLoad(save, [...new Set(granted)]) : [];
   const unlocked = [];
@@ -1305,7 +1305,7 @@ function renderHangar() {
   const craft = Hangar.mode === 'craft';
   const base = craft ? CARD_LIST.filter(d => !d.token && setUnlocked(save, d.tier)) : Object.keys(save.coll).filter(id => save.coll[id] > 0).map(D);
   const owned = base
-    .filter(d => Hangar.filter === 'all' || d.type === Hangar.filter)
+    .filter(d => Hangar.filter === 'all' || (Hangar.filter === 'missing' ? (save.coll[d.id] || 0) < maxCopies(d) : d.type === Hangar.filter))
     .filter(d => Hangar.cost < 0 || (Hangar.cost >= 7 ? d.cost >= 7 : d.cost === Hangar.cost))
     .filter(d => !Hangar.q || (d.name + ' ' + d.text).toLowerCase().includes(Hangar.q.toLowerCase()))
     .filter(d => !Hangar.strat || (d.strat || []).includes(Hangar.strat))
@@ -1323,12 +1323,13 @@ function renderHangar() {
   const cmax = Math.max(1, ...curve);
   const types = { unit: 0, spell: 0, gear: 0, trap: 0 }; save.deck.forEach(id => types[D(id).type]++);
   const powers = save.powers.map(p => { const h = HEROPOWERS[p]; return `<button class="pw ${save.power === p ? 'on' : ''}" data-pw="${p}"><span class="pw-i">${powerIco(p)}</span><span><b>${esc(h.name)}</b><br><span class="muted">${esc(h.text)}</span></span></button>`; }).join('') || '<p class="muted">Commander powers unlock in Sector 1.</p>';
-  const tabs = [['all', 'All'], ['unit', 'Units'], ['spell', 'Protocols'], ['gear', 'Gear'], ['trap', 'Traps']].filter(([k]) => k === 'all' || base.some(d => d.type === k));
+  const tabs = [['all', 'All'], craft ? ['missing', 'Missing'] : null, ['unit', 'Units'], ['spell', 'Protocols'], ['gear', 'Gear'], ['trap', 'Traps']].filter(x => x && (x[0] === 'all' || x[0] === 'missing' || base.some(d => d.type === x[0])));
+  const setDone = craft ? base.filter(d => (save.coll[d.id] || 0) >= maxCopies(d)).length : 0;
   $('#hangar').innerHTML = `<div class="nav-shell hangar-wrap">
     ${cmdBar(save, 'hangar')}
     <div class="sub-head"><div><div class="sh-tag">Fleet logistics</div><h1>Hangar</h1></div><span class="muted">Build your deck and choose your commander power.</span><button class="btn primary" id="h-done">Done</button></div>
     <div class="mode-bar">${economyOpen(save) ? `<div class="seg"><button class="${craft ? '' : 'on'}" data-mode="deck">Build deck</button><button class="${craft ? 'on' : ''}" data-mode="craft">Craft cards</button></div>` : ''}
-      <span class="muted small">${craft ? 'Every card from the sets you have reached. Click one to craft it with Scrap, or scrap spare copies.' : (TOUCH.on ? 'Tap a card to add it. Tap a deck entry to remove it. Press and hold any card to read it.' : 'Click a card to add it. Click a deck entry to remove it. Right-click any card to read it.') + ' Up to 2 copies (1 Legendary).'}</span></div>
+      <span class="muted small">${craft ? `Every card from the sets you have reached: you have <b>${setDone} of ${base.length}</b> complete. Click one to craft it with Scrap, or scrap spare copies. <b>Missing</b> shows only the cards you still need.` : (TOUCH.on ? 'Tap a card to add it. Tap a deck entry to remove it. Press and hold any card to read it.' : 'Click a card to add it. Click a deck entry to remove it. Right-click any card to read it.') + ' Up to 2 copies (1 Legendary).'}</span></div>
     <div class="hangar-body">
       <section class="coll">
         <div class="filters">${tabs.map(([k, l]) => `<button class="chipbtn ${Hangar.filter === k ? 'on' : ''}" data-f="${k}">${l}</button>`).join('')}

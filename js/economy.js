@@ -13,7 +13,7 @@ const ECON = {
   odds: { common: 0.735, rare: 0.23, epic: 0.028, legendary: 0.007 },
   pityEpic: 15,        // an Epic is guaranteed at least once every 15 packs
   pityLegendary: 35,   // a Legendary at least once every 35 packs
-  freshChance: 0.35,   // chance a Common/Rare/Epic slot avoids cards you already own (Legendaries always avoid duplicates); duplicates become Scrap for crafting
+  freshChance: 0.5,    // chance a Common/Rare/Epic slot avoids cards you already own (Legendaries always avoid duplicates); duplicates become Scrap for crafting
   scrapValue: { common: 5, rare: 20, epic: 100, legendary: 400 },
   craftCost: { common: 40, rare: 100, epic: 400, legendary: 1600 },
   winCredits: { normal: 25, elite: 50, boss: 75 },      // a first clear always pays more than a replay
@@ -32,7 +32,7 @@ const ECON = {
 // Module data and the station screen live in station.js; the numbers that
 // touch the economy and battles live here so the headless sim sees them.
 function stationLv(save, id) { return (save && save.station && save.station.mods[id]) || 0; }
-function packPriceOf(save) { return stationLv(save, 'dock') >= 3 ? Math.round(ECON.packPrice * 0.9 / 5) * 5 : ECON.packPrice; }
+function packPriceOf(save) { return stationLv(save, 'dock') >= 3 ? ECON.packPrice - 15 : ECON.packPrice; }
 function craftCostOf(save, rarity) { return Math.round(ECON.craftCost[rarity] * (1 - 0.1 * stationLv(save, 'fabricator')) / 5) * 5; }
 function contractSlotsOf(save) { const c = stationLv(save, 'comms'); return ECON.contractSlots + (c >= 1 ? 1 : 0) + (c >= 3 ? 1 : 0); }
 function contractRewardOf(save, id) { return Math.round(CONTRACTS[id].reward * (stationLv(save, 'comms') >= 2 ? 1.5 : 1)); }
@@ -125,7 +125,7 @@ function setProgress(save, tier) {
 // stat: which battle tally counts toward it. avail: when it can be offered.
 const CONTRACTS = {
   wins3:    { text: 'Win 3 battles', stat: 'wins', goal: 3, reward: 40 },
-  units25:  { text: 'Deploy 25 units', stat: 'units', goal: 25, reward: 40 },
+  units25:  { text: 'Play 25 unit cards', stat: 'units', goal: 25, reward: 40 },
   kills30:  { text: 'Destroy 30 enemy units', stat: 'kills', goal: 30, reward: 50 },
   face60:   { text: 'Deal 60 damage to enemy commanders', stat: 'face', goal: 60, reward: 50 },
   spells12: { text: 'Cast 12 Protocols', stat: 'spells', goal: 12, reward: 40, avail: s => s.codex.includes('spells') },
@@ -187,7 +187,18 @@ function battleRewards(save, enc, firstClear) {
 }
 // Missions from Sector 2 on offer a choice: keep one of up to three cards from the supply crate.
 // Academy missions hand out their teaching cards; optional missions give their named cards.
-function crateChoice(enc) { return enc.grant && enc.sector >= 1 && !enc.elite ? Object.keys(enc.grant).slice(0, 3) : null; }
+// A crate offers the mission's three cards; with a save, any you already own in full is swapped for a
+// card of the same rarity from that set you still need (when there is one), so a crate is never all duplicates.
+function crateChoice(enc, save) {
+  if (!(enc.grant && enc.sector >= 1 && !enc.elite)) return null;
+  const out = Object.keys(enc.grant).slice(0, 3); if (!save) return out;
+  const full = id => (save.coll[id] || 0) >= maxCopies(D(id));
+  return out.map((id, k) => {
+    if (!full(id)) return id;
+    const alt = setCards(D(id).tier).filter(d => d.rarity === D(id).rarity && !full(d.id) && !out.includes(d.id));
+    return alt.length ? pick(alt).id : id;
+  }).filter((id, k, a) => a.indexOf(id) === k);
+}
 // One copy per crate pick, so a later pack copy is a useful second copy rather than Scrap.
 function crateCopies(id) { return 1; }
 

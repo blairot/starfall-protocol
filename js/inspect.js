@@ -252,7 +252,9 @@ function archivePage(sec, save) {
     return `<div class="m-eyebrow">Archive // Mission logs</div><h2>Mission logs</h2><p class="muted">Replay the story so far. New logs are recorded as you clear each sector.</p><div class="cine-list">${items}</div>`;
   }
   if (sec === 'manual') {
-    const list = Object.keys(KEYWORDS).map(k => save && save.codex.includes(k)
+    // a keyword is in the manual once a mission teaches it or a card you own uses it
+    const owned = new Set(); Object.keys((save && save.coll) || {}).forEach(id => { const d = CARDS[id]; if (d) [...(d.kw || []), ...(d.tags || []), ...(d.kwRef || [])].forEach(k => owned.add(k)); });
+    const list = Object.keys(KEYWORDS).map(k => save && (save.codex.includes(k) || owned.has(k))
       ? `<div class="cx"><b>${esc(KEYWORDS[k].name)}</b><span>${esc(KEYWORDS[k].text)}</span></div>`
       : '<div class="cx locked"><b>???</b><span>Not yet encountered.</span></div>').join('');
     return `<div class="m-eyebrow">Field manual</div><h2>Rules & keywords</h2><div class="codex">${list}</div>`;

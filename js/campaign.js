@@ -162,7 +162,7 @@ const ENCOUNTERS = [
     victory: 'Kade\'s ship pulls away with its guns cold. Kade: "First contract I\'ve ever handed back. Keep your head, Commander. Somebody else will want it." Mox: "Forty-one for forty-one, then you. Kade will be hearing about that for years."',
     tips: ['Kade\'s units all have +1 Attack. Trade carefully: they hit harder than their cards say.'] },
 
-  { id: '2-5', sector: 1, name: 'Wreck Run',
+  { id: '2-5', sector: 1, grant: { rail_rifle: 1, wreck_gunner: 1, boarding_crew: 1 }, name: 'Wreck Run',
     enemy: { name: 'Raider Wing Leader', hp: 30, ai: 2, power: 'blade', deck: dk('boarding_crew:2 scrap_rat:2 smuggler:2 det_bot:2 shadow_corsair:1 plunderer:2 mine_layer:1 scrap_golem:1 plasma_cutlass:1 shock_baton:1 broadside:1 hover_tank:2 interceptor:2') },
     story: 'Sable\'s coordinates put Vex\'s flagship, the Bad Debt, in the debris field beside Lamp 9, and Vex\'s best pilots are waiting to stop you reaching it. Wing Leader: "Captain says nobody goes near the Lamp. Captain says it\'s hers. Turn around, Fleet." Mox: "They learned to fly in the junk out here. Don\'t follow them into it."',
     victory: 'The Wing Leader\'s pilots scatter into the junk, and the way to the Bad Debt is open. Wing Leader: "Go on, then. The Captain hasn\'t been herself for months. Maybe you can tell her."',
@@ -208,7 +208,7 @@ const ENCOUNTERS = [
     tips: ['The Swarm wins by numbers. Area damage like Flak Barrage and Broadside is very strong here.', 'Hive Mind gives every unit summoned after it +1 Attack. Kill it first.'],
     grant: { hive_mind: 1, broodmother: 1, spawn_surge: 1, frenzied_ripper: 1 } },
 
-  { id: '3-4', sector: 2, name: 'Apex Predator',
+  { id: '3-4', sector: 2, grant: { thornback: 1, venom_tender: 1, chitin_guard: 1 }, name: 'Apex Predator',
     enemy: { name: 'Ripper Alpha', hp: 32, ai: 2, power: 'mutagen', deck: dk('frenzied_ripper:3 hive_reaper:2 devourer_worm:2 acid_spitter:2 venom_stinger:2 rapid_mutation:2 toxic_spitter:2 blood_leech:2 chitin_guard:2 lamprey:2 hover_tank:2 toxic_spitter:2') },
     story: 'The biggest Swarm hunter the Fleet has ever recorded is picking off your scouts, and its brood grows stronger the longer the fight drags on. Okonkwo: "The scouts call it the Alpha. Nobody who got close enough came back with a better name. Swarm hunters used to work alone. Since the Choir started singing, this one brings its brood. Kill the brood as fast as it grows, Commander, or it buries you."',
     victory: 'The Alpha finally goes down, and its brood scatters without it. Okonkwo: "The scouts would like to suggest a better name for it now. Most of their suggestions aren\'t printable."',
@@ -220,7 +220,7 @@ const ENCOUNTERS = [
     victory: 'The Hivewarden falls, and its brood stops growing. Okonkwo: "We had orders to leave that thing alone because we were afraid of it. I\'ll add a line to the Aurora\'s old log. Somebody should know it\'s done."',
     tips: ['Brood Growth gives a random enemy unit +1/+1 every turn. The longer the fight, the more it favours the Warden.'] },
 
-  { id: '3-5', sector: 2, name: 'Queen\'s Guard',
+  { id: '3-5', sector: 2, grant: { infest: 1, venom_graft: 1, lamprey: 1 }, name: 'Queen\'s Guard',
     enemy: { name: 'Royal Guard Thorax', hp: 34, ai: 2, power: 'spawn_brood', deck: dk('chitin_guard:3 lamprey:2 hive_reaper:2 acid_spitter:2 venom_stinger:2 broodmother:2 hive_mind:1 hive_surge:2 life_drain:2 spore_carrier:2 larva:2 devourer_worm:1 rapid_mutation:2') },
     story: 'Royal Guard Thorax and its chamber guard stand between you and the Swarm\'s queen, Ixis. Okonkwo: "Thorax was bred for one job: nobody reaches the queen. It is very good at that job. Its wall is thick, some of it feeds on wounds, and the poisonous ones wait behind it. Spend spells here, not your best units."',
     victory: 'Thorax falls in the doorway it was bred to hold, and the queen\'s chamber is open. The hum on the Meridian\'s radio is loudest here, and it is coming from inside. Okonkwo: "Nobody has ever got this far, Commander. The queen steers the whole brood, and the Choir is singing straight to her. Ixis is waiting."',
