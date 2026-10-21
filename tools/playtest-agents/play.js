@@ -271,7 +271,7 @@ function finish(run, save, b, s) {
 
 // ---------------------------------------------------------------- commands
 const HELP = `Starfall playtest harness. Usage: node tools/playtest-agents/play.js <run> <command> [args]
-Campaign:  new [--diff cadet|officer|admiral] [--name N]   status   brief <mission>   cutscene <id>
+Campaign:  new [--diff cadet|officer|admiral] [--name N] [--from <sector 2-6>]   status   brief <mission>   cutscene <id>
            deck   deck add <card> | deck remove <card> | deck autofill | deck clear   card <card>   codex
            power list | power set <id>   difficulty <cadet|officer|admiral>
            packs   buy <tier>   open <tier>   crate <card>   collection [filter]
@@ -287,7 +287,36 @@ function main(argv) {
   if (cmd === 'new') {
     const diff = args.includes('--diff') ? args[args.indexOf('--diff') + 1] : 'officer';
     const name = args.includes('--name') ? args[args.indexOf('--name') + 1] : 'Commander';
-    const save = fn('newSave')(name, diff); writeJ(run, 'save.json', save); delJ(run, 'battle.json'); writeJ(run, 'results.json', []);
+    const save = fn('newSave')(name, diff); delJ(run, 'battle.json'); writeJ(run, 'results.json', []);
+    const from = args.includes('--from') ? +args[args.indexOf('--from') + 1] : 1;
+    if (from > 1) {
+      // Start at a later sector with a typical save: every earlier mission (and optional mission) cleared
+      // with its normal rewards, packs opened as they arrive and bought when affordable, crates picked,
+      // and the deck rebuilt from what you own. Cutscenes for skipped sectors are listed, not shown.
+      seed(Date.now() & 0x7fffffff);
+      for (const enc of ENCOUNTERS.filter(e => e.sector < from - 1)) {
+        save.cleared[enc.id] = true; save.stats.wins++;
+        const rw = fn('battleRewards')(save, enc, true);
+        save.credits += rw.credits; if (rw.packs) save.packs[rw.packTier] = (save.packs[rw.packTier] || 0) + rw.packs;
+        if (enc.graduation) ['packs', 'crafting', 'anchorage'].forEach(k => save.codex.includes(k) || save.codex.push(k));
+        if (rw.alloy) fn('ensureStation')(save).alloy += rw.alloy;
+        if (rw.legendary) fn('gainCard')(save, rw.legendary);
+        const crate = fn('crateChoice')(enc);
+        if (crate) fn('grantCard')(save, crate[0], fn('crateCopies')(crate[0])); else if (enc.grant) Object.entries(enc.grant).forEach(([id, n]) => fn('grantCard')(save, id, n));
+        if (enc.unlockPowers) enc.unlockPowers.forEach(pw => save.powers.includes(pw) || save.powers.push(pw));
+        [...(enc.teaches || []), ...(enc.teachesAlso || []), ...(enc.previews || [])].forEach(k => save.codex.includes(k) || save.codex.push(k));
+        if (fn('economyOpen')(save)) {
+          const tier = Math.min(fn('highestSector')(save) + 1, PACK_SETS.length);
+          while (save.credits >= ECON.packPrice) { save.credits -= ECON.packPrice; save.packs[tier] = (save.packs[tier] || 0) + 1; }
+          Object.keys(save.packs).forEach(t => { while (save.packs[t] > 0) { save.packs[t]--; fn('openPack')(save, +t); } });
+        }
+      }
+      if (!save.power && save.powers.length) save.power = save.powers[0];
+      save.deck = []; fn('autoFillDeck')(save, fn('deckSizeFor')(save));
+      say(`Started at Sector ${from} with a typical save: Sectors 1 to ${from - 1} cleared (including optional missions), rewards collected, deck auto-built from your collection (${save.deck.length} cards). Review it with: deck / collection.`);
+      say(`Story so far (cutscenes you would have seen): ${Object.entries(CINE_AFTER).filter(([id]) => save.cleared[id]).map(([, c]) => c).join(', ')}. Read any with: cutscene <id>`);
+    }
+    writeJ(run, 'save.json', save);
     say(`New campaign "${run}" on ${DIFFICULTY[diff].name}: ${DIFFICULTY[diff].text}`);
     say('The game opens with this cutscene:'); cutscene('opening'); say(''); status(save);
     return;
