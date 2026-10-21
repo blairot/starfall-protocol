@@ -91,7 +91,7 @@ function openPackFlow(tier) {
     if (done) return; done = true;
     save.packs[tier]--; if (!save.packs[tier]) delete save.packs[tier];
     const res = openPack(save, tier);
-    persist();
+    const got = achieve(save); persist(); achieveToast(got);
     const cut = 10.5, pts = [];
     for (let i = 0; i <= 20; i++) pts.push([i * 5, cut + (i % 2 ? 1.4 : -1.1) + (Math.random() - 0.5) * 1.6]);
     const line = pts.map(([x, y]) => `${x}% ${y.toFixed(2)}%`).join(', ');
@@ -184,7 +184,7 @@ function craftDialog(id, back) {
       <div class="m-actions left"><button class="btn ghost" data-a="back">Back</button></div></div></div>`, 'wide');
   m.onclick = e => {
     const a = e.target.dataset.a; if (!a) return;
-    if (a === 'craft' && craftCard(save, id)) { SFX.heal(); persist(); toast(`Crafted ${esc(d.name)}.`); return craftDialog(id, back); }
+    if (a === 'craft' && craftCard(save, id)) { SFX.heal(); const got = achieve(save); persist(); toast(`Crafted ${esc(d.name)}.`); achieveToast(got); return craftDialog(id, back); }
     if (a === 'scrap' && scrapCard(save, id)) { SFX.death(); persist(); toast(`Scrapped ${esc(d.name)} for ${val} Scrap.`); return craftDialog(id, back); }
     if (a === 'back') { closeModal(); if (back) back(); }
   };

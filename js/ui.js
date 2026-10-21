@@ -127,6 +127,9 @@ function tipFor(t) {
 }
 
 // ---------------------------------------------------------------- toasts, modals
+// newly unlocked achievements: a toast each (the reward is already paid by achieve())
+function achieveToast(list) { (list || []).forEach((a, i) => setTimeout(() => toast(`Service record: <b>${esc(a.name)}</b> +${a.reward} Credits`, 3200), 400 + i * 900)); }
+
 function toast(msg, ms) {
   const t = document.createElement('div'); t.className = 'toast'; t.innerHTML = msg;
   $('#toasts').appendChild(t);
@@ -770,6 +773,7 @@ function endBattle() {
     save.stats.losses++;
     const offerEasy = save.streak.n >= (enc.boss ? 1 : 2) && save.diff !== 'cadet' && !UI.easyRun;
     const done = applyContracts(save, tally);
+    achieve(save, { won: false, enc, s, easy: UI.easyRun });
     persist(); SFX.lose(); if (Music.stinger) Music.stinger('defeat');
     const m = modal(`${paintedBanner('screen-defeat')}<div class="m-eyebrow danger">Defeat</div><h2>${esc(enc.name)}</h2>
       <p>Your forces pull back to regroup. Adjust your deck in the Hangar and try again.</p>
@@ -825,6 +829,8 @@ function endBattle() {
   unlocked.forEach(p => bits.push(`<div class="got power-got"><b>New commander power:</b> ${powerIco(p)} ${esc(HEROPOWERS[p].name)}: ${esc(HEROPOWERS[p].text)} <span class="muted">Equip it in the Hangar.</span></div>`));
   if (newSector && DECK_SIZES[highestSector(save)] > DECK_SIZES[prevSector]) bits.push(`<div class="got"><b>Deck size increased to ${deckSizeFor(save)}.</b> <span class="muted">Add ${Math.max(0, deckSizeFor(save) - save.deck.length)} cards in the Hangar before your next battle. A new pack set is available at the Supply Depot.</span></div>`);
   if (graduated) bits.push('<div class="got"><b>Training complete. Three things are now open:</b><ul class="grad-list"><li><b>Supply Depot:</b> spend Credits on packs of new cards.</li><li><b>Crafting:</b> spare copies become Scrap; spend Scrap in the Hangar on the cards you want.</li><li><b>Anchorage:</b> your forward base. Spend Alloy there on upgrades.</li></ul><span class="muted">Each is explained in the Archive. Battles and contracts earn Credits and Alloy from now on.</span></div>');
+  const earned = achieve(save, { won: true, enc, s, easy: UI.easyRun }); persist();
+  if (earned.length) bits.push(`<div class="got"><b>Service record:</b> ${earned.map(a => `<span class="chip">${esc(a.name)}</span>`).join(' ')} <span class="muted">+${earned.reduce((n, a) => n + a.reward, 0)} Credits</span></div>`);
   const unopened = unopenedPacks(save);
   const m = modal(`${paintedBanner('screen-victory')}<div class="m-eyebrow ok">Victory</div><h2>${esc(enc.name)}</h2>
     ${enc.victory && firstClear ? `<p class="story">${esc(enc.victory)}</p>` : ''}

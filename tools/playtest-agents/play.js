@@ -18,7 +18,7 @@ const vm = require('vm'), fs = require('fs'), path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const RUNS = path.join(__dirname, 'runs');
-const FILES = ['build', 'engine', 'cards', 'strategies', 'ai', 'campaign', 'economy', 'station', 'decks', 'lore', 'cinematics'];
+const FILES = ['build', 'engine', 'cards', 'strategies', 'ai', 'campaign', 'economy', 'station', 'achievements', 'decks', 'lore', 'cinematics'];
 
 // ---------------------------------------------------------------- the game, headless
 let rngState = 1;
@@ -235,6 +235,7 @@ function finish(run, save, b, s) {
   const tally = Object.assign({}, s.tally || {});
   if (!won) {
     save.stats.losses++;
+    fn('achieve')(save, { won: false, enc, s, easy: b.easy });
     fn('applyContracts')(save, tally).forEach(c => say(`Contract complete: ${g('CONTRACTS')[c.id].text} (+${fn('contractRewardOf')(save, c.id)} Credits)`));
     say(`== DEFEAT: ${enc.name}`);
     say('Your forces pull back to regroup. Adjust your deck in the Hangar and try again.');
@@ -279,6 +280,7 @@ function finish(run, save, b, s) {
   if (newSector && fn('deckSizeFor')(save) > DECK_SIZES_PREV) say(`Deck size increased to ${fn('deckSizeFor')(save)}. Add ${Math.max(0, fn('deckSizeFor')(save) - save.deck.length)} cards before your next battle. A new pack set is at the Supply Depot.`);
   if (graduated) say('Training complete. Three things are now open: Supply Depot (spend Credits on packs of new cards); Crafting (spare copies become Scrap; spend Scrap in the Hangar on the cards you want); Anchorage (your forward base; spend Alloy there on upgrades). Each is explained in the Archive (command: codex). Battles and contracts earn Credits and Alloy from now on.');
   if (fn('economyOpen')(save)) say(`Wallet: ${save.credits} Credits · ${save.scrap} Scrap · ${fn('ensureStation')(save).alloy} Alloy · unopened packs: ${Object.values(save.packs).reduce((a, c) => a + c, 0)}`);
+  fn('achieve')(save, { won: true, enc, s, easy: b.easy }).forEach(a => say(`SERVICE RECORD: ${a.name} (${a.text}) +${a.reward} Credits`));
   if (CINE_AFTER[enc.id] && firstClear) say(`A cutscene plays now. Watch it with: cutscene ${CINE_AFTER[enc.id]}`);
 }
 
@@ -288,7 +290,7 @@ Campaign:  new [--diff cadet|officer|admiral] [--name N] [--from <sector 2-6>]  
            deck   deck add <card> | deck remove <card> | deck autofill | deck clear   card <card>   codex
            power list | power set <id>   difficulty <cadet|officer|admiral>
            packs   buy <tier>   open <tier>   crate <card>   collection [filter]
-           station   upgrade <module>   craft <card>   scrap <card>   signature <card>
+           station   upgrade <module>   craft <card>   scrap <card>   signature <card>   achievements
 Battle:    launch <mission> [--easy]   mulligan <n...> | keep   look
            play <handNo|"card name"> [target]   attack <attacker> <target>   power [target]   choose <n>   end   concede
 Targets:   E0 = enemy commander, E1..E7 = enemy units left to right; A0 = you, A1..A7 = your units.
@@ -430,10 +432,11 @@ function main(argv) {
         say(`  ${id.padEnd(12)} ${m.name} Mk ${lv}/${m.max}${lv ? ' — now: ' + m.levels[lv - 1] : ''}${cost != null ? ` · next (${cost} Alloy${lv >= cap ? ', needs a stronger Reactor first' : ''}): ${m.levels[lv]}` : ' · fully upgraded'}${fn('canUpgrade')(save, id) ? ' [READY]' : ''}`); });
       break;
     }
-    case 'upgrade': { if (!fn('canUpgrade')(save, args[0])) return say('Can\'t upgrade that now (unknown module, not enough Alloy, maxed, or the Reactor must be upgraded first).'); fn('upgradeModule')(save, args[0]); persist(); const m = g('STATION').mods[args[0]]; say(`${m.name} upgraded to Mk ${fn('stationLv')(save, args[0])}: ${m.levels[fn('stationLv')(save, args[0]) - 1]} Alloy left: ${save.station.alloy}.`); break; }
-    case 'craft': { const id = findCard(args.join(' ')); if (!id) return say('No such card.'); if (!fn('canCraft')(save, id)) return say(`Can't craft ${D(id).name}: needs ${fn('craftCostOf')(save, D(id).rarity)} Scrap (you have ${save.scrap}), its set must be unlocked, and you can own at most ${fn('maxCopies')(D(id))}.`); fn('craftCard')(save, id); persist(); say(`Crafted ${D(id).name}. Scrap left: ${save.scrap}.`); break; }
+    case 'upgrade': { if (!fn('canUpgrade')(save, args[0])) return say('Can\'t upgrade that now (unknown module, not enough Alloy, maxed, or the Reactor must be upgraded first).'); fn('upgradeModule')(save, args[0]); fn('achieve')(save).forEach(x => say(`SERVICE RECORD: ${x.name} +${x.reward} Credits`)); persist(); const m = g('STATION').mods[args[0]]; say(`${m.name} upgraded to Mk ${fn('stationLv')(save, args[0])}: ${m.levels[fn('stationLv')(save, args[0]) - 1]} Alloy left: ${save.station.alloy}.`); break; }
+    case 'craft': { const id = findCard(args.join(' ')); if (!id) return say('No such card.'); if (!fn('canCraft')(save, id)) return say(`Can't craft ${D(id).name}: needs ${fn('craftCostOf')(save, D(id).rarity)} Scrap (you have ${save.scrap}), its set must be unlocked, and you can own at most ${fn('maxCopies')(D(id))}.`); fn('craftCard')(save, id); fn('achieve')(save).forEach(x => say(`SERVICE RECORD: ${x.name} +${x.reward} Credits`)); persist(); say(`Crafted ${D(id).name}. Scrap left: ${save.scrap}.`); break; }
     case 'scrap': { const id = findCard(args.join(' ')); if (!id || !save.coll[id]) return say('You don\'t own that card.'); fn('scrapCard')(save, id); persist(); say(`Scrapped ${D(id).name} for ${ECON.scrapValue[D(id).rarity]} Scrap. Scrap: ${save.scrap}.`); break; }
     case 'signature': { if (fn('stationLv')(save, 'armory') < 2) return say('A signature card needs the Armory at Mk 2 (station).'); const id = findCard(args.join(' ')); if (!id || !save.coll[id]) return say('You don\'t own that card.'); save.signature = id; persist(); say(`Signature card: ${D(id).name}. It starts in your opening hand when it's in your deck.`); break; }
+    case 'achievements': { const done = save.ach || {}; say(`SERVICE RECORD ${Object.keys(done).length}/${g('ACHIEVEMENTS').length} (each pays Credits):`); g('ACHIEVEMENTS').forEach(a => { const pr = !done[a.id] && a.progress ? a.progress(save) : null; say(`  ${done[a.id] ? '[x]' : '[ ]'} ${a.name} (+${a.reward}): ${a.text}${pr ? ` ${pr[0]}/${pr[1]}` : ''}`); }); break; }
     case 'packs': {
       if (!fn('economyOpen')(save)) return say('The Supply Depot unlocks after you graduate the Academy.');
       say(`Supply Depot · Credits ${save.credits} · a pack costs ${ECON.packPrice} Credits (${ECON.packSize} cards)`);
@@ -444,7 +447,7 @@ function main(argv) {
     case 'open': {
       const t = +args[0]; if (!save.packs[t]) return say('No unopened pack of that tier.');
       seed(Math.floor(Math.random() * 2 ** 31) ^ Date.now());
-      save.packs[t]--; const got = fn('openPack')(save, t); persist();
+      save.packs[t]--; const got = fn('openPack')(save, t); fn('achieve')(save).forEach(x => say(`SERVICE RECORD: ${x.name} +${x.reward} Credits`)); persist();
       say(`You tear open the ${PACK_SETS[t - 1].name}:`);
       got.forEach(c => say(`  ${c.rarity.toUpperCase()}${c.isNew ? ' NEW' : ''}: ${cardText(c.id)}${c.scrap ? ' (duplicate beyond the limit: +' + c.scrap + ' Scrap)' : ''}`));
       break;

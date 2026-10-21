@@ -61,7 +61,7 @@ function gainCard(save, id) {
   return 0;
 }
 function canCraft(save, id) { const d = D(id); return !d.token && setUnlocked(save, d.tier) && (save.coll[id] || 0) < maxCopies(d) && save.scrap >= craftCostOf(save, d.rarity); }
-function craftCard(save, id) { if (!canCraft(save, id)) return false; save.scrap -= craftCostOf(save, D(id).rarity); save.coll[id] = (save.coll[id] || 0) + 1; return true; }
+function craftCard(save, id) { if (!canCraft(save, id)) return false; save.scrap -= craftCostOf(save, D(id).rarity); save.coll[id] = (save.coll[id] || 0) + 1; save.stats.crafted = (save.stats.crafted || 0) + 1; return true; }
 function scrapCard(save, id) {
   const d = D(id); if (!(save.coll[id] > 0)) return false;
   save.coll[id]--; if (!save.coll[id]) delete save.coll[id];

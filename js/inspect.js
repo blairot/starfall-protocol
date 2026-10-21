@@ -202,6 +202,7 @@ function archiveSections(save) {
     ['cinematics', 'Mission logs', `${((save && save.seenCine) || []).length}/${Object.keys(typeof CINEMATICS !== 'undefined' ? CINEMATICS : {}).length}`],
     ['h', 'Anchorage'],
     ['records', 'Recovered records', `${recs.filter(r => r.unlock <= lim).length}/${recs.length}`],
+    ['achievements', 'Service record', `${achievementCount(save)}/${ACHIEVEMENTS.length}`],
     ['h', 'Field manual'],
     ['manual', 'Rules & keywords'], ['controls', 'Controls'],
   ];
@@ -225,6 +226,14 @@ function archivePage(sec, save) {
   if (sec === 'cards') {
     const seen = CARD_LIST.filter(d => !d.token);
     return `<div class="m-eyebrow">Archive // Card dossiers</div><h2>Card dossiers</h2><p class="muted">Every card you own has a dossier. Right-click any card in the game to open it.</p><div class="arch-cards">${cardList(seen, save)}</div>`;
+  }
+  if (sec === 'achievements') {
+    const done = (save && save.ach) || {}, groups = [...new Set(ACHIEVEMENTS.map(a => a.group))];
+    return `<div class="m-eyebrow">Anchorage // Personnel file</div><h2>Service record</h2><p class="muted">${achievementCount(save)} of ${ACHIEVEMENTS.length} commendations. Each one pays Credits when you earn it.</p>` +
+      groups.map(g => `<h3>${esc(g)}</h3><div class="ach-list">${ACHIEVEMENTS.filter(a => a.group === g).map(a => {
+        const got = done[a.id], pr = !got && save && a.progress ? a.progress(save) : null;
+        return `<div class="ach ${got ? 'got' : ''}"><div class="ach-name">${esc(a.name)}<span class="ach-reward">+${a.reward}</span></div><div class="ach-text">${esc(a.text)}</div>${pr ? `<div class="ach-bar"><i style="width:${Math.round(100 * pr[0] / pr[1])}%"></i></div><div class="ach-prog">${pr[0]}/${pr[1]}</div>` : ''}${got ? `<div class="ach-date">Earned ${new Date(got).toLocaleDateString()}</div>` : ''}</div>`;
+      }).join('')}</div>`).join('');
   }
   if (sec === 'records') {
     const lim = save ? archiveLimit(save) : 0, lv = save ? stationLv(save, 'archive') : 0;

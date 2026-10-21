@@ -136,7 +136,7 @@ function renderStation() {
     if (up) {
       const id = up.dataset.up;
       if (upgradeModule(save, id)) {
-        persist(); SFX.heal(); renderStation();
+        const got = achieve(save); persist(); SFX.heal(); renderStation(); achieveToast(got);
         const n = $(`.stn-node[data-mod="${id}"]`); if (n) burstAt(n.getBoundingClientRect(), '#4fd2ec', 40);
         toast(`${esc(STATION.mods[id].name)} ${stationLv(save, id) > 1 ? 'upgraded to Mk ' + stationLv(save, id) : 'is back online'}.`);
       }
