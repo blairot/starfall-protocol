@@ -94,6 +94,7 @@ console.log('mission  kind   deck  ' + LEVELS.map(l => `L${l} win%  turns  hpLef
 for (const enc of order) {
   rebuild(save);
   const r = { id: enc.id, name: enc.name, kind: enc.boss ? 'BOSS' : enc.elite ? 'elite' : 'main', sector: enc.sector, deck: enc.fixedDeck ? 'fixed' : save.deck.length + '/' + fn('deckSizeFor')(save), levels: {} };
+  if (ONLY && !ONLY.includes(enc.id)) { clear(save, enc); continue; }   // --only: still progress the campaign, skip the games
   for (const L of LEVELS) {
     let w = 0, turns = 0, hp = 0;
     for (let k = 0; k < GAMES; k++) { let res; try { res = play(save, enc, L); } catch (e) { res = { win: false, turns: 0, hp: 0 }; } if (res.win) { w++; hp += res.hp; } turns += res.turns; }

@@ -1,0 +1,50 @@
+{
+  "story": {
+    "3-2": "A Leech Matron nests here, breeding Swarm organisms whose bites heal their own side. The Meridian's radio picks up a faint hum from the nest, the same hum that ran through the Bad Debt's cables. Okonkwo: \"Every bite they land patches them up. Don't leave anything half dead out there, Commander. Finish what you start, or they will.\"",
+    "3-3": "A Brood Tender, a walking breeding chamber, is turning out new Swarm faster than you can count them. Okonkwo: \"This is how the brood tripled in a year. Ixis started listening to the Choir, and her breeders haven't stopped since. Every turn you give it, there will be more of them. So don't give it many turns.\"",
+    "3-4": "The biggest Swarm hunter the Fleet has ever recorded is picking off your scouts, and its brood grows stronger the longer the fight drags on. Okonkwo: \"The scouts call it the Alpha. Nobody who got close enough came back with a better name. Swarm hunters used to work alone. Since the Choir started singing, this one brings its brood. Kill the brood as fast as it grows, Commander, or it buries you.\"",
+    "3-E": "The Hivewarden is an ancient guardian beast, older than the Swarm Wars, the Fleet's long war that ended with the Swarm fenced inside this nebula. Its brood grows stronger every turn it lives. Okonkwo: \"I saw it once from the bridge of my old ship, the Aurora. We had orders to leave it alone, and I was glad of them. You have no such orders. This fight is optional.\""
+  },
+  "victory": {
+    "1-6": "HALCYON: \"Evaluation complete. I am told this is where I say congratulations. Congratulations.\" In the gallery, Admiral Okonkwo is already on her feet and heading down to meet you.",
+    "2-6": "The Bad Debt's guns fall silent, and her crew scramble for the lifeboats. Vex stays aboard and opens a channel to the Meridian. Before the ship goes dark, the Meridian copies Vex's command records and builds a combat model from her tactics.",
+    "3-3": "The Brood Tender falls, and for the first time in a year the nebula has fewer Swarm in it than it did yesterday. Okonkwo: \"Something big is picking off our scouts further in. Stay sharp.\"",
+    "3-5": "Thorax falls in the doorway it was bred to hold, and the queen's chamber is open. The hum on the Meridian's radio is loudest here, and it is coming from inside. Okonkwo: \"Nobody has ever got this far, Commander. The queen steers the whole brood, and the Choir is singing straight to her. Ixis is waiting.\"",
+    "3-6": "Ixis sinks to the floor of her chamber, and across the nebula her brood stops fighting. She has just enough strength left to speak. Before her signals fade, the Meridian copies Ixis's command records and builds a combat model from her tactics.",
+    "4-6": "Calculus Prime's core cracks, and the foundries around it start shutting down one by one. It has a few seconds left, and it spends them talking. Before the core goes dark, the Meridian copies Calculus Prime's command records and builds a combat model from its tactics.",
+    "5-6": "Nyra kneels in the ruins of her sanctum, and her followers lower their weapons. She asks to speak to you before the end. Before she goes, the Meridian copies Nyra's command records and builds a combat model from her tactics."
+  },
+  "cutscene": [
+    {
+      "cid": "s1",
+      "old": "Simulation complete. You pass, Cadet. Correction, Commander.",
+      "new": "You pass, Cadet. Correction, Commander."
+    },
+    {
+      "cid": "s1",
+      "old": "Commander, I'm Admiral Okonkwo. I run this Academy, and I'd like you back alive.",
+      "new": "Well done, Commander. I run this Academy, and I'd like you back alive."
+    },
+    {
+      "cid": "s1",
+      "old": "There's a dead Lamp out there, Lamp Nine. It's started humming, and the machines near it are failing.",
+      "new": "There's a dead Lamp out there, Lamp Nine. After the Starfall, we shut it down for good."
+    },
+    {
+      "cid": "s1",
+      "old": "Go and find out why. Anchorage is nearby, so use it as your base.",
+      "new": "Now it's humming, and nearby machines are failing. Find out why, and use Anchorage as your base."
+    },
+    {
+      "cid": "s2",
+      "old": "You hear it too, don't you? It calls itself the Choir.",
+      "new": "You hear it too, don't you? It sings from the centre of the galaxy. It calls itself the Choir."
+    },
+    {
+      "cid": "s2",
+      "old": "So that's the Choir. It offers you what you want most, then it does your thinking for you.",
+      "new": null
+    }
+  ],
+  "notes": "SECTOR 3 THREAD (task 1). Each touched field adds one or two sentences that build toward 3-6 without spoiling s3's reveal (that the Choir took the queen and spoke through her). 3-2 story: the Meridian hears the same hum that ran through the Bad Debt's cables, so the Choir is here. 3-3 story: Okonkwo says why the brood tripled (Ixis started listening to the Choir). 3-4 story: the Swarm behaves out of character since the song started (a lone hunter now brings its brood). 3-5 victory: the hum is loudest from the queen's chamber, and Okonkwo gives the reason the Fleet is pushing toward Ixis (the queen steers the whole brood, and the Choir is singing straight to her). The existing 3-6 line 'the whole nebula pulses in time with the Choir's song' then pays it off. The 3-5 victory also drops 'End it.', since the 3-6 briefing says it one screen later. 3-3 victory fixes Priya's 'hunting them' ambiguity (it is our scouts being hunted), which also sets up 3-4 cleanly.\n\nVICTORY/CUTSCENE REPETITION (task 2). Boss victory texts now give only the immediate battlefield beat, plus a hand-off into the cutscene ('opens a channel', 'just enough strength left to speak', 'spends them talking', 'asks to speak to you'). Everything removed is still delivered by the cutscene that follows:\n- 1-6: commission, Meridian, Belt orders and Lamp 9, all in s1.\n- 2-6: the Choir, its offer, its takeover of Vex, the Swarm and Okonkwo's clearance, all in s2.\n- 3-6: the Choir held the queen, the Swarm scattered, the signal is on the Forge band, the Forge has been silent since February, course for the Forge. All in s3.\n- 4-6: the February match, the Choir caused the Starfall, Directive 17 and Nyra, all in s4.\n- 5-6: the Lamplighters, absorption, the Starfall as a first attempt, Nyra believing in peace and the way to the core, all in s5.\nThe 2-6 trim also removes the vague 'it took her'. s2's 'the Choir took her mind with it' now stands alone as the cause of death.\nThe 1-6 victory keeps 'Evaluation complete' because the 6-E victory quotes it as HALCYON's old words and the finale echoes it. 'You pass' now lives only in s1, so the verdict is said once.\ns1 changes:\n- HALCYON no longer repeats 'Simulation complete'.\n- Okonkwo no longer re-introduces herself. The subtitle shows her name, and 'Well done, Commander' greets instead. She keeps 'I run this Academy'.\n- The Lamp 9 history (shut down for good after the Starfall) moves from the old 1-6 victory into her spoken lines, where Priya said it should land.\nLamp numbering: every spoken line says 'Lamp Nine', and all on-screen text (briefings, victories, intros) says 'Lamp 9'. The new 1-6 victory doesn't name the Lamp.\ns2: Mox's 'So that's the Choir. It offers you what you want most...' was the third retelling, after Vex's 'it says that to everyone' and 'I wasn't giving the orders', so it is deleted. The old victory carried one fact the cutscene lacked (the Choir is the signal from the centre of the galaxy), and that is folded into Vex's first line. s2 was 166 spoken words, over budget; it is now 156. s1 stays in budget at 159.\ns3, s4 and s5 need no cutscene changes, because their redundancy lived in the victory texts.\n\nLEGENDARY CARDS (task 3). bossCard is set on 2-6 (vex), 3-6 (ixis), 4-6 (calculus) and 5-6 (nyra). All four die or are absorbed, and each returns as a Choir echo in Sector 6. Each victory now ends with the same clause: 'Before ..., the Meridian copies [name]'s command records and builds a combat model from her/its tactics.' This matches existing canon: HALCYON's hardest sims are built from Okonkwo's records, which is why her card (she is alive) is the 1-6 reward. Every Legendary is now a combat model built from a commander's records, and 1-6 needs no change.\n\nSMALL FIXES (task 4). 3-E now glosses 'Swarm Wars' as 'the Fleet's long war that ended with the Swarm fenced inside this nebula'. The Sector 3 intro (SECTORS[2].intro, outside this schema) also says 'since the Swarm Wars' with no explanation, and it is actually the first mention, so consider the same gloss there.\n'since February' in s3 stays. It is canon: the Forge went silent in February 2291, and the game uses real calendar months in-world (14 March 2219, 2 February 2220). s4, the Sector 4 intro and several Sector 4 texts all say February, so changing only s3 would break consistency.\nThe Progenitor line in s3 stays. The narrator already defines it in plain words, and any one-line fix would add words to a cutscene already near its cap.\n\nNOT CHANGED: the s2 log body's 'New course: the Hive Nebula', which jars with Vex being parked at Lamp 9 (on-screen log text, not a spoken line in this schema). Also left alone: the shared Vex/Ixis confession template, the 2-4 bounty reference and the double Mox intro in 2-E2, all outside this brief."
+}

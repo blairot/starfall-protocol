@@ -67,12 +67,12 @@ const CINEMATICS = {
       { type: 'title', kicker: 'Sector 01 complete', title: 'Graduation', dur: 3.5 },
       { type: 'transmission', sfx: 'hum',
         lines: [
-          { who: 'halcyon', text: "Simulation complete. You pass, Cadet. Correction, Commander." },
+          { who: 'halcyon', text: "You pass, Cadet. Correction, Commander." },
           { who: 'halcyon', text: "You're the first this year to pass my final exam without crying. I'm counting the shouting separately." },
         ] },
       { type: 'transmission',
         lines: [
-          { who: 'okonkwo', text: "Commander, I'm Admiral Okonkwo. I run this Academy, and I'd like you back alive." },
+          { who: 'okonkwo', text: "Well done, Commander. I run this Academy, and I'd like you back alive." },
           { who: 'okonkwo', text: "You're getting the frigate Meridian, and an old Fleet station called Anchorage. Giving you Anchorage was my idea." },
           { who: 'halcyon', text: "Her idea, from my request log. I'm glad we agree." },
         ] },
@@ -85,8 +85,8 @@ const CINEMATICS = {
           body: 'Any Fleet ship, please respond.\nThe dead Lamp out here is humming.\nOur machines stop working when it gets loud.\nWe need help.' },
         lines: [
           { who: 'okonkwo', text: "This came in an hour ago from the Scrap Belt, a ring of old wreckage." },
-          { who: 'okonkwo', text: "There's a dead Lamp out there, Lamp Nine. It's started humming, and the machines near it are failing." },
-          { who: 'okonkwo', text: "Go and find out why. Anchorage is nearby, so use it as your base." },
+          { who: 'okonkwo', text: "There's a dead Lamp out there, Lamp Nine. After the Starfall, we shut it down for good." },
+          { who: 'okonkwo', text: "Now it's humming, and nearby machines are failing. Find out why, and use Anchorage as your base." },
           { who: 'halcyon', text: "That hum matches the signal from the centre of the galaxy. I wasn't built to believe in coincidence." },
         ] },
       { type: 'ship', ship: 'meridian', action: 'depart', clip: 's1-depart', cam: 'pull',
@@ -108,7 +108,7 @@ const CINEMATICS = {
         ] },
       { type: 'transmission', sfx: 'static',
         lines: [
-          { who: 'vex', text: "You hear it too, don't you? It calls itself the Choir." },
+          { who: 'vex', text: "You hear it too, don't you? It sings from the centre of the galaxy. It calls itself the Choir." },
           { who: 'vex', text: "It promised me the Belt if I let it in. Funny thing is, it says that to everyone." },
           { who: 'vex', text: "So I let it in, and after that I wasn't giving the orders." },
           { who: 'narrator', text: "As the Bad Debt lost power, the Choir took her mind with it." },
@@ -122,7 +122,6 @@ const CINEMATICS = {
         log: { header: "THE BAD DEBT. CAPTAIN'S LOG. 2290 TO 2291",
           body: "Took the crew out to the dead Lamp for salvage. It hums.\n\nThe voice calls itself the Choir. It says the Belt can be mine.\n\nI said yes.\n\nNew course: the Hive Nebula. The Choir wants the Swarm." },
         lines: [
-          { who: 'mox', text: "So that's the Choir. It offers you what you want most, then it does your thinking for you." },
           { who: 'mox', text: "Last page, she set course for the Hive Nebula. The Choir wants the Swarm next. Lucky us." },
         ] },
       { type: 'space', clip: 's2-lamp-nine', cam: 'pan-right', sfx: 'hum',
