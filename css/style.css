@@ -1595,3 +1595,10 @@ body.touch .inspect-hint { color: var(--t-3); }
 .ach-bar { height: 4px; margin-top: 8px; background: rgba(255, 255, 255, .08); }
 .ach-bar i { display: block; height: 100%; background: hsl(var(--sec-h) 70% 55%); }
 .ach-prog, .ach-date { font-size: 11px; margin-top: 4px; opacity: .75; }
+
+/* 29. route events on the sector map */
+.mnode.event .mn-hex { width: 38px; height: 38px; color: var(--t-1); border-radius: 50%; }
+.mnode.event.open .mn-hex { box-shadow: 0 0 0 2px hsl(var(--sec-h) 75% 60% / .8), 0 0 18px hsl(var(--sec-h) 75% 55% / .45); }
+.lane.ev { stroke-dasharray: 3 4; }
+.ev-choices { display: grid; gap: 8px; margin: 14px 0 6px; }
+.ev-choice { text-align: left; justify-content: flex-start; white-space: normal; }

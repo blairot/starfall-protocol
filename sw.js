@@ -8,12 +8,12 @@
 // time ("precache"), so every card, scene and cutscene works with no signal.
 // Bump VERSION (tools/stamp_build.py does it) to replace the code cache.
 // ============================================================================
-const VERSION = 'starfall-b77';
+const VERSION = 'starfall-b80';
 const ASSETS = 'starfall-assets';   // art and voice, kept across builds
 const NET_WAIT = 3500;              // ms to wait for the network before using the saved copy
 const SHELL = [
   './', 'index.html', 'manifest.webmanifest', 'css/style.css', 'js/build.js', 'js/playtest.js', 'audio/silence.mp3',
-  'js/engine.js', 'js/audio.js', 'js/cards.js', 'js/strategies.js', 'js/ai.js', 'js/campaign.js', 'js/economy.js', 'js/station.js', 'js/achievements.js', 'js/decks.js', 'js/lore.js', 'js/cinematics.js', 'js/vo.js', 'js/videos.js',
+  'js/engine.js', 'js/audio.js', 'js/cards.js', 'js/strategies.js', 'js/ai.js', 'js/campaign.js', 'js/economy.js', 'js/station.js', 'js/achievements.js', 'js/events.js', 'js/decks.js', 'js/lore.js', 'js/cinematics.js', 'js/vo.js', 'js/videos.js',
   'js/art.js', 'js/painted.js', 'js/illustrations.js', 'js/icons.js', 'js/ui.js', 'js/shop.js', 'js/inspect.js', 'js/cinema.js', 'js/scene.js', 'js/main.js',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png', 'icons/favicon-32.png',
 ];

@@ -18,7 +18,7 @@ const vm = require('vm'), fs = require('fs'), path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const RUNS = path.join(__dirname, 'runs');
-const FILES = ['build', 'engine', 'cards', 'strategies', 'ai', 'campaign', 'economy', 'station', 'achievements', 'decks', 'lore', 'cinematics'];
+const FILES = ['build', 'engine', 'cards', 'strategies', 'ai', 'campaign', 'economy', 'station', 'achievements', 'events', 'decks', 'lore', 'cinematics'];
 
 // ---------------------------------------------------------------- the game, headless
 let rngState = 1;
@@ -84,6 +84,7 @@ function status(save) {
     const tag = e.boss ? 'BOSS' : e.elite ? 'ELITE (optional)' : 'mission';
     say(`  ${e.id.padEnd(5)} ${SECTORS[e.sector].name} · ${e.name} · ${tag}${save.cleared[e.id] ? ' · cleared (replay)' : ' · NEW'}`);
   });
+  const evs = fn('eventsAvailable')(save); if (evs.length) say(`ROUTE EVENTS on the map (optional stops, command: event <id>): ${evs.map(e => `${e.id} "${e.name}" (${e.kind}, Sector ${e.sector + 1})`).join(' · ')}`);
   const nx = fn('nextEncounter')(save); if (nx) say(`Next story mission: ${nx.id} ${nx.name}`);
 }
 function brief(save, enc) {
@@ -290,7 +291,7 @@ Campaign:  new [--diff cadet|officer|admiral] [--name N] [--from <sector 2-6>]  
            deck   deck add <card> | deck remove <card> | deck autofill | deck clear   card <card>   codex
            power list | power set <id>   difficulty <cadet|officer|admiral>
            packs   buy <tier>   open <tier>   crate <card>   collection [filter]
-           station   upgrade <module>   craft <card>   scrap <card>   signature <card>   achievements
+           station   upgrade <module>   craft <card>   scrap <card>   signature <card>   achievements   event <id> [n]
 Battle:    launch <mission> [--easy]   mulligan <n...> | keep   look
            play <handNo|"card name"> [target]   attack <attacker> <target>   power [target]   choose <n>   end   concede
 Targets:   E0 = enemy commander, E1..E7 = enemy units left to right; A0 = you, A1..A7 = your units.
@@ -437,6 +438,17 @@ function main(argv) {
     case 'scrap': { const id = findCard(args.join(' ')); if (!id || !save.coll[id]) return say('You don\'t own that card.'); fn('scrapCard')(save, id); persist(); say(`Scrapped ${D(id).name} for ${ECON.scrapValue[D(id).rarity]} Scrap. Scrap: ${save.scrap}.`); break; }
     case 'signature': { if (fn('stationLv')(save, 'armory') < 2) return say('A signature card needs the Armory at Mk 2 (station).'); const id = findCard(args.join(' ')); if (!id || !save.coll[id]) return say('You don\'t own that card.'); save.signature = id; persist(); say(`Signature card: ${D(id).name}. It starts in your opening hand when it's in your deck.`); break; }
     case 'achievements': { const done = save.ach || {}; say(`SERVICE RECORD ${Object.keys(done).length}/${g('ACHIEVEMENTS').length} (each pays Credits):`); g('ACHIEVEMENTS').forEach(a => { const pr = !done[a.id] && a.progress ? a.progress(save) : null; say(`  ${done[a.id] ? '[x]' : '[ ]'} ${a.name} (+${a.reward}): ${a.text}${pr ? ` ${pr[0]}/${pr[1]}` : ''}`); }); break; }
+    case 'event': {
+      const ev = g('EVENTS').find(e => e.id === args[0]); if (!ev) return say('No such event. Your status lists the ones on the map.');
+      if (!fn('eventOpen')(save, ev)) return say('That stop is not on your route yet.'); if (fn('eventDone')(save, ev)) return say('You have already been there.');
+      if (args[1] == null) { say(`== ${ev.kind}: ${ev.name}\n${ev.text}`); ev.choices.forEach((c, k) => say(`  ${k + 1}. ${c.label}${c.n ? ' (+' + c.n + ' ' + c.kind + ')' : c.kind === 'pack' ? ' (+1 ' + PACK_SETS[c.set - 1].name + ')' : c.kind === 'card' ? ' (+1 card)' : ''}`)); say('Choose with: event ' + ev.id + ' <n>'); return; }
+      const k = +args[1] - 1, ch = ev.choices[k]; if (!ch) return say('Pick one of the listed numbers.');
+      if (ch.kind === 'shop' && args[2] == null) { const off = fn('eventOffer')(save, ev, ch.set); persist(); say(`For sale (one only; you have ${save.credits} Credits):`); off.forEach(id => say(`  ${id}: ${cardText(id)} · ${g('EVENT_PRICE')[D(id).rarity]} Credits`)); say(`Buy with: event ${ev.id} ${k + 1} <card>`); return; }
+      const res = fn('resolveEvent')(save, ev, k, ch.kind === 'shop' ? findCard(args.slice(2).join(' ')) : undefined);
+      if (!res) return say('That did not work (not enough Credits, or that card is not on offer).');
+      fn('achieve')(save).forEach(x => say(`SERVICE RECORD: ${x.name} +${x.reward} Credits`)); persist();
+      say(res.text); res.cards.forEach(id => say(`  ${cardText(id)}`)); break;
+    }
     case 'packs': {
       if (!fn('economyOpen')(save)) return say('The Supply Depot unlocks after you graduate the Academy.');
       say(`Supply Depot · Credits ${save.credits} · a pack costs ${ECON.packPrice} Credits (${ECON.packSize} cards)`);

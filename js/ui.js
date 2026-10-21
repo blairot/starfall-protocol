@@ -917,6 +917,38 @@ function openMap() {
   }
 }
 
+// a route event: a short scene with a choice of routes (js/events.js)
+function openEvent(ev) {
+  const save = App.save;
+  const choose = k => {
+    const ch = ev.choices[k];
+    if (ch.kind === 'shop') return openShopEvent(ev, k);
+    const res = resolveEvent(save, ev, k); if (!res) return;
+    achieveToast(achieve(save)); persist(); SFX.heal(); eventResult(ev, res);
+  };
+  const m = modal(`<div class="m-eyebrow">${esc(SECTORS[ev.sector].name)} · ${esc(ev.kind)}</div><h2>${esc(ev.name)}</h2>
+    <p class="story">${esc(ev.text)}</p>
+    <div class="ev-choices">${ev.choices.map((c, k) => `<button class="btn ev-choice" data-k="${k}">${esc(c.label)}${c.n ? ` <span class="muted">+${c.n} ${c.kind === 'credits' ? 'Credits' : c.kind === 'alloy' ? 'Alloy' : 'Scrap'}</span>` : c.kind === 'pack' ? ` <span class="muted">+1 ${esc(PACK_SETS[c.set - 1].name)}</span>` : c.kind === 'card' ? ' <span class="muted">+1 card</span>' : ''}</button>`).join('')}</div>
+    <div class="m-actions"><button class="btn ghost" data-a="later">Decide later</button></div>`, 'event-modal');
+  m.onclick = e => { const b = e.target.closest('[data-k]'); if (b) { SFX.click(); choose(+b.dataset.k); return; } if (e.target.dataset.a === 'later') { closeModal(); renderMap(); } };
+}
+function openShopEvent(ev, k) {
+  const save = App.save, offer = eventOffer(save, ev, ev.choices[k].set); persist();
+  const m = modal(`<div class="m-eyebrow">${esc(ev.kind)} · ${esc(ev.name)}</div><h2>Pick one to buy</h2><p class="muted">You have <b>${save.credits}</b> Credits. You can buy one card; the others go back on the shelf.</p>
+    <div class="crate-row">${offer.map(id => { const p = EVENT_PRICE[D(id).rarity]; return `<button class="crate-card" data-buy="${id}" ${save.credits < p ? 'disabled' : ''}>${cardHTML(id)}<span class="crate-own">${p} Credits · ${save.coll[id] ? 'you have ' + save.coll[id] : 'new'}</span></button>`; }).join('')}</div>
+    <div class="m-actions"><button class="btn ghost" data-a="back">Back</button></div>`, 'wide');
+  m.onclick = e => {
+    const b = e.target.closest('[data-buy]'); if (b) { const res = resolveEvent(save, ev, k, b.dataset.buy); if (res) { achieveToast(achieve(save)); persist(); SFX.heal(); eventResult(ev, res); } return; }
+    if (e.target.dataset.a === 'back') openEvent(ev);
+  };
+}
+function eventResult(ev, res) {
+  const m = modal(`<div class="m-eyebrow">${esc(ev.kind)} · ${esc(ev.name)}</div><h2>${esc(res.text)}</h2>
+    ${res.cards.length ? `<div class="crate-row">${res.cards.map(id => cardHTML(id)).join('')}</div><p class="muted">It's in your collection. Add it to a deck in the Hangar.</p>` : ''}
+    <div class="m-actions"><button class="btn primary" data-a="ok">Continue</button></div>`, 'event-modal');
+  m.onclick = e => { if (e.target.dataset.a === 'ok') { closeModal(); renderMap(); } };
+}
+
 function renderMap() {
   const save = App.save, si = MapUI.sector, sec = SECTORS[si];
   const hs = highestSector(save), next = nextEncounter(save);
@@ -940,6 +972,16 @@ function renderMap() {
     return `<button class="${cls}" style="left:${x}%;top:${y}%" ${ok ? `data-enc="${e.id}"` : 'disabled'} aria-label="${esc(ok || cl ? e.name : 'Locked mission')}">
       <span class="mn-hex">${face}<span class="mn-g">${glyph}</span></span>
       <span class="mn-label"><b>${ok || cl ? esc(e.name) : 'Unknown signal'}</b><i>${e.boss ? 'Boss' : e.elite ? 'Elite · optional' : 'Mission ' + e.id}</i></span></button>`;
+  }).join('');
+  const evNodes = EVENTS.filter(ev => ev.sector === si).map(ev => {
+    const k = main.findIndex(e => e.id === ev.after), a = pos[ev.after], b = pos[(main[k + 1] || main[k]).id];
+    const x = (a[0] + b[0]) / 2, y = (a[1] + b[1]) / 2 + ((a[1] + b[1]) / 2 > 52 ? -24 : 24);
+    const open = eventOpen(save, ev), dn = eventDone(save, ev);
+    lanes += `<path class="lane spur ev ${dn ? 'done' : open ? 'active' : 'locked'}" d="M${a[0]} ${a[1]} L${x} ${y}" vector-effect="non-scaling-stroke"/>`;
+    const cls = ['mnode', 'event', x < 22 ? 'al' : x > 78 ? 'ar' : '', dn ? 'cleared' : '', open && !dn ? 'open' : '', !open ? 'locked' : ''].join(' ');
+    return `<button class="${cls}" style="left:${x}%;top:${y}%" ${open && !dn ? `data-event="${ev.id}"` : 'disabled'} aria-label="${esc(open ? ev.name : 'Unknown signal')}">
+      <span class="mn-hex"><span class="mn-g">${dn ? ico('check') : open ? ico('scope') : ico('lock')}</span></span>
+      <span class="mn-label"><b>${open ? esc(ev.name) : 'Unknown signal'}</b><i>${open ? esc(ev.kind) : 'Event'}</i></span></button>`;
   }).join('');
   const shipAt = next && next.sector === si ? pos[next.id] : null;
   // sector strip
@@ -975,7 +1017,7 @@ function renderMap() {
         <div class="chart-head"><div class="ch-n">Sector ${String(si + 1).padStart(2, '0')} // ${esc(sec.sub)}</div><h2>${esc(sec.name)}</h2><div class="ch-prog"><b>${done}</b>/${encs.length} cleared</div></div>
         <div class="chart-coords">GRID ${String.fromCharCode(65 + si)}-${(si + 1) * 117} · ${encs.length} SIGNALS</div>
         <svg class="lanes" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${lanes}</svg>
-        ${nodes}
+        ${nodes}${evNodes}
         ${shipAt ? `<div class="ship-marker" style="left:${shipAt[0]}%;top:${shipAt[1]}%" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12l16-7-5 7 5 7z"/></svg></div>` : ''}
       </section>
       <aside class="ops">${nextCard}${stn}${contracts}${cmdr}</aside>
@@ -984,6 +1026,7 @@ function renderMap() {
   if (onSec && gStrip.scrollWidth > gStrip.clientWidth) gStrip.scrollLeft = onSec.offsetLeft - gStrip.offsetLeft - 12;
   $('#map').onclick = e => {
     const b = e.target.closest('[data-enc]'); if (b) { SFX.init(); SFX.click(); openBriefing(ENC[b.dataset.enc]); return; }
+    const ev = e.target.closest('[data-event]'); if (ev) { SFX.init(); SFX.click(); openEvent(EVENTS.find(x => x.id === ev.dataset.event)); return; }
     const s = e.target.closest('[data-sec]'); if (s) { SFX.click(); MapUI.sector = +s.dataset.sec; renderMap(); return; }
     cmdBarClick(e, openMap);
   };
