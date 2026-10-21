@@ -120,6 +120,8 @@ function uidOf(s, ref) {
   ref = String(ref).toUpperCase();
   if (ref === 'E0' || ref === 'EH' || ref === 'ENEMY' || ref === 'H') return 'H1';
   if (ref === 'A0' || ref === 'ME' || ref === 'AH' || ref === 'SELF') return 'H0';
+  const tag = /^#(\d+)$/.exec(ref);   // stable unit tag: never changes when other units die
+  if (tag) { for (const p of s.players) { const u = p.board.find(x => String(x.uid) === tag[1] && fn('alive')(x)); if (u) return u.uid; } return null; }
   const m = /^([EA])(\d+)$/.exec(ref); if (!m) return null;
   const b = s.players[m[1] === 'E' ? 1 : 0].board[+m[2] - 1]; return b ? b.uid : null;
 }
@@ -192,7 +194,7 @@ function board(s, enc, b, turns) {
     if (m.owner === 0 && fn('canAttack')(s, 0, m.uid)) f.push('CAN ATTACK');
     return f.length ? ' [' + f.join(', ') + ']' : '';
   };
-  const unit = (m, ref) => `  ${ref} ${D(m.id).name} ${fn('atkOf')(s, m)}/${m.hp}${m.hp < m.maxHp ? ' (max ' + m.maxHp + ')' : ''}${st(m)}`;
+  const unit = (m, ref) => `  ${ref} #${m.uid} ${D(m.id).name} ${fn('atkOf')(s, m)}/${m.hp}${m.hp < m.maxHp ? ' (max ' + m.maxHp + ')' : ''}${st(m)}`;
   say(`== TURN ${Math.max(1, Math.ceil(s.turnNo / 2))} · ${s.over ? 'battle over' : s.active === 0 ? 'YOUR TURN' : 'enemy turn'} · Energy ${P.mana}/${P.maxMana}${P.locked ? ' (' + P.locked + ' locked by Overheat)' : ''} · your deck ${P.deck.length}`);
   const ep = E.power ? `${HEROPOWERS[E.power.id].name}` : 'none';
   say(`ENEMY E0: ${E.name} · Health ${E.hp}/${E.maxHp}${E.armor ? ' + ' + E.armor + ' armor' : ''} · hand ${E.hand.length} · deck ${E.deck.length} · power ${ep}${E.weapon ? ' · gear ' + D(E.weapon.id).name + ' ' + E.weapon.atk + '/' + E.weapon.dur : ''}${E.traps.length ? ' · ' + E.traps.length + ' hidden Trap(s)' : ''}${E.phases && E.phases.length ? ' · ' + E.phases.length + ' more phase(s)' : ''}`);
@@ -275,7 +277,8 @@ Campaign:  new [--diff cadet|officer|admiral] [--name N]   status   brief <missi
            packs   buy <tier>   open <tier>   crate <card>   collection [filter]
 Battle:    launch <mission> [--easy]   mulligan <n...> | keep   look
            play <handNo> [target]   attack <attacker> <target>   power [target]   choose <n>   end   concede
-Targets:   E0 = enemy commander, E1..E7 = enemy units left to right; A0 = you, A1..A7 = your units.`;
+Targets:   E0 = enemy commander, E1..E7 = enemy units left to right; A0 = you, A1..A7 = your units.
+           Each unit also has a fixed tag like #34 that never changes: use it when chaining several commands.`;
 
 function main(argv) {
   const [run, cmd, ...args] = argv;

@@ -49,7 +49,7 @@ Use the run name you were given. Typical loop:
 2. `status`, `brief <mission>` and `deck` to look around, like opening the map, briefing and Hangar.
 3. `launch <mission>`, then `keep` or `mulligan 2 4` for the opening hand.
 4. Each turn: read the board (`look`), then `play <handNo> [target]`, `attack <attacker> <target>` and `power [target]`, then `end`.
-   - Targets: `E0` is the enemy commander and `E1`…`E7` are enemy units, left to right. `A0` is you and `A1`…`A7` are your units.
+   - Targets: `E0` is the enemy commander and `E1`…`E7` are enemy units, left to right. `A0` is you and `A1`…`A7` are your units. Positions shift when units die, so when you chain several commands, use a unit's fixed tag instead (e.g. `attack #34 #51`).
    - Read card text in the hand listing, or with `card <name>`.
 5. After a battle: read the rewards. Open packs (`open <tier>`), choose crate cards (`crate <card>`), watch cutscenes (`cutscene <id>`) and fix your deck (`deck add` / `deck remove` / `deck autofill`).
 

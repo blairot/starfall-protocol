@@ -177,7 +177,7 @@ const ENCOUNTERS = [
 
   // ===================================================================== SECTOR 3
   { id: '3-1', sector: 2, name: 'Venom Fields', teaches: ['toxic'],
-    enemy: { name: 'Hive Overseer', hp: 30, ai: 1, power: 'spawn_brood', deck: dk('venom_stinger:3 acid_spitter:2 larva:3 chitin_guard:2 spore_carrier:2 marine:2 cadet:2 rapid_mutation:2 heavy_trooper:2 hover_tank:2 spawn_surge:1 hive_reaper:1 scout_drone:1') },
+    enemy: { name: 'Hive Overseer', hp: 30, ai: 1, power: 'spawn_brood', deck: dk('venom_stinger:3 acid_spitter:2 larva:3 chitin_guard:2 spore_carrier:2 spore_carrier:2 needle_mite:2 rapid_mutation:2 toxic_spitter:2 hover_tank:2 spawn_surge:1 hive_reaper:1 scout_drone:1') },
     story: 'A small Swarm patrol guards the edge of the nebula, steered by a Hive Overseer. Okonkwo: "I spent nine years on this quarantine line, Commander. Rule one: their stingers are Toxic. They kill anything they scratch, however big it is. Rule two: see rule one." Your deck now holds 25 cards.',
     victory: 'The patrol breaks apart, and the Overseer\'s brood dies with it. Okonkwo: "Nine years on that line and I never once crossed it. It feels strange, Commander. Keep going."',
     tips: [
@@ -195,7 +195,7 @@ const ENCOUNTERS = [
     grant: { hive_reaper: 1, acid_rain: 1 } },
 
   { id: '3-2', sector: 2, name: 'Bloodline', teaches: ['siphon'],
-    enemy: { name: 'Leech Matron', hp: 30, ai: 2, power: 'spawn_brood', deck: dk('blood_leech:3 lamprey:2 venom_stinger:2 larva:2 chitin_guard:2 spore_carrier:2 broodmother:2 rapid_mutation:2 life_drain:2 marine:2 heavy_trooper:2 hover_tank:2') },
+    enemy: { name: 'Leech Matron', hp: 30, ai: 2, power: 'spawn_brood', deck: dk('blood_leech:3 lamprey:2 venom_stinger:2 larva:2 chitin_guard:2 spore_carrier:2 broodmother:2 rapid_mutation:2 life_drain:2 blood_leech:2 toxic_spitter:2 hover_tank:2') },
     story: 'A Leech Matron nests here, breeding Swarm organisms whose bites heal their own side. Okonkwo: "Every bite they land patches them up. Don\'t leave anything half dead out there, Commander. Finish what you start, or they will."',
     victory: 'The Leech Matron\'s nest goes still, and nothing in it is getting back up. Okonkwo: "Good. Nothing left half dead. The breeding grounds are next, and that\'s where the numbers come from."',
     tips: ['<b>Siphon</b>: damage this unit deals also heals its commander. Kill Siphon units before they attack.'],
@@ -209,8 +209,8 @@ const ENCOUNTERS = [
     grant: { hive_mind: 1, broodmother: 1, spawn_surge: 1, frenzied_ripper: 1 } },
 
   { id: '3-4', sector: 2, name: 'Apex Predator',
-    enemy: { name: 'Ripper Alpha', hp: 32, ai: 2, power: 'mutagen', deck: dk('frenzied_ripper:3 hive_reaper:2 devourer_worm:2 acid_spitter:2 venom_stinger:2 rapid_mutation:2 toxic_spitter:2 blood_leech:2 chitin_guard:2 lamprey:2 hover_tank:2 heavy_trooper:2') },
-    story: 'The biggest Swarm hunter the Fleet has ever recorded is picking off your scouts, and it gets more dangerous every time you wound it. Okonkwo: "The scouts call it the Alpha. Nobody who got close enough came back with a better name. Kill it in one blow, Commander. If you only hurt it, you just make it angry."',
+    enemy: { name: 'Ripper Alpha', hp: 32, ai: 2, power: 'mutagen', deck: dk('frenzied_ripper:3 hive_reaper:2 devourer_worm:2 acid_spitter:2 venom_stinger:2 rapid_mutation:2 toxic_spitter:2 blood_leech:2 chitin_guard:2 lamprey:2 hover_tank:2 toxic_spitter:2') },
+    story: 'The biggest Swarm hunter the Fleet has ever recorded is picking off your scouts, and its brood grows stronger the longer the fight drags on. Okonkwo: "The scouts call it the Alpha. Nobody who got close enough came back with a better name. Kill it in one blow, Commander. If you only hurt it, you just make it angry."',
     victory: 'The Alpha goes down in one blow, which was the only way it was going to go down. Okonkwo: "The scouts would like to suggest a better name for it now. Most of their suggestions aren\'t printable."',
     tips: ['Frenzied Ripper gains +2 Attack whenever it survives damage. Kill it in one hit or leave it alone.', 'Devourer Worm destroys a friendly unit and takes its Attack and Health. Keep removal ready.'] },
 

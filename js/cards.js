@@ -127,7 +127,7 @@ card('shock_baton',  { name: 'Shock Baton', type: 'gear', cost: 1, atk: 2, hp: 2
 card('plasma_cutlass',{ name: 'Plasma Cutlass', type: 'gear', cost: 3, atk: 3, hp: 2, faction: 'raider', tier: 2, strat: ['gear'], tags: ['gear'], text: '' });
 card('harpoon_gun',  { name: 'Harpoon Gun', type: 'gear', cost: 2, atk: 2, hp: 2, faction: 'raider', tier: 2, strat: ['gear'], tags: ['gear', 'deploy'], target: 'enemyMinion', targetOptional: true, text: '**Deploy:** Deal 1 damage to an enemy unit.', play: (s, c) => damage(s, null, c.target, 1) });
 card('rail_rifle',   { name: 'Heavy Rail Rifle', type: 'gear', cost: 5, atk: 5, hp: 2, rarity: 'rare', tier: 2, strat: ['gear'], tags: ['gear'], text: '' });
-card('cluster_cannon',{ name: 'Cluster Cannon', type: 'gear', cost: 4, atk: 2, hp: 3, faction: 'raider', rarity: 'epic', tier: 2, strat: ['gear'], tags: ['gear'], text: 'After your commander attacks, deal 1 damage to all enemy units.', onAttack: (s, c) => enemyMinions(s, c.pi).forEach(m => damage(s, null, m, 1)) });
+card('cluster_cannon',{ name: 'Cluster Cannon', type: 'gear', cost: 4, atk: 2, hp: 2, faction: 'raider', rarity: 'epic', tier: 2, strat: ['gear'], tags: ['gear'], text: 'After your commander attacks, deal 1 damage to all enemy units.', onAttack: (s, c) => enemyMinions(s, c.pi).forEach(m => damage(s, null, m, 1)) });
 card('smoke_screen', { name: 'Smoke Screen', type: 'spell', cost: 1, faction: 'raider', tier: 2, target: 'friendlyMinion', tags: [], kwRef: ['cloak'], text: 'Give a friendly unit **Cloak** and +1/+1.', play: (s, c) => { buff(s, c.target, 1, 1); giveKw(s, c.target, 'cloak'); } });
 card('echo_protocol',{ name: 'Echo Protocol', type: 'spell', cost: 2, faction: 'raider', tier: 2, strat: ['salvage'], tags: ['salvage'], target: 'friendlyMinion', tf: m => !!D(m.id).death && !m.silenced, text: "Trigger a friendly unit's **Salvage** effect.", play: (s, c) => { const m = getChar(s, c.target); if (m) D(m.id).death(s, ctx(s, c.pi, m, { pos: c.me.board.indexOf(m) + 1 })); } });
 card('broadside',    { name: 'Broadside', type: 'spell', cost: 4, faction: 'raider', tier: 2, text: 'Deal 2 damage to all enemy units.', play: aoeEnemy(2) });
@@ -256,7 +256,7 @@ const CARD_LIST = Object.values(CARDS);
 
 // ============================================================ Commander powers
 const HEROPOWERS = {
-  repair:   { name: 'Nanite Repair', cost: 2, target: 'any', text: 'Restore 2 Health.', use: (s, c) => heal(s, c.target, 2) },
+  repair:   { name: 'Nanite Repair', cost: 2, target: 'any', text: 'Restore 3 Health.', use: (s, c) => heal(s, c.target, 3) },
   pulse:    { name: 'Pulse Laser', cost: 2, target: 'any', text: 'Deal 1 damage.', use: (s, c) => damage(s, null, c.target, 1) },
   drone:    { name: 'Launch Drone', cost: 2, text: 'Summon a 1/1 Drone.', canUse: (s, c) => c.me.board.length < MAX_BOARD, use: (s, c) => summon(s, c.pi, 'drone') },
   blade:    { name: 'Arm Blade', cost: 2, text: 'Equip a 1/2 Combat Knife.', use: (s, c) => equip(s, c.pi, 'combat_knife') },
