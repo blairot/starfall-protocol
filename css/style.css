@@ -1623,3 +1623,26 @@ body.touch .inspect-hint { color: var(--t-3); }
 .ch-mods { display: grid; gap: 6px; margin: 8px 0; }
 .ch-mod { display: grid; gap: 2px; padding: 8px 10px; border-left: 3px solid hsl(var(--sec-h, 200) 75% 60%); background: rgb(255 255 255 / .04); border-radius: 4px; }
 .ch-keep { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-height: 52vh; overflow: auto; }
+
+/* 31. briefing: narration and transmissions apart; foe lines wrap as text */
+.foe-line > span { flex: 1; min-width: 0; }
+.foe-line > .ico, .foe-line > svg { flex: none; position: relative; top: 2px; }
+.brief-story { display: grid; gap: 10px; margin: 14px 0; max-width: 72ch; }
+.brief-story .story { margin: 0; }
+.comm-line { display: flex; gap: 12px; align-items: flex-start; padding: 10px 14px; background: rgba(120, 190, 255, .06); border: 1px solid rgba(120, 190, 255, .16); border-radius: 8px; }
+.cl-face { flex: none; width: 44px; height: 44px; border-radius: 50%; background: #1a2532 center / cover no-repeat; box-shadow: 0 0 0 1px rgba(120, 190, 255, .35); display: grid; place-items: center; font-weight: 700; color: var(--t-1, #dfe8f2); }
+.cl-who { font-family: 'Saira Semi Condensed', sans-serif; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #8fc8ff; margin-bottom: 2px; }
+.comm-line q { display: block; font-size: 16.5px; line-height: 1.55; color: #e6edf5; quotes: none; }
+
+/* 32. star map panel: a solid, quiet surface so routes and labels read clearly (playtest feedback) */
+.chart { background: radial-gradient(ellipse at 50% 45%, hsl(var(--h) 45% 14% / .55), transparent 75%), rgba(5, 9, 15, .93); }
+.chart::before { display: none; }
+.chart::after { background:
+    repeating-linear-gradient(90deg, rgba(115, 207, 255, .025) 0 1px, transparent 1px 64px), repeating-linear-gradient(0deg, rgba(115, 207, 255, .025) 0 1px, transparent 1px 64px),
+    linear-gradient(to bottom right, transparent 50%, rgba(160, 225, 255, .7) 50% calc(50% + 1.5px), transparent calc(50% + 1.5px)) 0 0 / var(--cut) var(--cut) no-repeat,
+    linear-gradient(to bottom right, transparent calc(50% - 1.5px), rgba(160, 225, 255, .7) calc(50% - 1.5px) 50%, transparent 50%) 100% 100% / var(--cut) var(--cut) no-repeat; }
+.mn-label { background: rgba(8, 14, 22, .95); box-shadow: inset 0 0 0 1px rgba(115, 207, 255, .28); }
+.mn-label i { color: #9fb1c4; }
+.mnode.locked .mn-label b { color: #7f8c9a; }
+.lane { stroke: rgba(150, 210, 255, .38); }
+.chart-coords { color: rgba(150, 200, 240, .55); }

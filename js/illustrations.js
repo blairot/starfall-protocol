@@ -1580,5 +1580,24 @@ function portraitPlate(key, faction, spec) {
   return ART_CACHE[k];
 }
 
+// Painted art loads the first time a screen shows it, which can hitch the Hangar or a battle.
+// In idle time, fetch and decode the cards you own (deck first), two at a time. Only your own
+// cards, to keep phone data modest; the rest load on demand as before.
+function prefetchOwnArt(save) {
+  if (!save || typeof Image === 'undefined') return;
+  const ids = [...new Set([...(save.deck || []), ...Object.keys(save.coll || {})])].filter(id => PAINTED_CARDS.has(id));
+  let busy = 0;
+  const next = () => {
+    while (busy < 2 && ids.length) {
+      const m = /url\("(.*)"\)/.exec(artPlate(ids.shift())); if (!m) continue;
+      const img = new Image(); busy++;
+      let fin = false; const done = () => { if (fin) return; fin = true; busy--; idle(next, { timeout: 2000 }); };
+      img.onload = img.onerror = done;   // decode() can wait while the page is in the background
+      img.src = m[1]; if (img.decode) img.decode().then(done, done);
+    }
+  };
+  idle(next, { timeout: 2000 });
+}
+
 // Warm every card in idle time so most art is already a bitmap when needed.
 function prewarmAllArt() { prewarmArt(CARD_LIST.map(d => () => artPlate(d.id))); }

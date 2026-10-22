@@ -179,13 +179,20 @@ const Cinema = (() => {
     // decode this cutscene's voice while the title card shows
     const loads = shots.some(s => s.lines.some(l => l.key)) ? load(cid) : Promise.resolve(null);
     const hold = document.createElement('div'); hold.className = 'cin-preload'; el.appendChild(hold);
-    const pre = {}; shots.forEach(x => { if (x.sh.clip && videoSrc(x.sh.clip) && !pre[x.sh.clip]) pre[x.sh.clip] = preloadVideo(x.sh.clip, hold); });
+    // Clips load just in time (this shot's and the next one's) rather than all at once, so the
+    // first shots aren't fighting the later ones for bandwidth.
+    const pre = {}, want = clip => clip && videoSrc(clip) ? pre[clip] || (pre[clip] = preloadVideo(clip, hold)) : null;
+    const clipAt = k => { for (let j = k; j < shots.length; j++) if (shots[j].sh.clip && videoSrc(shots[j].sh.clip)) return shots[j].sh.clip; return null; };
+    want(clipAt(0)); want(clipAt(clipAt(0) ? shots.findIndex(x => x.sh.clip === clipAt(0)) + 1 : 0));
+    // resolves once a clip can play on without stalling, or after `ms` (the previous shot holds meanwhile)
+    const ready = (v, ms) => new Promise(r => { if (!v || v.readyState >= 3) return r(); const t = setTimeout(r, ms); me.timers.push(t); const ok = () => { clearTimeout(t); r(); }; v.addEventListener('canplay', ok, { once: true }); v.addEventListener('error', ok, { once: true }); });
     const stage = el.querySelector('.cin-stage'), sub = el.querySelector('.cin-sub');
     const wait = ms => new Promise(r => { const t = setTimeout(r, ms); me.timers.push(t); });
     for (let i = 0; i < shots.length && !me.done; i++) {
       const { sh, lines, dur } = shots[i];
       if (i === 1) await Promise.race([loads, wait(2500)]);
       if (me.done) break;
+      if (sh.clip) { await ready(want(sh.clip), 2500); want(clipAt(i + 1)); if (me.done) break; }
       const div = document.createElement('div'); div.className = `cin-shot t-${sh.type}`; div.style.setProperty('--dur', dur + 's');
       div.innerHTML = shotHTML(cid, cine, sh, i);
       stage.appendChild(div);

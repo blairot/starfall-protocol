@@ -136,7 +136,7 @@ function start(data) {
   window.addEventListener('pagehide', bootDone);   // a normal reload or navigation is not a crash
   App.safeMode = lastBootFailed;
   if (lastBootFailed) setTimeout(() => toast('Safe graphics mode: the last launch didn\'t finish loading.', 3500), 800);
-  else setTimeout(prewarmAllArt, 1500);
+  else { setTimeout(prewarmAllArt, 1500); setTimeout(() => prefetchOwnArt(App.save), 3000); }
   // Installed web app (GitHub Pages): cache the game for offline play. Not inside claude.ai.
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) && window.top === window.self && !window.claude) {
     navigator.serviceWorker.register('sw.js').then(r => r.update()).catch(() => { /* offline play is optional */ });

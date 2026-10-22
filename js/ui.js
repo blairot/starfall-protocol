@@ -1194,12 +1194,12 @@ function openBriefing(enc) {
     <h2>${esc(enc.name)}</h2>
     <div class="brief">
       <div class="foe"><button class="foe-art" data-cmdr="${enc.id}" aria-label="${esc(e.name)} dossier" title="Commander dossier" style='background-image:${portraitPlate(e.name, ENEMY_FACTION[enc.sector], ENEMY_ART[e.name])}'></button><div><div class="foe-name">${esc(e.name)}</div><div class="muted">${hp} Health${e.phases ? ` · ${e.phases.length + 1} phases` : ''}</div>
-        ${power ? `<div class="foe-line">${powerIco(e.power)} <b>${esc(power.name)}:</b> ${esc(power.text)}</div>` : ''}
-        ${(e.passives || []).map(id => `<div class="foe-line">${passiveIco(id)} <b>${esc(PASSIVES[id].name)}:</b> ${esc(PASSIVES[id].text)}</div>`).join('')}
+        ${power ? `<div class="foe-line">${powerIco(e.power)}<span><b>${esc(power.name)}:</b> ${esc(power.text)}</span></div>` : ''}
+        ${(e.passives || []).map(id => `<div class="foe-line">${passiveIco(id)}<span><b>${esc(PASSIVES[id].name)}:</b> ${esc(PASSIVES[id].text)}</span></div>`).join('')}
         ${tacticsLine(enc)}
-        ${e.startTraps ? `<div class="foe-line">${ico('trap')} <b>Starts with ${e.startTraps.length} Trap${e.startTraps.length > 1 ? 's' : ''} armed.</b></div>` : ''}
+        ${e.startTraps ? `<div class="foe-line">${ico('trap')}<b>Starts with ${e.startTraps.length} Trap${e.startTraps.length > 1 ? 's' : ''} armed.</b></div>` : ''}
         ${intelHTML(save, e)}</div></div>
-      <p class="story">${esc(enc.story)}</p>
+      ${storyHTML(enc.story, enc)}
       ${fresh.map(k => `<div class="newmech"><span class="pill new">New</span> <b>${esc(KEYWORDS[k].name)}</b> ${esc(KEYWORDS[k].text)}</div>`).join('')}
       ${soon.map(k => `<div class="newmech"><span class="pill">In your rewards</span> <b>${esc(KEYWORDS[k].name)}</b> ${esc(KEYWORDS[k].text)}</div>`).join('')}
       <div class="brief-foot"><span class="muted">Reward:</span> ${rewardTxt}${save.cleared[enc.id] ? ' <span class="pill">Cleared</span>' : ''}</div>
@@ -1247,10 +1247,33 @@ function offlineHTML() {
 }
 
 // How this enemy plays (its AI personality), shown in briefings and dossiers.
+// A mission story is narration with quoted lines ("Okonkwo: \"...\""). Show each quote as a short
+// transmission (speaker portrait, name, line) apart from the narration, so the two don't run together.
+function speakerArt(name, enc) {
+  const n = name.toLowerCase();
+  const cast = Object.values(typeof CAST !== 'undefined' ? CAST : {}).find(c => c.portrait && c.name.toLowerCase().split(/[ ,]+/).includes(n.split(' ')[0]) && c.name.toLowerCase().includes(n));
+  if (cast) { const p = cast.portrait; if (p.card) return artPlate(p.card); const x = ENCOUNTERS.find(e => e.enemy.name === p.enemy); return portraitPlate(p.enemy, ENEMY_FACTION[x ? x.sector : 0], ENEMY_ART[p.enemy]); }
+  const x = (enc && enc.enemy.name.toLowerCase().includes(n) ? enc : null) || ENCOUNTERS.find(e => e.enemy.name.toLowerCase().includes(n));
+  if (x) return portraitPlate(x.enemy.name, ENEMY_FACTION[x.sector], ENEMY_ART[x.enemy.name]);
+  const card = CARD_LIST.find(d => d.name.toLowerCase().includes(n) && d.type === 'unit');
+  return card ? artPlate(card.id) : '';
+}
+function storyHTML(text, enc) {
+  const re = /(?<=^|[.!?"]\s+)([A-Z][A-Za-z'.\- ]{1,28}?): "([^"]*)"/g, parts = []; let last = 0, m;
+  while ((m = re.exec(text))) {
+    const pre = text.slice(last, m.index).trim();
+    if (pre) parts.push(`<p class="story">${esc(pre)}</p>`);
+    const art = speakerArt(m[1], enc);
+    parts.push(`<div class="comm-line"><span class="cl-face" style='${art ? `background-image:${art}` : ''}'>${art ? '' : esc(m[1][0])}</span><div><div class="cl-who">${esc(m[1])}</div><q>${esc(m[2])}</q></div></div>`);
+    last = m.index + m[0].length;
+  }
+  const rest = text.slice(last).trim(); if (rest) parts.push(`<p class="story">${esc(rest)}</p>`);
+  return `<div class="brief-story">${parts.join('')}</div>`;
+}
 function tacticsLine(enc, cls) {
   if (typeof personaOf !== 'function' || !enc) return '';
   const p = personaOf(enc); if (!p || !p.name) return '';
-  return `<div class="${cls || 'foe-line'}">${ico('target')} <b>Tactics: ${esc(p.name)}.</b> ${esc(p.text)}</div>`;
+  return `<div class="${cls || 'foe-line'}">${ico('target')}<span><b>Tactics: ${esc(p.name)}.</b> ${esc(p.text)}</span></div>`;
 }
 
 // Briefing: which deck you're taking, and the optional mission-tuned deck.
