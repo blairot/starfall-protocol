@@ -18,7 +18,7 @@ const vm = require('vm'), fs = require('fs'), path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const RUNS = path.join(__dirname, 'runs');
-const FILES = ['build', 'engine', 'cards', 'strategies', 'ai', 'campaign', 'economy', 'station', 'achievements', 'events', 'decks', 'lore', 'cinematics'];
+const FILES = ['build', 'engine', 'cards', 'strategies', 'ai', 'campaign', 'economy', 'station', 'achievements', 'events', 'challenge', 'decks', 'lore', 'cinematics'];
 
 // ---------------------------------------------------------------- the game, headless
 let rngState = 1;
@@ -32,7 +32,8 @@ const g = name => vm.runInContext(name, G);
 const { D, CARDS, KEYWORDS, ENCOUNTERS, SECTORS, HEROPOWERS, PASSIVES, DIFFICULTY, CINEMATICS, CAST, PACK_SETS, ECON } = ['D', 'CARDS', 'KEYWORDS', 'ENCOUNTERS', 'SECTORS', 'HEROPOWERS', 'PASSIVES', 'DIFFICULTY', 'CINEMATICS', 'CAST', 'PACK_SETS', 'ECON'].reduce((o, k) => (o[k] = g(k), o), {});
 const fn = name => g(name);
 const CINE_AFTER = { '1-6': 's1', '2-6': 's2', '3-6': 's3', '4-6': 's4', '5-6': 's5', '6-5': 'finale' };   // as js/cinema.js
-const ENC = id => ENCOUNTERS.find(e => e.id.toLowerCase() === String(id).toLowerCase());
+let CH_SAVE = null;   // the save whose Proving Grounds run a 'challenge' battle belongs to
+const ENC = id => String(id) === 'challenge' ? (CH_SAVE && fn('chEnc')(CH_SAVE)) : ENCOUNTERS.find(e => e.id.toLowerCase() === String(id).toLowerCase());
 
 // ---------------------------------------------------------------- run files
 const runDir = run => path.join(RUNS, run);
@@ -172,10 +173,88 @@ function newBattle(save, enc, opts) {
   return { enc: enc.id, seed: sd, snap, actions: [], mull: enc.noMulligan ? [] : null, playerTurns: 0, easy: !!opts.easy };
 }
 // Rebuild the battle; returns { s, log } where log holds the event text of the LAST step only.
+// ---------------------------------------------------------------- Proving Grounds (js/challenge.js)
+function chStatus(save) {
+  const run = save.challenge;
+  if (!run) {
+    if (!fn('challengeOpen')(save)) return say('The Proving Grounds open when you finish the campaign.');
+    say(`PROVING GROUNDS (challenge run). Runs played: ${save.stats.challenges || 0}${save.stats.chBest ? ', best ' + save.stats.chBest + '/8' : ''}.`);
+    say('Pick a commander power, draft 20 cards (pick 1 of 3) from every set, then fight 8 trials against enemies from the whole war, each with a random modifier.');
+    say(`${g('CHALLENGE').lives} hull points: a loss costs one and re-rolls the trial. Rewards go to your real collection: ${g('CHALLENGE').winCredits} x wins Credits after each win, keep one card from your run deck at 3 wins, a Singularity Pack at 4 wins and two at 8.`);
+    return say('Start with: challenge start');
+  }
+  const C = g('CHALLENGE'), M = g('CH_MODS');
+  say(`PROVING GROUNDS · ${run.wins}/${C.battles} won · hull ${run.lives}/${C.lives} · power ${run.power ? HEROPOWERS[run.power].name : '(not chosen)'} · deck ${run.deck.length} cards`);
+  if (run.step === 'power') { say('Choose a commander power:'); run.powers.forEach(pw => say(`  ${pw}: ${HEROPOWERS[pw].name} (${HEROPOWERS[pw].cost}): ${HEROPOWERS[pw].text}`)); return say('Choose with: challenge power <id>'); }
+  if (run.step === 'draft' || run.step === 'reward') {
+    say(run.step === 'draft' ? `DRAFT pick ${run.deck.length + 1} of ${C.picks}. Pick one:` : `SPOILS of trial ${run.at}: add one card to your run deck (or skip):`);
+    run.offer.forEach(id => say(`  ${id}: ${cardText(id)}${run.deck.includes(id) ? ` (in deck x${run.deck.filter(x => x === id).length})` : ''}`));
+    if (run.deck.length) say(`Run deck so far: ${run.deck.map(id => D(id).name).join(', ')}`);
+    return say(run.step === 'draft' ? 'Pick with: challenge pick <card>' : 'Pick with: challenge pick <card>   or: challenge skip');
+  }
+  if (run.step === 'fight') {
+    const enc = fn('chEnc')(save), e = enc.enemy;
+    say(`TRIAL ${run.at + 1} of ${C.battles}${run.at === C.battles - 1 ? ' (final)' : ''}: ${e.name} (${SECTORS[enc.sector].name}, from mission ${enc.base} "${enc.name}")`);
+    enc.mods.forEach(k => say(`  MODIFIER ${M[k].name}: ${M[k].text}`));
+    if (e.power) say(`  Enemy power: ${HEROPOWERS[e.power].name}: ${HEROPOWERS[e.power].text}`);
+    (e.passives || []).forEach(id => say(`  ${PASSIVES[id].name}: ${PASSIVES[id].text}`));
+    say(`Your commander: ${C.hp} Health before modifiers. Run deck (${run.deck.length}): ${run.deck.map(id => D(id).name).join(', ')}`);
+    return say('Fight with: challenge launch   (or give up: challenge abandon)');
+  }
+  const pr = fn('chPrize')(run.wins);
+  say(`RUN OVER: ${run.wins} trial(s) won.${pr.packs ? ` Prize: ${pr.packs} Singularity Pack(s).` : ''}`);
+  if (pr.keep) { say('Keep one card from your run deck:'); [...new Set(run.deck)].forEach(id => say(`  ${id}: ${cardText(id)} (you own ${save.coll[id] || 0})`)); say('Keep with: challenge keep <card>'); }
+  else say('Collect with: challenge finish');
+}
+function challengeCmd(run, save, args, persist) {
+  const sub = args[0], rest = args.slice(1).join(' '), ch = save.challenge;
+  if (!sub) return chStatus(save);
+  if (sub === 'start') { if (!fn('challengeOpen')(save)) return say('The Proving Grounds open when you finish the campaign.'); if (ch) return say('A run is already in progress.'); fn('startChallenge')(save); persist(); return chStatus(save); }
+  if (!ch) return say('No run in progress. Start with: challenge start');
+  if (sub === 'power') { if (!fn('chChoosePower')(save, args[1])) return say('Pick one of the listed power ids.'); persist(); return chStatus(save); }
+  if (sub === 'pick') { const id = findCard(rest); if (!id || !(ch.offer || []).includes(id)) return say('Pick one of the offered cards.'); (ch.step === 'draft' ? fn('chDraft')(save, id) : fn('chReward')(save, id)); persist(); return chStatus(save); }
+  if (sub === 'skip') { if (ch.step !== 'reward') return say('You can only skip the spoils after a win.'); fn('chReward')(save, null); persist(); return chStatus(save); }
+  if (sub === 'abandon') { fn('chAbandon')(save); persist(); say('Run abandoned.'); return chStatus(save); }
+  if (sub === 'keep' || sub === 'finish') {
+    const out = fn('chFinish')(save, sub === 'keep' ? findCard(rest) : null); if (!out) return say('The run is not over yet.');
+    fn('achieve')(save).forEach(x => say(`SERVICE RECORD: ${x.name} +${x.reward} Credits`)); persist();
+    say(`Run rewards: ${out.packs ? out.packs + ' Singularity Pack(s) (open with: packs)' : 'no packs'}${out.kept ? `; kept ${D(out.kept).name}${out.scrap ? ` (already owned: +${out.scrap} Scrap)` : ''}` : ''}.`); return;
+  }
+  if (sub === 'launch') {
+    if (ch.step !== 'fight') return say('There is no trial to fight right now.');
+    CH_SAVE = save;
+    const nb = newBattle(save, { id: 'challenge', noMulligan: false }, {}); writeJ(run, 'battle.json', nb);
+    say(`Launching trial ${ch.at + 1}: ${fn('chEnc')(save).enemy.name}.`);
+    const r = rebuild(nb), P = r.s.players[0];
+    say(`OPENING HAND (${r.s.first === 0 ? 'you go first' : 'you go second: +1 card and an Energy Cell'}). Swap cards with "mulligan <n...>" or "keep".`);
+    P.hand.forEach((c, i) => say(`  ${i + 1}. ${cardText(c.id)}`));
+    return;
+  }
+  say('Commands: challenge | challenge start | power <id> | pick <card> | skip | launch | keep <card> | finish | abandon');
+}
+function finishChallenge(run, save, b, s) {
+  CH_SAVE = save;
+  const enc = ENC('challenge'), won = s.winner === 0;
+  delJ(run, 'battle.json');
+  const res = readJ(run, 'results.json') || [];
+  res.push({ m: 'challenge ' + (save.challenge ? save.challenge.at + 1 : '?') + ' ' + enc.base, r: won ? 'win' : 'loss', turns: Math.ceil(s.turnNo / 2), hp: [s.players[0].hp, s.players[1].hp], mods: enc.mods, at: new Date().toISOString() });
+  writeJ(run, 'results.json', res);
+  const tally = Object.assign({}, s.tally || {});
+  if (won) { save.stats.wins++; tally.wins = 1; } else save.stats.losses++;
+  fn('applyContracts')(save, tally).forEach(c => say(`Contract complete: ${g('CONTRACTS')[c.id].text} (+${fn('contractRewardOf')(save, c.id)} Credits)`));
+  const r = fn('chResult')(save, won) || {};
+  fn('achieve')(save, { won, enc, s }).forEach(x => say(`SERVICE RECORD: ${x.name} +${x.reward} Credits`));
+  say(won ? `== VICTORY: trial ${enc.trial} (${enc.enemy.name}). +${r.credits} Credits.` : `== DEFEAT: trial ${enc.trial} (${enc.enemy.name}).`);
+  if (!won) { const hurt = Object.entries(s.hurt || {}).sort((x, y) => y[1] - x[1]).slice(0, 3); if (hurt.length) say('What hurt you most: ' + hurt.map(([k, n]) => `${k} ${n} damage`).join(' · ')); }
+  say(''); chStatus(save);
+}
+
 function rebuild(b) {
   seed(b.seed);
+  const ch = b.enc === 'challenge';
+  if (ch) CH_SAVE = b.snap;
   const enc = ENC(b.enc);
-  const s = fn('newGame')(fn('buildBattle')(b.snap, enc));
+  const s = fn('newGame')(ch ? fn('challengeBattle')(b.snap) : fn('buildBattle')(b.snap, enc));
   fn('aiMulligan')(s, 1);
   let nm = names(s), log = [], turns = 0;
   const enemyTurn = () => {
@@ -232,6 +311,7 @@ function board(s, enc, b, turns) {
 
 // ---------------------------------------------------------------- end of battle: same rules as endBattle() in js/ui.js
 function finish(run, save, b, s) {
+  if (b.enc === 'challenge') return finishChallenge(run, save, b, s);
   const enc = ENC(b.enc), won = s.winner === 0;
   delJ(run, 'battle.json');
   const res = readJ(run, 'results.json') || [];
@@ -297,6 +377,7 @@ Campaign:  new [--diff cadet|officer|admiral] [--name N] [--from <sector 2-6>]  
            power list | power set <id>   difficulty <cadet|officer|admiral>
            packs   buy <tier>   open <tier>   crate <card>   collection [filter]
            station   upgrade <module>   craft <card>   scrap <card>   signature <card>   achievements   event <id> [n]   archive [n]
+Proving Grounds (after the campaign):  challenge [start | power <id> | pick <card> | skip | launch | keep <card> | finish | abandon]
 Battle:    launch <mission> [--easy]   mulligan <n...> | keep   look
            play <handNo|"card name"> [target]   attack <attacker> <target>   power [target]   choose <n>   end   concede
 Targets:   E0 = enemy commander, E1..E7 = enemy units left to right; A0 = you, A1..A7 = your units.
@@ -344,6 +425,7 @@ function main(argv) {
     return;
   }
   const save = loadSave(run);
+  CH_SAVE = save;
   const b = readJ(run, 'battle.json');
   const persist = () => { save.updated = Date.now(); writeJ(run, 'save.json', save); };
   const battleCmds = ['mulligan', 'keep', 'look', 'play', 'attack', 'power', 'choose', 'end', 'concede'];
@@ -451,6 +533,7 @@ function main(argv) {
 ${r.body}` : `  ${k + 1}. ${r.title}`));
       if (lim && args[0] == null) say('Read one with: archive <n>'); break;
     }
+    case 'challenge': challengeCmd(run, save, args, persist); break;
     case 'event': {
       const ev = g('EVENTS').find(e => e.id === args[0]); if (!ev) return say('No such event. Your status lists the ones on the map.');
       if (!fn('eventOpen')(save, ev)) return say('That stop is not on your route yet.'); if (fn('eventDone')(save, ev)) return say('You have already been there.');
