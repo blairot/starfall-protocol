@@ -1548,13 +1548,16 @@ const CARD_DIR = ART_LITE ? 'cards-sm' : 'cards';
 
 // second art pass (packs, stills, station, sectors, screens, card back): CSS url or '' when not painted yet
 const PAINTED_EXTRA = new Set(typeof PAINTED !== 'undefined' ? PAINTED.extra || [] : []);
-function extraArt(id) { return PAINTED_EXTRA.has(id) ? `url("${ART_BASE}${ART_LITE ? 'extra-sm' : 'extra'}/${id}.webp")` : ''; }
+// The Claude artifact build serves some art from its asset store (PAINTED.a: id -> { f: full size, s: phone size }; see tools/art/artifact_painted.py).
+const PAINTED_A = typeof PAINTED !== 'undefined' ? PAINTED.a || {} : {};
+const hostedArt = id => PAINTED_A[id] ? `url("${ART_LITE ? PAINTED_A[id].s : PAINTED_A[id].f}")` : '';
+function extraArt(id) { return PAINTED_EXTRA.has(id) ? hostedArt(id) || `url("${ART_BASE}${ART_LITE ? 'extra-sm' : 'extra'}/${id}.webp")` : ''; }
 // a painted banner for a modal or panel, or nothing
 function paintedBanner(id, cls) { const u = extraArt(id); return u ? `<div class="m-hero ${cls || ''}" style='background-image:${u}'></div>` : ''; }
 if (typeof document !== 'undefined' && PAINTED_EXTRA.has('card-back')) document.documentElement.style.setProperty('--cardback', extraArt('card-back'));
 
 function artPlate(id) {
-  if (PAINTED_CARDS.has(id)) return `url("${ART_BASE}${CARD_DIR}/${id}.webp")`;
+  if (PAINTED_CARDS.has(id)) return hostedArt(id) || `url("${ART_BASE}${CARD_DIR}/${id}.webp")`;
   if (RASTER[id]) return RASTER[id];
   if (!ART_CACHE[id]) {
     const d = D(id); const [kind, opts] = artFor(d);

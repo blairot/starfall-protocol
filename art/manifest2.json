@@ -372,5 +372,14 @@
   "title": "App icon",
   "show": "The game's home-screen icon: a bold falling star streaking diagonally across a hexagonal badge (amber rim, dark glass inside, cyan inner line), deep-space background with a warm nebula glow. It must read clearly at 60 px: big simple shapes and strong contrast. Keep the whole emblem inside the middle 80% (phones crop the corners into a rounded square or a circle). No text.",
   "refs": []
+ },
+ {
+  "kind": "pack",
+  "id": "pack-6",
+  "file": "pack-6.png",
+  "size": "portrait 1024 x 1536",
+  "title": "Singularity Pack (Supply Pack front)",
+  "show": "See art/BRIEF5.md",
+  "refs": []
  }
 ]

@@ -3023,5 +3023,143 @@
   "faction": "fleet",
   "role": "Player character",
   "look": "The player's commander: a Colonial Fleet officer in a sealed armoured combat helmet with a glowing blue visor (face never shown, so any player can be them), high-collared navy and white armour, determined stance."
+ },
+ {
+  "kind": "card",
+  "id": "glass_acolyte",
+  "file": "glass_acolyte.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "choir_singer",
+  "file": "choir_singer.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "glass_sentinel",
+  "file": "glass_sentinel.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "glass_lancer",
+  "file": "glass_lancer.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "the_unsung",
+  "file": "the_unsung.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "resonance_wraith",
+  "file": "resonance_wraith.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "hollow_choir",
+  "file": "hollow_choir.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "choir_colossus",
+  "file": "choir_colossus.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "echo_shard",
+  "file": "echo_shard.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "last_light",
+  "file": "last_light.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "hymn_of_ending",
+  "file": "hymn_of_ending.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "song_of_return",
+  "file": "song_of_return.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "bastion_protocol",
+  "file": "bastion_protocol.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "breaker_jun",
+  "file": "breaker_jun.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "kade",
+  "file": "kade.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "spore_mother",
+  "file": "spore_mother.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "hivewarden",
+  "file": "hivewarden.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "recall_foreman",
+  "file": "recall_foreman.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "siege_engine",
+  "file": "siege_engine.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "lampkeeper",
+  "file": "lampkeeper.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "null_choir",
+  "file": "null_choir.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "lost_fleet",
+  "file": "lost_fleet.png",
+  "brief": "BRIEF5"
+ },
+ {
+  "kind": "card",
+  "id": "halcyon",
+  "file": "halcyon.png",
+  "brief": "BRIEF5"
  }
 ]
