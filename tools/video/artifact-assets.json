@@ -1,16 +1,82 @@
 {
-  "_note": "Cutscene clips (720, 1080, poster p) and portrait loops (l) the Claude artifact serves from its asset store (it can't hold them as files: 511-file limit). Written when the clips are uploaded; artifact_videos.py merges these into the artifact's copy of js/videos.js.",
-  "s1-meridian":     {"1080": "/_blob/6e1b97c07257b9819865fea0e80904a7", "720": "/_blob/dfc387b73a6c83dcccca9b5993db23da", "p": "/_blob/dcacfb4d8ee311ab958fbb19ea7ede66"},
-  "s1-depart":       {"1080": "/_blob/0b643ffa7eac302a78a97fc4da2f2636", "720": "/_blob/2e21f01911e66af62c2e8eb239b9b0dc", "p": "/_blob/aaf20b813050425a37f68da71576cb36"},
-  "s2-wreck":        {"1080": "/_blob/acba83531501642928b52c00b4b18574", "720": "/_blob/2f3e48d00995bf671a77fdef07d0b8da", "p": "/_blob/0944324edde997014e8b62d76a833479"},
-  "s2-lamp-nine":    {"1080": "/_blob/7404b8fd53ef88c2a0a7e1f75cc91e77", "720": "/_blob/a9a78c85a1cbdd5b7f704316aea5b331", "p": "/_blob/69ec26b735af41164e6a79309b796678"},
-  "s3-scatter":      {"1080": "/_blob/3c630ee4f46c5bd1d637b3984b26131a", "720": "/_blob/feff55c016f0e02fe096f0caadc53a95", "p": "/_blob/32356f45cfa487ecf0a457873b818e32"},
-  "s3-forge-signal": {"1080": "/_blob/19019039a14c0b1a1fbeb8a88e7d4a80", "720": "/_blob/c20f82cf54d73d395fe1930a0f697bf1", "p": "/_blob/d9c544930a3050b4f5be7b77cf577217"},
-  "s4-forge-dark":   {"1080": "/_blob/566d856e87321e13e732247bc092815c", "720": "/_blob/fb5db411fa02e03efa049a3f98e87003", "p": "/_blob/fff88c8a46e9ca0bdc8ec8aedee82357"},
-  "s4-void":         {"1080": "/_blob/4e6f19b1b1d934cddb0ce4717aa8d112", "720": "/_blob/136f2e3b9e47bbb5d0bb7fa085747733", "p": "/_blob/8ec2924bf334fd15dde47d55a0edd1a2"},
-  "s5-depart":       {"1080": "/_blob/0659be6915ba1539b08247abe0516eca", "720": "/_blob/85612c072ab71ace7220879cdbcb4729", "p": "/_blob/f3144f1254908e3e648f801bedd30eb2"},
-  "finale-collapse": {"1080": "/_blob/622379e619c16e9c3fc095b88195168d", "720": "/_blob/54465653c19cd69eb42cab849d5d3b3f", "p": "/_blob/a893638b3fab227a19722095584a1c17"},
-  "finale-dawn":     {"1080": "/_blob/6cfde8eb3a8ea87aa115cf3010fc99b7", "720": "/_blob/edbf012e6e1f41df8fe62ad2427d27fa", "p": "/_blob/078270fe72956786f48ed11cf85f780c"},
-  "halcyon-idle":      {"l": "/_blob/1b4ddd89c859ab914702a3dc8dbb6bc2", "p": "/_blob/0247cd57b21896fefa30754c9a9cd6a2"},
-  "halcyon-corrupted": {"l": "/_blob/66673bf43d992711bd42ac63d131b97b", "p": "/_blob/43c08f6396828e463de5d1fd0dbf8b6a"}
+ "_note": "Cutscene clips (720, 1080, poster p) and portrait loops (l) the Claude artifact serves from its asset store (it can't hold them as files: 511-file limit). Written when the clips are uploaded; artifact_videos.py merges these into the artifact's copy of js/videos.js.",
+ "s1-meridian": {
+  "1080": "/_blob/6e1b97c07257b9819865fea0e80904a7",
+  "720": "/_blob/dfc387b73a6c83dcccca9b5993db23da",
+  "p": "/_blob/dcacfb4d8ee311ab958fbb19ea7ede66"
+ },
+ "s1-depart": {
+  "1080": "/_blob/0b643ffa7eac302a78a97fc4da2f2636",
+  "720": "/_blob/2e21f01911e66af62c2e8eb239b9b0dc",
+  "p": "/_blob/aaf20b813050425a37f68da71576cb36"
+ },
+ "s2-wreck": {
+  "1080": "/_blob/acba83531501642928b52c00b4b18574",
+  "720": "/_blob/2f3e48d00995bf671a77fdef07d0b8da",
+  "p": "/_blob/0944324edde997014e8b62d76a833479"
+ },
+ "s2-lamp-nine": {
+  "1080": "/_blob/7404b8fd53ef88c2a0a7e1f75cc91e77",
+  "720": "/_blob/a9a78c85a1cbdd5b7f704316aea5b331",
+  "p": "/_blob/69ec26b735af41164e6a79309b796678"
+ },
+ "s3-scatter": {
+  "1080": "/_blob/3c630ee4f46c5bd1d637b3984b26131a",
+  "720": "/_blob/feff55c016f0e02fe096f0caadc53a95",
+  "p": "/_blob/32356f45cfa487ecf0a457873b818e32"
+ },
+ "s3-forge-signal": {
+  "1080": "/_blob/19019039a14c0b1a1fbeb8a88e7d4a80",
+  "720": "/_blob/c20f82cf54d73d395fe1930a0f697bf1",
+  "p": "/_blob/d9c544930a3050b4f5be7b77cf577217"
+ },
+ "s4-forge-dark": {
+  "1080": "/_blob/566d856e87321e13e732247bc092815c",
+  "720": "/_blob/fb5db411fa02e03efa049a3f98e87003",
+  "p": "/_blob/fff88c8a46e9ca0bdc8ec8aedee82357"
+ },
+ "s4-void": {
+  "1080": "/_blob/4e6f19b1b1d934cddb0ce4717aa8d112",
+  "720": "/_blob/136f2e3b9e47bbb5d0bb7fa085747733",
+  "p": "/_blob/8ec2924bf334fd15dde47d55a0edd1a2"
+ },
+ "s5-depart": {
+  "1080": "/_blob/0659be6915ba1539b08247abe0516eca",
+  "720": "/_blob/85612c072ab71ace7220879cdbcb4729",
+  "p": "/_blob/f3144f1254908e3e648f801bedd30eb2"
+ },
+ "finale-collapse": {
+  "1080": "/_blob/622379e619c16e9c3fc095b88195168d",
+  "720": "/_blob/54465653c19cd69eb42cab849d5d3b3f",
+  "p": "/_blob/a893638b3fab227a19722095584a1c17"
+ },
+ "finale-dawn": {
+  "1080": "/_blob/6cfde8eb3a8ea87aa115cf3010fc99b7",
+  "720": "/_blob/edbf012e6e1f41df8fe62ad2427d27fa",
+  "p": "/_blob/078270fe72956786f48ed11cf85f780c"
+ },
+ "halcyon-idle": {
+  "l": "/_blob/1b4ddd89c859ab914702a3dc8dbb6bc2",
+  "p": "/_blob/0247cd57b21896fefa30754c9a9cd6a2"
+ },
+ "halcyon-corrupted": {
+  "l": "/_blob/66673bf43d992711bd42ac63d131b97b",
+  "p": "/_blob/43c08f6396828e463de5d1fd0dbf8b6a"
+ },
+ "ixis-idle": {
+  "l": "/_blob/d4a4d7ad3a9a708fe8609a00aa61575c",
+  "p": "/_blob/3469cc915514dda333f6f21420991baf"
+ },
+ "calculus-idle": {
+  "l": "/_blob/1fcf4ffdc6bf3b1245720161d7bf706a",
+  "p": "/_blob/072156fb68beeab094d23b6674eda91d"
+ },
+ "choir-idle": {
+  "l": "/_blob/bce56ba4d8fdccbf1391ef1f72c0563d",
+  "p": "/_blob/2e18e712932a08ce67c0b9b1d12bc33f"
+ },
+ "nyra-idle": {
+  "l": "/_blob/eaaf743caefcdbb55ea327eff787c581",
+  "p": "/_blob/aa9ae8a97d0c170d5a40dfffea937fd4"
+ }
 }
