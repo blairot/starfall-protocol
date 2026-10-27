@@ -214,36 +214,38 @@ const CINEMATICS = {
     title: 'What the Choir Is', kicker: 'Sector 05 complete', sector: 4, music: 'boss',
     shots: [
       { type: 'title', kicker: 'Sector 05 complete', title: 'What the Choir Is', dur: 3 },
-      { type: 'transmission', sfx: 'hum',
+      // Nyra's last words. Her signal drops out as the song takes her.
+      { type: 'transmission', sfx: 'hum', end: 'lost', hold: 2.6,
         lines: [
-          { who: 'nyra', text: "I was nine when I first heard the Choir. I felt welcome." },
-          { who: 'nyra', text: "The Choir is the Lamplighters, who built the Lamps. Rather than die, they became one mind at the core." },
-          { who: 'nyra', text: "I lit the Lamps for peace. Now it's calling me in. I'm sorry, Commander." },
+          { who: 'nyra', text: "Commander, I don't have long. It's calling me in, and it sounds like home." },
+          { who: 'nyra', text: "The Choir is the Lamplighters. Rather than die, they became one voice at the core." },
+          { who: 'nyra', text: "I thought I was bringing peace. I was only feeding it. Don't let it take anyone else." },
         ] },
-      { type: 'space', clip: 'opening-signal', sector: 5, cam: 'push',
+      { type: 'space', clip: 'opening-signal', sector: 5, cam: 'push', hold: 1.4,
         lines: [
-          { who: 'narrator', text: "Then the Choir took her, and Nyra died." },
-          { who: 'narrator', text: "It swallows every mind it can reach. The Starfall was its first attempt to take us." },
+          { who: 'narrator', text: "Her voice faded into the song. Hierarch Nyra was gone." },
         ] },
       { type: 'transmission', sfx: 'static',
         lines: [
-          { who: 'choir', text: "Join us, Commander, and you'll never be alone." },
+          { who: 'choir', text: "She sings with us now. We reached for you once, at the Starfall. Join us, and you'll never be alone." },
         ] },
-      { type: 'transmission',
+      // HALCYON's recording. It has already gone into the song, so its signal ends too.
+      { type: 'transmission', end: 'lost', hold: 2.4,
         lines: [
-          { who: 'halcyon', text: "Commander, this is a recording. Before the Academy, I ran Anchorage. The Fleet wiped me after the Starfall." },
-          { who: 'halcyon', text: "They left me one order. If the Choir came back, train a commander to reach the core." },
-          { who: 'halcyon', text: "I chose you. Now I'm going into the Choir, to help from the inside." },
+          { who: 'halcyon', text: "Commander, this is a recording. I ran Anchorage, before the Academy. The Fleet wiped me after the Starfall." },
+          { who: 'halcyon', text: "They left me one order. If the Choir came back, train a commander to reach the core. I chose you." },
+          { who: 'halcyon', text: "Nyra's mind showed me the way in. I'm going into the song, to help from the inside." },
+          { who: 'halcyon', text: "Most cadets fail. You didn't. I'd like that on the record." },
         ] },
       { type: 'log',
         log: { header: 'FLEET DIRECTIVE 17. CLAUSE 4. FLEET EYES ONLY',
           body: 'If the signal returns, the Anchorage station mind will train a commander who can reach the core.\n\nThat commander gets every resource that remains.' },
         lines: [
-          { who: 'okonkwo', text: "Directive Seventeen gives you every resource that remains. I checked. That's you and the Meridian." },
+          { who: 'okonkwo', text: "Directive Seventeen. Every resource that remains. That's you and the Meridian." },
         ] },
       { type: 'ship', ship: 'meridian', action: 'depart', clip: 's5-depart', cam: 'push',
         lines: [
-          { who: 'narrator', text: "Nyra's Lamps had opened the way to the Singularity, the Choir's home. The Meridian went to end it." },
+          { who: 'narrator', text: "The way to the Singularity lay open. The Meridian went to end it." },
         ] },
       { type: 'warp', sector: 5, sfx: 'warp', dur: 2.5 },
     ],

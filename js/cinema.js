@@ -245,6 +245,8 @@ const Cinema = (() => {
         await wait(350);
       }
       duck(false); sub.classList.remove('show');
+      // `end: 'lost'`: the speaker is gone. The signal drops to static during the hold.
+      if (sh.end === 'lost' && !me.done) { const h = div.querySelector('.cc-h'); if (h) h.textContent = 'Signal lost'; div.classList.add('lost'); if (SFX.static) SFX.static(); }
       const left = dur * 1000 - (performance.now() - t0);
       if (left > 0) await wait(left);
     }

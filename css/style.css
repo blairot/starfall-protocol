@@ -1659,3 +1659,12 @@ body.touch .inspect-hint { color: var(--t-3); }
 @keyframes upGlow { 0% { box-shadow: inset 0 0 0 1px rgba(125, 255, 168, .9), 0 0 26px rgba(125, 255, 168, .55); } }
 
 .card .c-atk.up { color: #eaffef; background: linear-gradient(180deg, #8dffb4, #2fae62); }
+
+/* ----- 34. Cutscenes: a transmission that ends with its speaker gone (end: 'lost') ----- */
+.cin-shot.lost .cc-portrait { animation: ccLost 2.4s ease-in forwards; }
+.cin-shot.lost .cc-scan { animation: none; opacity: 1; background: var(--scan), repeating-linear-gradient(0deg, rgba(255, 255, 255, .08) 0 2px, transparent 2px 5px); }
+.cin-shot.lost .cc-wave i { height: 2%; animation: none; opacity: .35; transition: height .6s; }
+.cin-shot.lost .cc-h::before { animation: none; background: #555; box-shadow: none; }
+.cin-shot.lost .cc-h { color: var(--muted, #8a93a3); }
+@keyframes ccLost { 0% { filter: none; } 20% { filter: saturate(.4) brightness(1.4); transform: translateX(3px); } 24% { transform: none; } 100% { filter: grayscale(1) brightness(.15) blur(2px); } }
+@media (prefers-reduced-motion: reduce) { .cin-shot.lost .cc-portrait { animation-duration: .01s; } }
