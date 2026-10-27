@@ -93,6 +93,7 @@ function openPack(save, tier) {
   const out = [];
   for (const r of rar) {
     let pool = byR[r].length ? byR[r] : byR.common;
+    const unseen = pool.filter(d => !out.some(o => o.id === d.id)); if (unseen.length) pool = unseen;   // never the same card twice in one pack
     // no duplicate Legendaries (or any card already maxed) while unowned ones remain at that rarity
     const fresh = pool.filter(d => (save.coll[d.id] || 0) < maxCopies(d) && !out.some(o => o.id === d.id && d.rarity === 'legendary'));
     if (r === 'legendary' && fresh.length) pool = fresh;

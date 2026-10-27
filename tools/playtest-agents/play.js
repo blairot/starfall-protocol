@@ -146,7 +146,7 @@ function describe(s, evs, nm) {
       case 'play': lines.push(e.pi === 1 && D(e.id).type === 'trap' ? `${who(e.pi)} armed a hidden Trap.` : `${who(e.pi)} played ${D(e.id).name}${e.tgt != null && nm[e.tgt] ? ' on ' + nm[e.tgt] : ''}.`); break;
       case 'power': { const p = s.players[e.pi].power; lines.push(`${who(e.pi)} used ${p ? HEROPOWERS[p.id].name : 'their power'}.`); break; }
       case 'attack': lines.push(`${n(e.from)} attacked ${n(e.to)}.`); break;
-      case 'dmg': lines.push(`  ${n(e.uid)} took ${e.n} damage${e.soak ? ` (${e.soak} absorbed by Armor)` : ''}.`); break;
+      case 'dmg': lines.push(!e.soak ? `  ${n(e.uid)} took ${e.n} damage.` : e.soak >= e.n ? `  ${n(e.uid)}'s Armor blocked all ${e.n} damage.` : `  ${n(e.uid)} was hit for ${e.n}: Armor blocked ${e.soak}, ${e.n - e.soak} to Health.`); break;
       case 'shield': lines.push(`  ${n(e.uid)}'s Barrier absorbed the hit and broke.`); break;
       case 'armor': lines.push(`  ${n(e.uid)} gained ${e.n} Armor.`); break;
       case 'heal': lines.push(`  ${n(e.uid)} healed ${e.n}.`); break;
@@ -160,7 +160,7 @@ function describe(s, evs, nm) {
       case 'equip': lines.push(`${who(e.pi)} equipped ${D(e.id).name}.`); break;
       case 'freeze': lines.push(`  ${n(e.uid)} was frozen.`); break;
       case 'silence': lines.push(`  ${n(e.uid)} was hit by EMP (card text, buffs and keywords wiped).`); break;
-      case 'transform': lines.push(`  ${n(e.uid)} was transformed.`); break;
+      case 'transform': { const nu = s.players.flatMap(p => p.board).find(m => m.uid === e.uid); lines.push(`  ${nm[e.old] || 'A unit'} transformed into ${nu ? D(nu.id).name : n(e.uid)}.`); break; }
       case 'bounce': lines.push(`  ${n(e.uid)} returned to hand.`); break;
       case 'summon': if (!evs.some(x => x.t === 'play' && x === e)) { /* summoned by an effect */ } break;
     }
@@ -179,6 +179,7 @@ function chStatus(save) {
   const run = save.challenge;
   if (!run) {
     if (!fn('challengeOpen')(save)) return say('The Proving Grounds open when you finish the campaign.');
+    say('The Proving Grounds are the Academy\'s oldest simulator, the one Halcyon was first built to run; Okonkwo has had it restored. Okonkwo: "Halcyon put every cadet through this, me included. No collection, no favourites. It\'s still running its old code."');
     say(`PROVING GROUNDS (challenge run). Runs played: ${save.stats.challenges || 0}${save.stats.chBest ? ', best ' + save.stats.chBest + '/8' : ''}.`);
     say('Pick a commander power, draft 20 cards (pick 1 of 3) from every set, then fight 8 trials against enemies from the whole war, each with a random modifier.');
     say(`${g('CHALLENGE').lives} hull points: a loss costs one and re-rolls the trial. Rewards go to your real collection: ${g('CHALLENGE').winCredits} x wins Credits after each win, keep one card from your run deck at 3 wins, a Singularity Pack at 4 wins and two at 8.`);

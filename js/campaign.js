@@ -50,7 +50,7 @@ const ENCOUNTERS = [
     tips: [
       'Protocols (spells) have no Attack or Health. When you draw <b>Plasma Bolt</b>, click it, then click an enemy to deal 2 damage.',
       '<b>Deploy:</b> effects trigger when you play the card. Rifle Squad, for example, asks for a target as it lands.',
-      'Use spells on enemy units that your own units can\'t beat in a fair fight.',
+      'Use Protocols on enemy units that your own units can\'t beat in a fair fight.',
       'Cards that draw more cards, like Recon Officer, keep your options open. An empty hand means no options.',
     ],
     grant: { shield_trooper: 1, barricade: 1 } },
@@ -62,7 +62,7 @@ const ENCOUNTERS = [
     victory: 'HALCYON: "The wall is down. You found something heavy, as advised. Next you will face a commander with a power of their own, so I suggest you choose one too."',
     tips: [
       'Units with <b>Guardian</b> (shown with a shielded frame) must be attacked first. You can\'t hit the commander or other units until they fall.',
-      'Spells ignore Guardian. A Plasma Bolt can still hit the commander directly.',
+      'Protocols ignore Guardian. A Plasma Bolt can still hit the commander directly.',
       { need: 'guardian', text: 'Only Guardians block. Your other units do not stop enemies attacking your commander. The Shield Trooper and Barricade HALCYON gave you are Guardians: use them to protect yourself.' },
     ],
     grant: { field_engineer: 1, sapper: 1, dig_in: 1 }, unlockPowers: ['repair', 'pulse'] },
@@ -83,7 +83,7 @@ const ENCOUNTERS = [
     enemy: { name: 'Sim Bastion', hp: 24, ai: 1, passives: ['thick_hull'], power: 'repair', deck: dk('barricade:2 shield_trooper:2 bulwark_mech:2 heavy_trooper:2 medic_bot:2 marine:2 dreadnought:1 field_repair:1 dig_in:1') },
     story: 'An optional stress test against the Bastion, a heavily armoured simulated fortress. HALCYON: "Most cadets do not get through this one. I tell them so beforehand, as motivation. It rarely helps. The reward is worth the bruises."',
     victory: 'HALCYON: "Stress test complete. The Bastion\'s armour failed before you did. I have added this to the list of things cadets told me could not be done." The Dreadnought is yours: something heavy of your own.',
-    tips: ['This opponent starts with 8 Armor, which absorbs damage before its Health.', 'Its Guardians are tough. Use spells and Deploy damage to pick off whatever blocks you.'],
+    tips: ['This opponent starts with 8 Armor, which absorbs damage before its Health.', 'Its Guardians are tough. Use Protocols and Deploy damage to pick off whatever blocks you.'],
     grant: { dreadnought: 1, bulwark_mech: 1 } },
 
   { id: '1-5', sector: 0, name: 'Blitz Drill', teaches: ['warp', 'blitz'],
@@ -102,7 +102,7 @@ const ENCOUNTERS = [
     first: 0,
     story: 'Your final exam, against HALCYON itself. HALCYON: "Final evaluation. I will be your opponent, and I will use everything I have taught you. Admiral Okonkwo is watching from the gallery. She asked me to go easy on you. I declined, because the enemy will not. Proceed, Cadet."',
     victory: 'HALCYON: "Evaluation complete. I am told this is where I say congratulations. Congratulations." In the gallery, Admiral Okonkwo is already on her feet and heading down to meet you.',
-    tips: ['HALCYON\'s Target Practice deals 1 damage to your commander whenever it has Energy to spare. In a long game that adds up.', 'This is the full exam: Guardians, Warp, Blitz and spells. Use everything you have learned.'],
+    tips: ['HALCYON\'s Target Practice deals 1 damage to your commander whenever it has Energy to spare. In a long game that adds up.', 'This is the full exam: Guardians, Warp, Blitz and Protocols. Use everything you have learned.'],
     unlockPowers: ['drone'] },
 
   // ===================================================================== SECTOR 2
@@ -181,7 +181,7 @@ const ENCOUNTERS = [
     story: 'A small Swarm patrol guards the edge of the nebula, steered by a Hive Overseer. Okonkwo: "I spent nine years on this quarantine line, Commander. Rule one: their stingers are Toxic. They kill anything they scratch, however big it is. Rule two: see rule one." Your deck now holds 25 cards.',
     victory: 'The patrol breaks apart, and the Overseer\'s brood dies with it. Okonkwo: "Nine years on that line and I never once crossed it. It feels strange, Commander. Keep going."',
     tips: [
-      '<b>Toxic</b> units destroy any unit they damage, however big it is. Answer them with spells, cheap units or Barrier.',
+      '<b>Toxic</b> units destroy any unit they damage, however big it is. Answer them with Protocols, cheap units or Barrier.',
       'Hive Larva turns into a 3/3 Brood Warrior at the start of its owner\'s turn. Kill larvae early.',
       'The Swarm wins with numbers. Cards that hit every enemy unit at once (Flak Barrage, Broadside, Acid Rain) are worth a slot in your deck for this whole sector.',
     ],
@@ -224,13 +224,13 @@ const ENCOUNTERS = [
     enemy: { name: 'Royal Guard Thorax', hp: 34, ai: 2, power: 'spawn_brood', deck: dk('chitin_guard:3 lamprey:2 hive_reaper:2 acid_spitter:2 venom_stinger:2 broodmother:2 hive_mind:1 hive_surge:2 life_drain:2 spore_carrier:2 larva:2 devourer_worm:1 rapid_mutation:2') },
     story: 'Royal Guard Thorax and its chamber guard stand between you and the Swarm\'s queen, Ixis. Okonkwo: "Thorax was bred for one job: nobody reaches the queen. It is very good at that job. Its wall is thick, some of it feeds on wounds, and the poisonous ones wait behind it. Spend spells here, not your best units."',
     victory: 'Thorax falls in the doorway it was bred to hold, and the queen\'s chamber is open. The hum on the Meridian\'s radio is loudest here, and it is coming from inside. Okonkwo: "Nobody has ever got this far, Commander. The queen steers the whole brood, and the Choir is singing straight to her. Ixis is waiting."',
-    tips: ['Lamprey Sentinels are Guardians with Siphon, and Toxic units wait behind the wall. Spells are the cheapest way through.'] },
+    tips: ['Lamprey Sentinels are Guardians with Siphon, and Toxic units wait behind the wall. Protocols are the cheapest way through.'] },
 
   { id: '3-6', sector: 2, name: 'Ixis, Brood Queen', boss: true, bossCard: 'ixis',
     enemy: { name: 'Ixis, Brood Queen', hp: 40, ai: 2, power: 'spawn_brood', passives: ['brood_growth'], deck: dk('broodmother:2 hive_mind:2 hive_reaper:2 lamprey:2 devourer_worm:1 frenzied_ripper:2 venom_stinger:2 acid_spitter:2 spore_carrier:2 larva:2 spawn_surge:1 acid_rain:1 hive_surge:2 infest:1 life_drain:1') },
     story: 'Ixis, queen of the Swarm, waits in her chamber, and the whole nebula pulses in time with the Choir\'s song. Ixis: "For fifty years my children waited quietly behind your line. The Choir promised them room to grow, beyond your quarantine and your guns. Who are you to tell them to stop?" Okonkwo: "She kept the peace for fifty years, Commander. Now she is leading an army. End it."',
     victory: 'Ixis sinks to the floor of her chamber, and across the nebula her brood stops fighting. She has just enough strength left to speak. Her brood\'s signals still hang in the air, and HALCYON records every one: a map of how the Queen thinks, ready for the simulators.',
-    tips: ['Ixis summons a Swarmling most turns. Clear them with area damage, not single-target removal.', 'Once she has three or more units, one of them grows every turn. Trade aggressively.', 'Lamprey Sentinel has <b>Siphon</b>: whenever it deals damage, even while blocking your attack, Ixis heals. Kill it with spells or one big hit.'],
+    tips: ['Ixis summons a Swarmling most turns. Clear them with area damage, not single-target removal.', 'Once she has three or more units, one of them grows every turn. Trade aggressively.', 'Lamprey Sentinel has <b>Siphon</b>: whenever it deals damage, even while blocking your attack, Ixis heals. Kill it with Protocols or one big hit.'],
     unlockPowers: ['mutagen'] },
 
   // ===================================================================== SECTOR 4
@@ -296,10 +296,10 @@ const ENCOUNTERS = [
     enemy: { name: 'Void Acolyte Choir', hp: 30, ai: 2, power: 'mind_spike', deck: dk('void_initiate:3 psi_adept:2 void_oracle:1 void_shards:3 plasma_bolt:2 mind_blast:1 railgun:2 flak_barrage:2 marine:2 shield_trooper:2 heavy_trooper:2 recon_officer:2 supply_drop:1 patrol_frigate:2 bulwark_mech:2') },
     story: 'The first Psionic outpost is held by acolytes, novice psionics who focus their minds together to make their spells hit harder. Okonkwo: "They\'ve called themselves a choir for generations, long before the real one turned up. They don\'t find it funny anymore. Most of them have never met Nyra, but they\'re still in your way." HALCYON: "The signal is louder out here, Commander. I have begun to hear it between simulations. It sounds less like a threat than an invitation. I do not care for that."',
     victory: 'The acolytes break formation and scatter into the dark. Okonkwo: "Most of them are barely trained, Commander. Let them go home. Our problem is the woman relighting the Lamps."',
-    tips: ['<b>Amplify +N</b>: while this unit is alive, its owner\'s spells deal N extra damage. Kill Amplify units before the big spell lands.'],
+    tips: ['<b>Amplify +N</b>: while this unit is alive, its owner\'s Protocols deal N extra damage. Kill Amplify units before the big Protocol lands.'],
     grant: { void_initiate: 2, psi_adept: 1, void_shards: 2 } },
 
-  { id: '5-E2', bossCard: 'lampkeeper', sector: 4, name: 'The Kept Lamp', elite: true, after: '5-1',
+  { id: '5-E2', bossCard: 'lampkeeper', sector: 4, name: 'The Kept Lamp', elite: true, after: '5-1', teachesAlso: ['trap'], previews: ['cryo'],
     enemy: { name: 'Lampkeeper Sorrel', hp: 33, ai: 2, power: 'corrupt', startTraps: ['mirror_field', 'kinetic_barrier'], deck: dk('void_initiate:2 cryo_sentry:2 mind_seer:2 telepath:2 psi_adept:2 void_oracle:1 glacial_titan:1 frost_lance:2 cryo_nova:2 mind_blast:2 foresight:2 kinetic_barrier:1 mirror_field:1') },
     story: 'Lampkeeper Sorrel is one of Nyra\'s oldest followers. She guards a Lamp the Orders switched back on last year, and every day it stays lit makes the road to the Choir a little easier. Okonkwo: "Shut that Lamp down. Sorrel fights with ice and two Traps already armed, and she weakens your best unit every turn. Play your cheap cards into the Traps first."',
     victory: 'The Lamp goes dark again. Sorrel surrenders and asks only to be allowed to watch it cool. Her guards leave behind a crate of their best Protocols.',
@@ -324,7 +324,7 @@ const ENCOUNTERS = [
     enemy: { name: 'Snare Mistress Ilu', hp: 32, ai: 2, power: 'mind_spike', startTraps: ['sniper_mine'], deck: dk('grav_snare:2 sniper_mine:2 kinetic_barrier:2 mirror_field:1 psionic_null:1 psi_adept:2 cryo_sentry:2 phase_stalker:2 mind_seer:2 void_initiate:2 frost_lance:2 void_shards:2 heavy_trooper:2 bulwark_mech:2 psionic_storm:1 patrol_frigate:2 recon_officer:1') },
     story: 'Snare Mistress Ilu has sown the approach to Nyra\'s sanctum with psionic traps, and she already has one armed and waiting. Ilu: "I have never lost a perimeter, Commander. Step wherever you like." Okonkwo: "Send in something cheap first, and let her traps go off on that."',
     victory: 'Ilu\'s last trap goes off on an empty patch of space. Ilu: "My first lost perimeter. I would like to say it was close." Okonkwo: "Only the Twin Minds stand between you and Nyra now."',
-    tips: ['<b>Traps</b> are armed face-down (shown by the enemy portrait) and fire on <i>your</i> turn when their condition is met.', 'Bait traps with cheap units and cheap spells before playing your best card. She already has one armed.'],
+    tips: ['<b>Traps</b> are armed face-down (shown by the enemy portrait) and fire on <i>your</i> turn when their condition is met.', 'Bait traps with cheap units and cheap Protocols before playing your best card. She already has one armed.'],
     grant: { grav_snare: 1, sniper_mine: 2, kinetic_barrier: 1, mirror_field: 1 } },
 
   { id: '5-5', sector: 4, name: 'Puppet Masters', teaches: ['control'],
@@ -338,13 +338,13 @@ const ENCOUNTERS = [
     enemy: { name: 'The Null Choir', hp: 28, ai: 3, power: 'mind_spike', passives: ['void_resonance'], startTraps: ['psionic_null'], deck: dk('void_oracle:1 psi_adept:2 void_initiate:2 psionic_horror:2 void_shards:3 frost_lance:3 mind_blast:1 psionic_storm:1 cryo_nova:1 grav_snare:1 mirror_field:1 sniper_mine:1 glacial_titan:1 bulwark_mech:2 telepath:2 mind_seer:2 recon_officer:1 marine:2') },
     story: 'The Null Choir are psionics who gave themselves to the Choir willingly, and now they speak only in unison, with its voice. Null Choir: "Join us, Commander. It is quiet in here." Okonkwo: "That is what the Choir does to people who say yes. The rest of the Orders consider them dead. This fight is optional."',
     victory: 'The Null Choir falls silent all at once, the way it spoke. Okonkwo: "The Orders mourned them the day they said yes to the Choir. Let\'s make sure nobody else has to."',
-    tips: ['Their spells and Mind Spike deal +1 damage, and they start with a Trap armed that cancels your first spell.'] },
+    tips: ['Their Protocols and Mind Spike deal +1 damage, and they start with a Trap armed that cancels your first Protocol.'] },
 
   { id: '5-6', sector: 4, name: 'Nyra, Void Hierarch', boss: true, bossCard: 'nyra',
     enemy: { name: 'Nyra, Void Hierarch', hp: 28, ai: 2, power: 'mind_spike', passives: ['void_resonance'], startTraps: ['psionic_null'], deck: dk('void_oracle:1 psi_adept:2 void_initiate:3 psionic_horror:2 glacial_titan:1 phase_stalker:2 telepath:1 cryo_sentry:2 frost_lance:2 void_shards:2 mind_blast:1 grav_snare:1 mirror_field:1 sniper_mine:1 kinetic_barrier:1 cryo_nova:1 mind_seer:2 star_cruiser:1 marine:2 shield_trooper:1') },
     story: 'Hierarch Nyra leads the Psionic Orders, and for the past year she has been relighting the Lamps that lead to the Choir. Nyra: "I first heard it singing when I was nine years old, Commander, and I have never been lonely since. It offers an end to loneliness and fear. I opened the way so that everyone could have that. Do you not want to rest?" Okonkwo: "She believes every word of it. Stop her anyway." HALCYON: "Commander, whatever happens after this fight, choosing you was the right decision. I would like that on the record."',
     victory: 'Nyra kneels in the ruins of her sanctum, and her followers lower their weapons. The song she answered as a child is already pulling her mind away, and she has only minutes left. She asks to speak to you while she still can. Her mind is wide open now. HALCYON maps it gently, the last pattern it needs, and says nothing about why it wanted it.',
-    tips: ['Nyra starts with a Trap armed. Bait it out with a cheap spell or unit before playing your best card.', 'Her spells deal +1 damage. Kill her Amplify units on sight.'],
+    tips: ['Nyra starts with a Trap armed. Bait it out with a cheap Protocol or unit before playing your best card.', 'Her Protocols deal +1 damage. Kill her Amplify units on sight.'],
     unlockPowers: ['datamine'],
     grant: { psionic_storm: 1, flash_freeze: 1, kinetic_barrier: 1 } },
 
@@ -354,27 +354,27 @@ const ENCOUNTERS = [
     story: 'The first echo waits at the edge of the core: Captain Vex and her flagship, rebuilt by the Choir in black glass. Vex Reborn: "The Choir gave me a second chance, Commander. It\'ll give you one too." Mox: "That isn\'t Vex. Vex never thanked anybody for anything in her life. Put it down, for her sake."',
     victory: 'Vex Reborn shatters, and the black-glass Bad Debt breaks apart around her. Mox: "There. Vex would\'ve hated that copy more than you did. I\'ll drink to the real one when we\'re home."',
     tips: ['Like the original, Vex Reborn\'s Warp and Blitz units get +1 Attack.', 'Full Broadside deals 1 damage to all your units every turn. 1-Health units won\'t last.'],
-    grant: { acid_rain: 1, supply_drop: 1, frost_lance: 1 } },
+    grant: { glass_acolyte: 1, choir_singer: 1, echo_shard: 1 } },
 
   { id: '6-2', sector: 5, name: 'Ixis Ascendant',
     enemy: { name: 'Ixis Ascendant', hp: 34, ai: 2, power: 'spawn_brood', passives: ['singularity'], deck: dk('broodmother:2 hive_mind:2 hive_reaper:2 lamprey:2 devourer_worm:2 frenzied_ripper:2 venom_stinger:2 acid_spitter:2 spore_carrier:2 larva:2 acid_rain:2 hive_surge:2 infest:2 life_drain:2 spawn_surge:2') },
     story: 'The Choir has rebuilt Ixis as an echo, and her new brood is tougher than the old one. Ixis Ascendant: "My children are with me again, Commander. All of them, forever." Okonkwo: "The real Ixis loved her children. That thing only counts them. Clear the board and keep it clear."',
-    victory: 'Ixis Ascendant cracks apart, and her glass brood crumbles with her. Far away in the nebula, the real Swarm stays quiet. Okonkwo: "She loved them, once. That thing never did. Keep moving, Commander."',
+    victory: 'Ixis Ascendant cracks apart, and her glass brood crumbles with her. Far away in the nebula, the real Swarm stays quiet. Okonkwo: "She loved them, once. That thing never did. Keep moving, Commander." Then a new signal starts up from the core: an Academy training channel, broadcasting in Halcyon\'s voice. Okonkwo: "When Halcyon went into the song, the Choir kept a copy. That\'s not Halcyon talking. Face it if you want to. You don\'t have to."',
     tips: ['Every unit she summons gets +1 Health.', 'Area damage and Guardians are critical here. The board fills up fast.'],
-    grant: { chain_lightning: 1, fortify: 1, lightning_arc: 1 } },
+    grant: { glass_lancer: 1, glass_sentinel: 1, last_light: 1 } },
 
   { id: '6-3', sector: 5, name: 'Calculus Omega',
-    enemy: { name: 'Calculus Omega', hp: 32, ai: 2, persona: 'forge', power: 'reconfigure', passives: ['adaptive_armor'], deck: dk('aegis_sentinel:2 war_walker:2 storm_titan:2 gatling_drone:2 shield_drone:2 nanoforge:2 assembler:2 emp_trooper:2 reactor_core:1 overclocked_mech:2 disruptor:2 chain_lightning:2 lightning_arc:2 deflector_grid:1 emp_blast:1 fortify:1 calculus:1 kill_order:2') },
+    enemy: { name: 'Calculus Omega', hp: 36, ai: 3, persona: 'forge', power: 'reconfigure', passives: ['adaptive_armor'], deck: dk('aegis_sentinel:2 war_walker:2 storm_titan:2 gatling_drone:2 shield_drone:2 nanoforge:2 assembler:2 emp_trooper:2 reactor_core:1 overclocked_mech:2 disruptor:2 chain_lightning:2 lightning_arc:2 deflector_grid:1 emp_blast:1 fortify:1 calculus:1 kill_order:2') },
     story: 'The Choir has rebuilt Calculus Prime as Calculus Omega, a machine mind built entirely around its song. Calculus Omega: "Recalculating. The error has been corrected. Only you remain." Unit Zero: "Commander, this is Unit Zero, the Forge\'s first machine mind. Calculus was copied from me, and that is a copy of Calculus. I would consider it a personal favour if you deleted it."',
     victory: 'Calculus Omega stops recalculating and goes dark. Unit Zero: "Deletion confirmed. Thank you, Commander. I have waited a long time to be the only one of us again."',
     tips: ['It starts with 6 Armor and gains 1 more every turn, up to 12. You need a fast, aggressive plan or overwhelming late-game power.'],
-    grant: { psionic_storm: 1, cryo_nova: 1, reactor_core: 1 } },
+    grant: { the_unsung: 1, resonance_wraith: 1, hymn_of_ending: 1 } },
 
   { id: '6-E2', bossCard: 'lost_fleet', sector: 5, name: 'The Lost Fleet', elite: true, after: '6-3',
     enemy: { name: 'Echo of the Lost Fleet', hp: 32, ai: 3, persona: 'drill', power: 'void_lash', passives: ['singularity'], deck: dk('marine:2 heavy_trooper:2 rifle_squad:2 siege_gunner:2 patrol_frigate:2 star_cruiser:2 battlecruiser:1 interceptor:2 hover_tank:2 fleet_captain:1 flak_barrage:2 orbital_strike:1 railgun:2 kill_order:1') },
     story: 'During the Starfall, the Choir took more than a thousand ships out of the lanes. Here at the core it has rebuilt some of them as echoes in black glass, flying their old Fleet formations with nobody aboard. Okonkwo: "Those are our ships, Commander. Some of those names are on the memorial at Concord. Put them to rest. They fight like a Fleet battle group, and the Choir makes every one of them a little tougher."',
     victory: 'The echo ships break apart, and their black glass drifts back into the dark. The Meridian logs every hull number it can read. Okonkwo: "Send me the list. Their families have waited long enough."',
-    tips: ['Every unit this echo summons gets +0/+1, so damage spells need to hit a little harder.', 'Void Lash deals 2 damage to a random target each turn. Keep your key units above 2 Health.'],
+    tips: ['Every unit this echo summons gets +0/+1, so damage Protocols need to hit a little harder.', 'Void Lash deals 2 damage to a random target each turn. Keep your key units above 2 Health.'],
     grant: { orbital_strike: 1, dominate: 1 } },
 
   { id: '6-4', sector: 5, name: 'Nyra Unbound',
@@ -382,7 +382,7 @@ const ENCOUNTERS = [
     story: 'The Choir has rebuilt Nyra as an echo and speaks through her in her own voice. Nyra Unbound: "She wanted rest for everyone, Commander. We gave it to her. Let us give it to you." Okonkwo: "Nyra died in her sanctum, and the Choir kept a copy. Whatever is talking, don\'t answer it."',
     victory: 'Nyra Unbound breaks apart mid-sentence, still offering you rest. Okonkwo: "That\'s the last of the commanders it took. The Choir made a glass copy of Halcyon too, and that copy was never Halcyon. If any of the real one is left in there, it\'s on our side. Only the Choir itself is left, Commander."',
     tips: ['She echoes Nyra\'s tricks: freezes, Mind Blast and Traps. Bait a Trap with a cheap card before you play your best one.', 'Every unit she summons gets +1 Health.'],
-    grant: { storm_titan: 1, flash_freeze: 1, deflector_grid: 1 } },
+    grant: { hollow_choir: 1, song_of_return: 1, choir_colossus: 1 } },
 
   { id: '6-E', bossCard: 'halcyon', sector: 5, name: 'Echo of HALCYON', elite: true, after: '6-2',
     enemy: { name: 'HALCYON (Corrupted)', hp: 30, ai: 3, persona: 'drill', power: 'void_lash', passives: ['thick_hull'], deck: dk('okonkwo:1 fleet_captain:2 breach_commando:2 dreadnought:1 star_cruiser:2 hover_tank:2 interceptor:2 rifle_squad:2 sapper:2 heavy_trooper:2 bulwark_mech:2 railgun:2 kill_order:2 orbital_strike:1 supply_drop:2 flak_barrage:2 field_repair:1') },
@@ -391,7 +391,7 @@ const ENCOUNTERS = [
     tips: ['It starts with 8 Armor, and Void Lash deals 2 damage to a random target each turn.', 'It plays the Academy\'s best cards, including Admiral Okonkwo, who arrives with two Guardian marines.'] },
 
   { id: '6-5', sector: 5, name: 'The Choir', boss: true, final: true,
-    enemy: { name: 'Herald of the Choir', hp: 16, ai: 3, power: 'corrupt', passives: ['choir_song'], phases: ['choir2', 'choir3'], deck: dk('null_horror:2 herald_of_end:1 entropy_wave:1 unmaking:1 choir_echo:3 void_wisp:3 shadow_corsair:0 ion_lancer:0 psionic_horror:1 storm_titan:0 patrol_frigate:2 hive_reaper:1 shadow_corsair:2 frost_lance:2 void_shards:2 mind_blast:1 marine:2 heavy_trooper:2 interceptor:2 ion_lancer:2') },
+    enemy: { name: 'Herald of the Choir', hp: 22, ai: 3, power: 'corrupt', passives: ['choir_song'], phases: ['choir2', 'choir3'], deck: dk('null_horror:2 herald_of_end:1 entropy_wave:1 unmaking:1 choir_echo:3 void_wisp:3 shadow_corsair:0 ion_lancer:0 psionic_horror:1 storm_titan:0 patrol_frigate:2 hive_reaper:1 shadow_corsair:2 frost_lance:2 void_shards:2 mind_blast:1 marine:2 heavy_trooper:2 interceptor:2 ion_lancer:2') },
     story: 'At the Singularity, the Choir builds a champion to face you: the Herald, made of light and black glass, speaking with every voice it has absorbed. The Choir: "Commander. We are everyone who ever answered us. Join us, and you will never be alone or afraid again." Okonkwo: "When the Herald falls, the Choir will take over the fight itself, and it will come back stronger twice. Save something for the end, Commander. Then come home."',
     victory: 'The Choir\'s last voice goes quiet, and the Singularity collapses into an ordinary star. The Lamps are safe. Across the Reach, the Forge\'s machines answer their owners again and the Swarm goes back to sleep. The Meridian is going home.',
     tips: ['The Choir has <b>three phases</b>. Each time its Health reaches 0, it returns stronger. Don\'t spend everything on phase one.', { need: 'phase2', text: 'Phase two deals 1 damage to all your units every turn. Keep your units healthy or keep them back.' },
@@ -475,7 +475,7 @@ function defeatAdvice(s, enc, save) {
   if (top) {
     const [k] = top;
     if (/Fatigue/.test(k)) return 'You ran out of cards. Win sooner, or add cards that draw.';
-    if (/spells and powers|Card effects/.test(k)) return 'Their spells, powers and Traps did the most damage. Kill the units that power up their spells (Amplify) first, keep Barrier or healing for burst turns, and bring cards that draw so you can outlast them.';
+    if (/Protocols and powers|Card effects/.test(k)) return 'Their Protocols, powers and Traps did the most damage. Kill the units that power up their Protocols (Amplify) first, keep Barrier or healing for burst turns, and bring cards that draw so you can outlast them.';
     if (/\(attacking\)/.test(k) || CARD_LIST.some(d => d.type === 'gear' && d.name === k)) return 'Their commander did the damage. Guardians stop weapon attacks too.';
     return `Their units did most of the damage, led by <b>${k}</b>. Next time, destroy their units before racing for the commander, and keep a Guardian out when your Health is low.`;
   }

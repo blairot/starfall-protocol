@@ -10,8 +10,6 @@
 // ============================================================================
 
 const CHALLENGE = { battles: 8, lives: 3, picks: 20, hp: 36, maxDeck: 27, winCredits: 20 };
-// Battle k draws its enemy from this sector (0-based), the last one from the bosses of the last two sectors.
-const CH_SECTORS = [1, 2, 2, 3, 3, 4, 4, 5];
 const CH_RARITY = [['common', 58], ['rare', 28], ['epic', 11], ['legendary', 3]];
 // Each modifier edits the battle config (see newGame in engine.js).
 const CH_MODS = {
@@ -48,10 +46,25 @@ function chOffer(run, bump) {
   }
   return chPool().filter(d => d.rarity === 'common').sort(() => Math.random() - 0.5).slice(0, 3).map(d => d.id);
 }
+// Trials 1-7 draw from campaign enemies ranked by strength (Health, AI level, Elite, sector) and cut
+// into seven bands, so the trials get harder in order; trial 8 is a late boss.
+const chScore = e => e.enemy.hp * (1 + 0.2 * (e.enemy.ai || 0)) + (e.elite ? 6 : 0) + 2 * e.sector;
+function chBand(k) {
+  const all = ENCOUNTERS.filter(e => !e.fixedDeck && e.sector >= 1 && !e.boss && !e.final).sort((a, b) => chScore(a) - chScore(b));
+  const n = CHALLENGE.battles - 1;
+  return all.slice(Math.floor(k * all.length / n), Math.floor((k + 1) * all.length / n));
+}
+// modifiers that would pile onto what this enemy already has
+const ARMORED = ['thick_hull', 'adaptive_armor'];
+function chModOk(m, e) {
+  if (m === 'glass') return !(e.passives || []).some(p => ARMORED.includes(p));   // cuts Health, not their Armor: one-sided
+  if (m === 'minefield') return !(e.startTraps || []).length && !(e.passives || []).includes('void_resonance');
+  return true;
+}
 function chFight(k) {
   const final = k === CHALLENGE.battles - 1;
-  const pool = ENCOUNTERS.filter(e => !e.fixedDeck && (final ? e.boss && e.sector >= 4 : e.sector === CH_SECTORS[k] && !e.boss && !e.final));
-  const enc = pick(pool), keys = Object.keys(CH_MODS);
+  const pool = final ? ENCOUNTERS.filter(e => !e.fixedDeck && e.boss && e.sector >= 4) : chBand(k);
+  const enc = pick(pool), keys = Object.keys(CH_MODS).filter(m => chModOk(m, enc.enemy));
   const mods = []; while (mods.length < (final ? 2 : 1)) { const m = pick(keys); if (!mods.includes(m) && !(mods.includes('overcharged') && m === 'headstart') && !(mods.includes('headstart') && m === 'overcharged')) mods.push(m); }
   return { enc: enc.id, mods };
 }
@@ -84,13 +97,14 @@ function chEnc(save) {
   const run = save.challenge, f = run && run.fights[run.at]; if (!f) return null;
   const base = ENC[f.enc];
   return Object.assign({}, base, { id: 'challenge', challenge: true, base: base.id, boss: false, elite: false, final: false, graduation: false,
-    grant: null, victory: null, unlockPowers: null, noPower: false, noMulligan: false, mods: f.mods, trial: run.at + 1, first: base.first, story: base.story });
+    grant: null, victory: null, unlockPowers: null, tips: [], noPower: false, noMulligan: false, mods: f.mods, trial: run.at + 1, first: base.first, story: base.story });
 }
 function challengeBattle(save) {
   const run = save.challenge, enc = chEnc(save);
   const b = buildBattle(Object.assign({}, save, { deck: run.deck, power: run.power, signature: null }), ENC[enc.base]);
   b.player.hp = CHALLENGE.hp; b.player.signature = null; b.player.sigDiscount = 0;
-  b.enemy.deck = b.enemy.deck.slice();
+  // the enemy brings as many cards as you do, so running out of cards is even
+  b.enemy.deck = b.enemy.deck.slice().sort(() => Math.random() - 0.5).slice(0, Math.max(20, run.deck.length));
   enc.mods.forEach(m => CH_MODS[m].apply(b));
   return b;
 }
@@ -122,4 +136,5 @@ function chFinish(save, keepId) {
   save.challenge = null;
   return out;
 }
-function chAbandon(save) { const run = save.challenge; if (!run) return; if (run.step === 'fight' || run.step === 'reward' || run.step === 'draft' || run.step === 'power') { run.lives = 0; run.step = run.wins >= 3 ? 'keep' : 'done'; } }
+function chAbandon(save) { const run = save.challenge; if (!run) return; if (run.step === 'power') { save.challenge = null; return; }   // nothing chosen yet: just cancel
+  if (run.step === 'fight' || run.step === 'reward' || run.step === 'draft' || run.step === 'power') { run.lives = 0; run.step = run.wins >= 3 ? 'keep' : 'done'; } }

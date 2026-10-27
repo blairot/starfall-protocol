@@ -8,11 +8,11 @@
 // ============================================================================
 
 // after: the main mission that opens the stop. Choice kinds:
-//   credits / alloy / scrap: gain that much   card: a random card from `set` you don't have two of
+//   credits / alloy / scrap: gain that much   card: a random card (of `type`, if given) from `set` you don't have two of
 //   pack: a Supply Pack of `set`              shop: the merchant's three cards for Credits    leave: nothing
 const EVENTS = [
   { id: 'ev-freighter', sector: 1, after: '2-2', kind: 'Salvage find', name: 'Drifting Freighter',
-    text: 'A freighter is tumbling through the Belt with its engines dead and its hold sealed. Mox: "First come, first served out here. Pick what you want and leave before Vex\'s crews smell it."',
+    text: 'A freighter is tumbling through the Belt with its engines dead and its hold sealed. Mox: "First come, first served out here. Pick what you want and leave before the raider crews smell it."',
     choices: [{ label: 'Strip the hold for parts', kind: 'credits', n: 60 }, { label: 'Pull the armour plating for Anchorage', kind: 'alloy', n: 50 }, { label: 'Take the crated weapons', kind: 'card', set: 2 }] },
   { id: 'ev-blackmarket', sector: 1, after: '2-4', kind: 'Merchant', name: 'The Black Market',
     text: 'A smuggler\'s barge broadcasts a price list on an open channel. Sable: "Credits only, Commander. No questions, no refunds, and absolutely no Fleet paperwork."',
@@ -25,7 +25,7 @@ const EVENTS = [
     choices: [{ label: 'Open the supply crates', kind: 'pack', set: 3 }, { label: 'Take the fuel cells for Anchorage', kind: 'alloy', n: 60 }] },
   { id: 'ev-foundry', sector: 3, after: '4-1', kind: 'Salvage find', name: 'Silent Foundry',
     text: 'A foundry on the outer ring has stopped mid-shift, its line still loaded. HALCYON: "The parts are good. The machines that made them are not. I would not stay long."',
-    choices: [{ label: 'Take a finished unit off the line', kind: 'card', set: 4 }, { label: 'Melt down the stock for Scrap', kind: 'scrap', n: 80 }, { label: 'Ship the alloy home', kind: 'alloy', n: 60 }] },
+    choices: [{ label: 'Take a finished unit off the line', kind: 'card', set: 4, type: 'unit' }, { label: 'Melt down the stock for Scrap', kind: 'scrap', n: 80 }, { label: 'Ship the alloy home', kind: 'alloy', n: 60 }] },
   { id: 'ev-requisition', sector: 3, after: '4-3', kind: 'Merchant', name: 'Forge Requisitions',
     text: 'A requisition terminal still answers, and it still takes Fleet Credits. HALCYON: "It thinks we are a routine order. I see no reason to correct it."',
     choices: [{ label: 'Place an order', kind: 'shop', set: 4 }, { label: 'Leave it running', kind: 'leave' }] },
@@ -36,7 +36,7 @@ const EVENTS = [
     text: 'A keeper of the Psionic Archive will trade copies of its records for Credits. Archivist Prime: "Knowledge is free. Copying it is not."',
     choices: [{ label: 'Browse the records', kind: 'shop', set: 5 }, { label: 'Move on', kind: 'leave' }] },
   { id: 'ev-beacon', sector: 5, after: '6-1', kind: 'Salvage find', name: 'Lost Fleet Beacon',
-    text: 'A Fleet distress beacon from the Starfall, seventy years old, still transmitting. Okonkwo: "Eleven hundred ships went down that night. This one left us something."',
+    text: 'A Fleet distress beacon from the Starfall, seventy years old, still transmitting. Okonkwo: "Three thousand ships went down that night. This one left us something."',
     choices: [{ label: 'Recover the cargo', kind: 'pack', set: 6 }, { label: 'Recover the fuel', kind: 'credits', n: 120 }] },
 ];
 const EVENT_PRICE = { common: 40, rare: 100, epic: 250, legendary: 600 };
@@ -46,8 +46,8 @@ function eventDone(save, ev) { return !!(save.events && save.events[ev.id] && sa
 function eventsAvailable(save, sector) { return EVENTS.filter(ev => (sector == null || ev.sector === sector) && eventOpen(save, ev) && !eventDone(save, ev)); }
 function eventState(save, ev) { save.events = save.events || {}; return save.events[ev.id] || (save.events[ev.id] = {}); }
 // a random card from a set you don't have two of yet (or any card from it, if you do)
-function eventCard(save, set) {
-  const pool = setCards(set), fresh = pool.filter(d => (save.coll[d.id] || 0) < maxCopies(d) && d.rarity !== 'legendary');
+function eventCard(save, set, type) {
+  const pool = setCards(set).filter(d => !type || d.type === type), fresh = pool.filter(d => (save.coll[d.id] || 0) < maxCopies(d) && d.rarity !== 'legendary');
   return pick(fresh.length ? fresh : pool).id;
 }
 // The merchant's three cards (fixed once you've seen them), one of them rare or better when the set has one.
@@ -65,7 +65,7 @@ function resolveEvent(save, ev, k, buy) {
   if (ch.kind === 'credits') { save.credits += ch.n; res.text = `+${ch.n} Credits`; }
   else if (ch.kind === 'alloy') { ensureStation(save).alloy += ch.n; res.text = `+${ch.n} Alloy for Anchorage`; }
   else if (ch.kind === 'scrap') { save.scrap += ch.n; res.text = `+${ch.n} Scrap`; }
-  else if (ch.kind === 'card') { const id = eventCard(save, ch.set); grantCard(save, id); res.cards.push(id); res.text = `New card: ${D(id).name}`; }
+  else if (ch.kind === 'card') { const id = eventCard(save, ch.set, ch.type); grantCard(save, id); res.cards.push(id); res.text = `New card: ${D(id).name}`; }
   else if (ch.kind === 'pack') { save.packs[ch.set] = (save.packs[ch.set] || 0) + 1; res.text = `+1 ${PACK_SETS[ch.set - 1].name}`; }
   else if (ch.kind === 'shop') {
     if (!buy) return null;

@@ -18,18 +18,34 @@ function typeLabel(d) {
   return (d.faction === 'neutral' ? '' : f.name + ' · ') + t;
 }
 
+// Card text fit: once fonts are ready, render every card's text off-screen and keep the largest
+// size that fits its box (sizes are in em, so the answer holds at every card scale).
+const CARD_FIT = {};
+function fitCardText() {
+  const box = document.createElement('div'); box.style.cssText = 'position:absolute;left:-9999px;top:0;visibility:hidden;font-size:16px';
+  box.innerHTML = CARD_LIST.map(d => cardHTML(d.id)).join(''); document.body.appendChild(box);
+  box.querySelectorAll('.card').forEach(el => {
+    const t = el.querySelector('.c-text'); if (!t) return;
+    let fit = 'xxdense';
+    for (const lv of ['', 'dense', 'xdense', 'xxdense']) { t.className = 'c-text ' + lv; if (t.scrollHeight <= t.clientHeight + 1) { fit = lv; break; } }
+    CARD_FIT[el.dataset.card] = fit;
+  });
+  box.remove();
+}
+if (typeof document !== 'undefined' && document.fonts) document.fonts.ready.then(() => setTimeout(fitCardText, 50));
+
 function cardHTML(id, o) {
   o = o || {};
   const d = D(id), f = FACTIONS[d.faction] || FACTIONS.neutral;
   const cost = o.cost != null ? o.cost : d.cost;
   const cc = cost < d.cost ? 'down' : cost > d.cost ? 'up' : '';
   const stats = (d.type === 'unit' || d.type === 'gear')
-    ? `<div class="c-atk">${d.atk}</div><div class="c-hp${d.type === 'gear' ? ' dur' : ''}">${d.hp}</div>` : '';
+    ? `<div class="c-atk${o.atk > d.atk ? ' up' : ''}">${o.atk != null ? o.atk : d.atk}</div><div class="c-hp${d.type === 'gear' ? ' dur' : ''}">${d.hp}</div>` : '';
   return `<div class="card t-${d.type} r-${d.rarity} ${o.cls || ''}" style="--h:${f.hue}" data-card="${id}" ${o.attrs || ''}>
     <div class="c-body">
       <div class="c-art" style='background-image:${artPlate(id)}'></div>
       <div class="c-plate"><div class="c-name${d.name.length > 13 ? (d.name.length > 18 ? ' xlong' : ' long') : ''}">${esc(d.name)}</div><div class="c-code"><span>${typeLabel(d)}</span><i class="rar" title="${d.rarity}"></i></div></div>
-      <div class="c-text${d.text.length > 62 ? ' dense' : ''}">${fmt(d.text)}</div>
+      <div class="c-text ${CARD_FIT[id] != null ? CARD_FIT[id] : d.text.length > 62 ? 'dense' : ''}">${fmt(d.text)}</div>
     </div>
     <div class="c-cost ${cc}">${cost}</div>
     ${stats}
@@ -158,7 +174,11 @@ function showScreen(id) {
   if (id === 'battle' && UI.enc) {
     if (Music.setTheme) Music.setTheme(UI.enc.sector);
     Music.setMood(UI.enc.final ? 'final' : UI.enc.boss || UI.enc.elite ? 'boss' : 'battle');
-  } else Music.setMood('menu');
+  } else {
+    // menus play the ambience of the sector you're looking at (the title screen keeps the neutral one)
+    if (Music.setTheme) Music.setTheme(id === 'title' || !App.save ? -1 : MapUI.sector != null ? MapUI.sector : highestSector(App.save));
+    Music.setMood('menu');
+  }
 }
 
 // ---------------------------------------------------------------- incremental DOM updates
@@ -213,6 +233,8 @@ function startBattle(enc, resumeState) {
   const ov = UI.deckOverride && UI.deckOverride.id === enc.id ? { deck: UI.deckOverride.deck.slice() } : null;
   const s = newGame(enc.challenge ? challengeBattle(App.save) : buildBattle(easy || ov ? Object.assign({}, App.save, ov, easy ? { diff: 'cadet' } : null) : App.save, enc));
   UI.s = s; UI.retreat = false;
+  const nextCine = !enc.challenge && CINE_AFTER[enc.id];
+  if (nextCine && !(App.save.seenCine || []).includes(nextCine)) Cinema.prefetch(nextCine);
   Playtest.start(enc, enc.challenge ? App.save.challenge.deck : enc.fixedDeck || (ov ? ov.deck : App.save.deck), { tuned: !!ov, easy });
   aiMulligan(s, 1);
   renderBattle();
@@ -381,12 +403,17 @@ function renderBattle() {
   const overlap = handN > fitN ? -Math.min(UI.portrait ? 84 : 62, Math.ceil((handN * CW - HW) / (handN - 1))) : 4;
   if (UI.peek != null && (UI.peek >= handN || UI.busy || !myTurnNow(s))) UI.peek = null;
   const myTurn = s.active === 0 && !s.over;
+  // a unit in hand shows the Attack it will have from your commander's passives (e.g. the Veteran Crews modifier)
+  const handAtk = (s, id) => { const d = D(id); if (d.type !== 'unit') return null; let a = d.atk;
+    const kw = {}; (d.kw || []).forEach(k => kw[k] = true);
+    for (const pid of s.players[0].passives) { const ps = PASSIVES[pid]; if (ps && ps.auraAtk) try { a += ps.auraAtk(s, { id, kw, owner: 0 }) || 0; } catch (e) { /* needs a real unit */ } }
+    return a; };
   const hand = P.hand.map((c, i) => {
     const playable = myTurn && !UI.busy && !UI.mode && canPlay(s, 0, i);
     const sel = UI.mode && UI.mode.k === 'play' && UI.mode.hi === i;
     if (!UI.seenCards.has(c.uid)) UI.seenCards.set(c.uid, performance.now());
     const fresh = performance.now() - UI.seenCards.get(c.uid) < 500;
-    return `<div class="hand-slot${fresh ? ' drawn' : ''}${UI.peek === i ? ' peek' : ''}" data-key="c${c.uid}" style="margin-left:${i ? overlap : 0}px;--i:${i};--n:${handN}">${cardHTML(c.id, { cost: costOf(s, 0, c), cls: (playable ? 'playable' : '') + (sel ? ' selected' : ''), attrs: `data-hand="${i}"` })}</div>`;
+    return `<div class="hand-slot${fresh ? ' drawn' : ''}${UI.peek === i ? ' peek' : ''}" data-key="c${c.uid}" style="margin-left:${i ? overlap : 0}px;--i:${i};--n:${handN}">${cardHTML(c.id, { cost: costOf(s, 0, c), atk: handAtk(s, c.id), cls: (playable ? 'playable' : '') + (sel ? ' selected' : ''), attrs: `data-hand="${i}"` })}</div>`;
   }).join('');
   const seeCosts = stationLv(App.save, 'observatory') >= 3;
   const ehand = E.hand.map(c => `<i class="cback">${seeCosts ? `<em>${costOf(s, 1, c)}</em>` : ''}</i>`).join('');
@@ -719,7 +746,7 @@ async function playEvents() {
         logLine(`${nm(e.uid)} was destroyed`); SFX.death(); break;
       }
       case 'trap': { await flush(); SFX.trap(); const d = D(e.id); logLine(`${e.pi === 0 ? 'Your' : 'Enemy'} Trap fired: <b>${esc(d.name)}</b>`); const c = centerOf('H' + e.pi); if (c) FX.ring(c.x, c.y, FX_COLORS.trap, 160); await showCardFlash(e.id, e.pi === 0 ? 'Your Trap fires!' : 'Enemy Trap fires!', 'trapflash'); break; }
-      case 'countered': toast('The spell was cancelled!'); logLine('Spell cancelled by a Trap'); break;
+      case 'countered': toast('The Protocol was cancelled!'); logLine('Protocol cancelled by a Trap'); break;
       case 'burn': { const d = D(e.id); toast(`${e.pi === 0 ? 'Your hand is full.' : 'Enemy hand full.'} ${esc(d.name)} was destroyed.`); logLine(`${who(e.pi)} overdrew and lost <b>${esc(d.name)}</b>`); break; }
       case 'fatigue': logLine(`${who(e.pi)} ${e.pi === 0 ? 'are' : 'is'} out of cards: ${e.n} fatigue damage`); if (e.pi === 0) toast(`Deck empty! You take ${e.n} fatigue damage.`); break;
       case 'steal': logLine(`${nm(e.uid)} changed sides`); break;
@@ -819,6 +846,7 @@ function endBattle() {
   if (rw.packs) chips.push(`<div class="reward-chip rc-pack"><span class="rc-icon">${ico('pack')}</span><span>${esc(set.name)}${rw.packs > 1 ? ' ×' + rw.packs : ''}</span><b class="rc-val">+${rw.packs} pack${rw.packs > 1 ? 's' : ''}</b></div>`);
   if (rw.alloy) chips.push(`<div class="reward-chip rc-alloy"><span class="rc-icon">${ico('alloy')}</span><span>Salvaged Alloy for Anchorage</span><b class="rc-val">+${rw.alloy} Alloy</b></div>`);
   if (rw.scrap) chips.push(`<div class="reward-chip"><span class="rc-icon">${ico('scrap')}</span><span>Salvaged from the Singularity</span><b class="rc-val">+${rw.scrap} Scrap</b></div>`);
+  if (firstClear && enc.boss && bossesCleared(save) <= 5) chips.push(`<div class="reward-chip rc-up"><span class="rc-icon">${ico('shield')}</span><span>Hull reinforced: your commander now has ${playerMaxHp(save)} Health</span><b class="rc-val">+${HULL_PER_BOSS} Health</b></div>`);
   const bits = [];
   if (rw.legendary) bits.push(`<div class="legend-reveal"><div class="lr-card">${cardHTML(rw.legendary, { cls: 'big' })}</div><div><div class="m-eyebrow">Legendary acquired</div><h3 class="lr-name">${esc(D(rw.legendary).name)} joins your fleet</h3><p class="muted">${legendScrap ? `You already owned this card, so it became ${legendScrap} Scrap.` : 'Add it to your deck in the Hangar.'}</p></div></div>`);
   if (granted.length) {
@@ -829,10 +857,13 @@ function endBattle() {
     <div class="crate-row">${crate.map(id => `<button class="crate-card" data-crate="${id}" aria-label="Keep ${esc(D(id).name)}">${cardHTML(id)}<span class="crate-own">${crateCopies(id) > 1 ? '×' + crateCopies(id) + ' · ' : ''}${save.coll[id] ? 'You have ' + save.coll[id] : 'New'}</span></button>`).join('')}</div>
     <p class="muted small">${TOUCH.on ? 'Press and hold' : 'Right-click'} a card to read it first. The other two go back to the quartermaster.</p></div>`);
   unlocked.forEach(p => bits.push(`<div class="got power-got"><b>New commander power:</b> ${powerIco(p)} ${esc(HEROPOWERS[p].name)}: ${esc(HEROPOWERS[p].text)} <span class="muted">Equip it in the Hangar.</span></div>`));
-  if (newSector && DECK_SIZES[highestSector(save)] > DECK_SIZES[prevSector]) bits.push(`<div class="got"><b>Deck size increased to ${deckSizeFor(save)}.</b> <span class="muted">Add ${Math.max(0, deckSizeFor(save) - save.deck.length)} cards in the Hangar before your next battle. A new pack set is available at the Supply Depot.</span></div>`);
+  if (newSector && DECK_SIZES[highestSector(save)] > DECK_SIZES[prevSector]) bits.push(`<div class="got upgrade-got"><span class="up-tag">Upgrade</span><b>Deck size ${DECK_SIZES[prevSector]} → ${deckSizeFor(save)} cards.</b> <span class="muted">Add ${Math.max(0, deckSizeFor(save) - save.deck.length)} cards in the Hangar before your next battle. A new pack set is available at the Supply Depot.</span></div>`);
   if (graduated) bits.push('<div class="got"><b>Training complete. Three things are now open:</b><ul class="grad-list"><li><b>Supply Depot:</b> spend Credits on packs of new cards.</li><li><b>Crafting:</b> spare copies become Scrap; spend Scrap in the Hangar on the cards you want.</li><li><b>Anchorage:</b> your forward base. Spend Alloy there on upgrades.</li></ul><span class="muted">Each is explained in the Archive. Battles and contracts earn Credits and Alloy from now on.</span></div>');
   const earned = achieve(save, { won: true, enc, s, easy: UI.easyRun }); persist();
   if (earned.length) bits.push(`<div class="got"><b>Service record:</b> ${earned.map(a => `<span class="chip">${esc(a.name)}</span>`).join(' ')} <span class="muted">+${earned.reduce((n, a) => n + a.reward, 0)} Credits</span></div>`);
+  // the story cutscene plays straight after the win, then the debrief
+  const cine = firstClear && CINE_AFTER[enc.id];
+  const show = () => {
   const unopened = unopenedPacks(save);
   const m = modal(`${paintedBanner('screen-victory')}<div class="m-eyebrow ok">Victory</div><h2>${esc(enc.name)}</h2>
     ${enc.victory && firstClear ? `<p class="story">${esc(enc.victory)}</p>` : ''}
@@ -841,7 +872,6 @@ function endBattle() {
     ${bits.join('')}
     ${rateHTML()}
     <div class="m-actions">${unopened ? `<button class="btn" data-a="open">Open packs (${unopened})</button>` : ''}<button class="btn" data-a="hangar">Hangar</button>${upgradesAvailable(save) ? `<button class="btn" data-a="station">Anchorage (${upgradesAvailable(save)} ready)</button>` : ''}<button class="btn primary" data-a="go">${enc.final ? 'Continue' : 'Star Map'}</button></div>`, 'wide');
-  const cine = firstClear && CINE_AFTER[enc.id];
   wireRate(m);
   // the crate must be opened before leaving
   let picked = !crate;
@@ -858,9 +888,10 @@ function endBattle() {
   });
   m.onclick = e => {
     const a = e.target.dataset.a; if (!a || !picked) return; closeModal();
-    if (cine) return Cinema.play(cine, () => afterVictory(a, enc));
     afterVictory(a, enc);
   };
+  };
+  if (cine) Cinema.play(cine, show); else show();
 }
 
 // Where the victory screen's buttons lead (after any cutscene).
@@ -914,7 +945,7 @@ function openMap() {
     save.seenSector[hs] = true; persist();
     const sec = SECTORS[hs];
     const m = modal(`${paintedBanner('sector-' + sec.id)}<div class="m-eyebrow">Sector ${String(hs + 1).padStart(2, '0')} // new heading</div><h2>${esc(sec.name)}</h2><p class="story">${esc(sec.intro)}</p>
-      ${hs > 0 ? `<p class="muted">Deck size is now <b>${DECK_SIZES[hs]}</b> cards.</p>` : ''}<div class="m-actions"><button class="btn primary" data-a="ok">Set course</button></div>`, 'sector-modal');
+      ${hs > 0 && DECK_SIZES[hs] > DECK_SIZES[hs - 1] ? `<div class="got upgrade-got"><span class="up-tag">Upgrade</span><b>Deck size ${DECK_SIZES[hs - 1]} → ${DECK_SIZES[hs]} cards.</b> <span class="muted">Fill the new slots in the Hangar before your next battle.</span></div>` : ''}<div class="m-actions"><button class="btn primary" data-a="ok">Set course</button></div>`, 'sector-modal');
     m.onclick = e => { if (e.target.dataset.a) closeModal(); };
   }
 }
@@ -938,7 +969,7 @@ function openChallenge() {
     if (a === 'abandon') { if (b.dataset.sure) { chAbandon(save); persist(); openChallenge(); } else { b.dataset.sure = 1; b.textContent = 'Abandon: are you sure?'; } return true; } return false; };
   if (!run) {
     const m = modal(`<div class="m-eyebrow">Challenge run</div><h2>The Proving Grounds</h2>
-      <p class="story">Okonkwo: "The Fleet runs its best through here. No collection, no favourites. You get a power, twenty cards off the shelf, and eight fights. Let's see what you're made of."</p>
+      <p class="story">The Proving Grounds are the Academy's oldest simulator, the one Halcyon was first built to run. Okonkwo has had it restored. Okonkwo: "Halcyon put every cadet through this, me included. No collection, no favourites: a power, twenty cards off the shelf, and eight fights against everyone we've faced. It's still running its old code. Let's see what you're made of."</p>
       <ul class="grad-list"><li><b>Draft:</b> choose a commander power, then pick 1 of 3 cards twenty times. Every set is in the draw.</li>
       <li><b>Eight trials</b> against enemies from across the war, each with a random modifier. After each win, add a card to your deck.</li>
       <li><b>${CHALLENGE.lives} hull points.</b> A loss costs one and re-rolls the trial. Lose them all and the run ends.</li>
@@ -1109,7 +1140,7 @@ function renderMap() {
   const contracts = economyOpen(save) && save.contracts.length ? `<div class="ops-card"><div class="oc-h">Contracts</div>${save.contracts.map(c => { const d = CONTRACTS[c.id]; return `<div class="oc-ct"><div class="oc-ct-t"><span>${esc(d.text)}</span><span class="ct-rw">${ico('credits')} ${contractRewardOf(save, c.id)}</span></div><div class="ct-bar"><i style="width:${(c.progress / d.goal) * 100}%"></i></div><span class="muted small">${c.progress}/${d.goal}</span></div>`; }).join('')}</div>` : '';
   const diff = DIFFICULTY[save.diff];
   const cmdr = `<div class="ops-card"><div class="oc-h">Commander</div><div class="cmd-name">${esc(save.name)}</div>
-    <div class="cmd-stats"><div><b>${playerMaxHp(save)}</b><span>Hull</span></div><div><b>${deckSizeFor(save)}</b><span>Deck</span></div><div><b>${save.stats.wins}</b><span>Wins</span></div><div><b>${diff.name}</b><span>Difficulty</span></div></div></div>`;
+    <div class="cmd-stats"><div title="${PLAYER_HP} base + ${HULL_PER_BOSS} for each boss defeated (${Math.min(5, bossesCleared(save)) * HULL_PER_BOSS})${medbayHp(save) ? ' + Med Bay ' + medbayHp(save) : ''}"><b>${playerMaxHp(save)}</b><span>Hull</span></div><div><b>${deckSizeFor(save)}</b><span>Deck</span></div><div><b>${save.stats.wins}</b><span>Wins</span></div><div><b>${diff.name}</b><span>Difficulty</span></div></div></div>`;
   const stn = stationOpen(save) ? (() => { const st = ensureStation(save), up = upgradesAvailable(save), tot = STATION.order.reduce((a, id) => a + STATION.mods[id].max, 0), have = STATION.order.reduce((a, id) => a + stationLv(save, id), 0);
     return `<div class="ops-card stn-teaser"><div class="oc-h">Anchorage</div><div class="oc-ct-t"><span>${ico('alloy')} <b>${st.alloy}</b> Alloy</span><span class="muted">${have}/${tot} systems</span></div><div class="meter"><i style="width:${have / tot * 100}%"></i></div>
       <button class="btn ${up ? 'primary' : ''} wide" data-nav="station">${up ? `Repairs ready (${up})` : 'Visit station'}</button></div>`; })() : '';
@@ -1136,7 +1167,7 @@ function renderMap() {
     const b = e.target.closest('[data-enc]'); if (b) { SFX.init(); SFX.click(); openBriefing(ENC[b.dataset.enc]); return; }
     if (e.target.closest('[data-chal]')) { SFX.init(); SFX.click(); openChallenge(); return; }
     const ev = e.target.closest('[data-event]'); if (ev) { SFX.init(); SFX.click(); openEvent(EVENTS.find(x => x.id === ev.dataset.event)); return; }
-    const s = e.target.closest('[data-sec]'); if (s) { SFX.click(); MapUI.sector = +s.dataset.sec; renderMap(); return; }
+    const s = e.target.closest('[data-sec]'); if (s) { SFX.click(); MapUI.sector = +s.dataset.sec; if (Music.setTheme) Music.setTheme(MapUI.sector); renderMap(); return; }
     cmdBarClick(e, openMap);
   };
 }

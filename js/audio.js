@@ -536,6 +536,13 @@ const MOODS = {
   menu: { bpm: 56, barsPerChord: 2, arp: 0.32, pulse: false, cutoff: 900, chords: [[50, 57, 60, 64, 65], [46, 53, 57, 62, 65], [45, 52, 57, 60, 64], [48, 55, 57, 62, 67]] },
 };
 const MOOD_OK = { menu: 1, battle: 1, boss: 1, final: 1 };
+// Map and menu ambience per sector: the menu generator, played in that sector's key, scale and chord
+// progression (THEMES below), slower and darker, so each area has its own sound between battles.
+const menuFor = T => {
+  const sc = SCALES[T.scale] || SCALES.aeo, n = k => T.root + 12 * Math.floor(k / 7) + sc[((k % 7) + 7) % 7];
+  return { bpm: Math.round(T.bpm * 0.58), barsPerChord: 2, arp: 0.3, pulse: false, cutoff: Math.round(T.cut * 0.62), dark: T.scale === 'phr' || T.scale === 'loc' || T.scale === 'hm' || T.scale === 'hung',
+    chords: T.progs[0].map(d => [n(d), n(d + 4), n(d + 6), n(d + 8), n(d + 9)]) };
+};
 
 const SCALES = { dor: [0, 2, 3, 5, 7, 9, 10], phr: [0, 1, 3, 5, 7, 8, 10], lyd: [0, 2, 4, 6, 7, 9, 11], aeo: [0, 2, 3, 5, 7, 8, 10],
   loc: [0, 1, 3, 5, 6, 8, 10], hm: [0, 2, 3, 5, 7, 8, 11], hung: [0, 2, 3, 6, 7, 8, 11], phd: [0, 1, 4, 5, 7, 8, 10] };
@@ -622,6 +629,7 @@ const THEMES = [
     boss: { scale: 'hm', bpm: 70, cut: 1200, swell: 1, choir: 0.8, progs: [[0, 5, 3, 4], [0, 3, 4, 0], [5, 3, 4, 4]] } },
 ];
 // Final boss (galactic core, "the Choir"): slow, huge, building over ~64 bars.
+const MENU_SECTOR = THEMES.map((T, i) => Object.assign(menuFor(T), i >= 4 ? { dark: true } : {}));   // the Void and the core get the low swells too
 const FINAL = Object.assign({}, THEMES[5], { root: 50, scale: 'hm', bpm: 56, cpb: 2, choir: 1, cut: 1600, fx: 'timp', lift: 2, lglide: 0.05, boss: null,
   progs: [[0, 5, 2, 4], [0, 3, 5, 4], [5, 2, 3, 4], [0, 5, 3, 6]],
   drums: [{ k: 'x...............', s: '........x.......', h: '................' }, { k: 'x.......x.......', s: '........x.......', h: '....o.......o...' },
@@ -659,13 +667,13 @@ const Music = {
     this.timer = setInterval(() => this.schedule(), 200);
   },
   fade(v, tc) { const t = AudioBus.ctx.currentTime; [this.bus, this.wet, this.dly].forEach(n => n.gain.setTargetAtTime(v, t, tc)); },
-  key(m, th) { return m === 'battle' || m === 'boss' ? m + th : m; },
+  key(m, th) { return m === 'battle' || m === 'boss' || m === 'menu' ? m + th : m; },
   setMood(m) {
     if (!MOOD_OK[m]) return;
     const k = this.key(m, this.wantTheme); if (k === this.wantKey) return;
     this.want = m; this.wantKey = k; this.swap();
   },
-  // sector 0-5 (anything else: neutral theme). Takes effect on the next battle/boss mood.
+  // sector 0-5 (anything else: neutral theme). Battle, boss and menu moods follow it (a crossfade).
   setTheme(i) {
     this.wantTheme = Number.isInteger(i) && THEMES[i] ? i : -1;
     const k = this.key(this.want, this.wantTheme); if (k === this.wantKey) return;
@@ -972,7 +980,7 @@ const Music = {
   },
   // ---- menu loop (original ambient generator)
   playBar(t) {
-    const M = MOODS[this.mood] || MOODS.menu, beat = 60 / M.bpm, barLen = beat * 4;
+    const M = this.mood === 'menu' && MENU_SECTOR[this.theme] || MOODS[this.mood] || MOODS.menu, beat = 60 / M.bpm, barLen = beat * 4;
     const chord = M.chords[Math.floor(this.bar / M.barsPerChord) % M.chords.length];
     const firstOfChord = this.bar % M.barsPerChord === 0;
     if (firstOfChord) {

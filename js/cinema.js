@@ -31,15 +31,25 @@ const Cinema = (() => {
   }
   // one decoded file per cutscene (audio/vo/<cid>.mp3); each line is a slice of it (VO[key].o, .d)
   const buffers = {};
+  const raw = {};   // cid -> promise of the voice file's bytes (fetched ahead, see prefetch)
+  const fetchVo = cid => raw[cid] || (raw[cid] = fetch(`audio/vo/${cid}.mp3`).then(r => r.ok ? r.arrayBuffer() : null).catch(() => { delete raw[cid]; return null; }));
   async function load(cid) {
-    if (buffers[cid] !== undefined) return buffers[cid];
-    buffers[cid] = null;
+    if (buffers[cid]) return buffers[cid];
     try {
-      const c = AudioBus.ctx; if (!c) return null;
-      const res = await fetch(`audio/vo/${cid}.mp3`); if (!res.ok) return null;
-      buffers[cid] = await c.decodeAudioData(await res.arrayBuffer());
-    } catch (e) { buffers[cid] = null; }
-    return buffers[cid];
+      const c = AudioBus.ctx; if (!c) return null;   // audio not unlocked yet: try again next time
+      const bytes = await fetchVo(cid); if (!bytes) return null;
+      buffers[cid] = await c.decodeAudioData(bytes.slice(0));
+    } catch (e) { delete buffers[cid]; }
+    return buffers[cid] || null;
+  }
+  // Start downloading a cutscene's voice and first clips before it plays (e.g. during the battle that leads to it).
+  const warm = {};
+  function prefetch(cid) {
+    const cine = typeof CINEMATICS !== 'undefined' && CINEMATICS[cid]; if (!cine || warm[cid]) return;
+    if (plan(cid, cine).some(s => s.lines.some(l => l.key))) fetchVo(cid);
+    const hold = document.createElement('div'); hold.className = 'cin-preload'; hold.hidden = true; document.body.appendChild(hold);
+    warm[cid] = cine.shots.filter(sh => sh.clip && videoSrc(sh.clip)).map(sh => sh.clip).filter((c, k, a) => a.indexOf(c) === k).slice(0, 2).map(c => preloadVideo(c, hold));
+    setTimeout(() => { hold.remove(); delete warm[cid]; }, 10 * 60 * 1000);
   }
   function duck(on) {
     const g = AudioBus.musicBus, c = AudioBus.ctx; if (!g || !c) return;
@@ -188,9 +198,15 @@ const Cinema = (() => {
     const ready = (v, ms) => new Promise(r => { if (!v || v.readyState >= 3) return r(); const t = setTimeout(r, ms); me.timers.push(t); const ok = () => { clearTimeout(t); r(); }; v.addEventListener('canplay', ok, { once: true }); v.addEventListener('error', ok, { once: true }); });
     const stage = el.querySelector('.cin-stage'), sub = el.querySelector('.cin-sub');
     const wait = ms => new Promise(r => { const t = setTimeout(r, ms); me.timers.push(t); });
+    {
+      const first = want(clipAt(0));
+      const slow = setTimeout(() => { if (me.done) return; sub.querySelector('b').textContent = ''; sub.querySelector('span').textContent = 'Receiving transmission…'; sub.classList.add('show'); }, 700);
+      await Promise.race([Promise.all([loads, ready(first, 15000)]), wait(15000)]);
+      clearTimeout(slow); sub.classList.remove('show');
+      if (me.done) return;
+    }
     for (let i = 0; i < shots.length && !me.done; i++) {
       const { sh, lines, dur } = shots[i];
-      if (i === 1) await Promise.race([loads, wait(2500)]);
       if (me.done) break;
       if (sh.clip) { await ready(want(sh.clip), 2500); want(clipAt(i + 1)); if (me.done) break; }
       const div = document.createElement('div'); div.className = `cin-shot t-${sh.type}`; div.style.setProperty('--dur', dur + 's');
@@ -261,7 +277,7 @@ const Cinema = (() => {
       <div class="cin-sub ${ln ? 'show' : ''}"><b>${esc(c.name || (ln && ln.who) || '')}</b><span>${esc(ln ? ln.text : '')}</span></div><button class="cin-skip" type="button">Skip <span aria-hidden="true">›</span></button>`;
     document.body.appendChild(el); PortraitLoop.mount(el);
   }
-  return { play, stop, plan, hashText, still, videoSrc, playing: () => !!run };
+  return { play, stop, plan, hashText, still, videoSrc, prefetch, playing: () => !!run };
 })();
 
 // ============================================================================

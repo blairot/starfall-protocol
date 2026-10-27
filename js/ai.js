@@ -162,7 +162,16 @@ function lethalNow(s, pi) {
     const swings = isHero(c) ? 1 : (c.kw.twin ? 2 : 1) - (c.attacks || 0);
     dmg += atkOf(s, c) * Math.max(1, swings); hitters.push(c.uid);
   }
-  return hitters.length && dmg >= O.hp + O.armor ? { k: 'atk', a: hitters[0], t: O.uid } : null;
+  if (hitters.length && dmg >= O.hp + O.armor) return { k: 'atk', a: hitters[0], t: O.uid };
+  // a power or a spell aimed at the enemy commander first, then the attacks (e.g. Pulse Laser for the last 1)
+  const finishers = [];
+  if (canPower(s, pi)) { const ts = powerTargets(s, pi); (ts.length ? ts.filter(t => t === O.uid) : [null]).forEach(t => finishers.push({ k: 'pow', t })); }
+  P.hand.forEach((c, hi) => { if (canPlay(s, pi, hi) && D(c.id).type === 'spell' && cardTargets(s, pi, c).includes(O.uid)) finishers.push({ k: 'play', hi, t: O.uid, id: c.id }); });
+  for (const a of finishers) {
+    const c = simulate(s, pi, a); if (c.over) { if (c.winner === pi) return a; continue; }
+    const O2 = c.players[1 - pi]; if (dmg >= O2.hp + O2.armor) return a;
+  }
+  return null;
 }
 
 function aiActions(s, pi) {

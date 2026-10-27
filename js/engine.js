@@ -363,8 +363,8 @@ function damage(s, src, tgt, n) {
 
 // What has damaged your commander this battle, by source (shown on the defeat screen).
 function hurtBy(s, sc, n) {
-  const k = s.inFatigue ? 'Fatigue (empty deck)' : !sc ? 'Card effects' : !isHero(sc) ? D(sc.id).name
-    : s.inAttack ? (sc.weapon ? D(sc.weapon.id).name : sc.name + ' (attacking)') : 'Enemy spells and powers';
+  const k = s.inFatigue ? 'Fatigue (empty deck)' : !sc ? 'Card effects' : isHero(sc) && sc.i === 0 ? 'Your own power and cards' : !isHero(sc) ? D(sc.id).name
+    : s.inAttack ? (sc.weapon ? D(sc.weapon.id).name : sc.name + ' (attacking)') : 'Enemy Protocols and powers';
   s.hurt = s.hurt || {}; s.hurt[k] = (s.hurt[k] || 0) + n;
 }
 
