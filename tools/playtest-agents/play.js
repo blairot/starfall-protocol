@@ -21,7 +21,8 @@ const RUNS = path.join(__dirname, 'runs');
 const FILES = ['build', 'engine', 'cards', 'strategies', 'ai', 'campaign', 'economy', 'station', 'achievements', 'events', 'challenge', 'decks', 'lore', 'cinematics'];
 
 // ---------------------------------------------------------------- the game, headless
-let rngState = 1;
+// Fresh randomness for every command (battles reseed from their own saved seed so they replay exactly).
+let rngState = (Date.now() ^ (process.pid << 16) ^ Math.floor(Math.random() * 2 ** 31)) | 0;
 const rng = () => { rngState |= 0; rngState = (rngState + 0x6D2B79F5) | 0; let t = Math.imul(rngState ^ (rngState >>> 15), 1 | rngState); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
 const seed = n => { rngState = n | 0; };
 const G = { console, Date, JSON, performance: { now: () => Date.now() }, setTimeout, clearTimeout };
