@@ -330,7 +330,7 @@ function minionHTML(s, m, side) {
     ${m.kw.barrier ? '<div class="u-shell"></div>' : ''}${m.frozen ? `<div class="u-ice">${ico('cryo')}</div>` : ''}
     <div class="u-atk ${ac}">${a}</div><div class="u-hp ${hc}">${m.hp}</div>
     ${badges.length ? `<div class="u-badges">${badges.join('')}</div>` : ''}
-    ${m.sick && side === 0 && !m.kw.warp && !m.kw.blitz ? '<div class="u-status">Standby</div>' : ''}
+    ${m.sick && side === 0 && !m.kw.warp && !m.kw.blitz ? '<div class="u-status">Standby</div>' : ''}${cls.includes('targetable') ? '<i class="st-mark t" aria-hidden="true"></i>' : cls.includes('ready') ? '<i class="st-mark r" aria-hidden="true"></i>' : ''}
   </div>`;
 }
 
@@ -346,7 +346,7 @@ function heroHTML(s, p) {
   const hc = p.hp < p.maxHp ? 'down' : '';
   return `<div class="${cls.join(' ')}" data-uid="${p.uid}">
     <div class="h-frame"><div class="h-art"${side ? PortraitLoop.attr(p.name) : ''} style='background-image:${heroArt(p)}'></div><div class="h-ring"></div></div>
-    <div class="h-name">${esc(p.name)}</div>
+    <div class="h-name">${esc(p.name)}</div>${cls.includes('targetable') ? '<i class="st-mark t" aria-hidden="true"></i>' : cls.includes('ready') ? '<i class="st-mark r" aria-hidden="true"></i>' : ''}
     <div class="h-hp ${hc}">${p.hp}</div>
     ${p.armor ? `<div class="h-armor">${p.armor}</div>` : ''}
     ${a ? `<div class="h-atk">${a}</div>` : ''}
@@ -946,8 +946,43 @@ function openMap() {
     const sec = SECTORS[hs];
     const m = modal(`${paintedBanner('sector-' + sec.id)}<div class="m-eyebrow">Sector ${String(hs + 1).padStart(2, '0')} // new heading</div><h2>${esc(sec.name)}</h2><p class="story">${esc(sec.intro)}</p>
       ${hs > 0 && DECK_SIZES[hs] > DECK_SIZES[hs - 1] ? `<div class="got upgrade-got"><span class="up-tag">Upgrade</span><b>Deck size ${DECK_SIZES[hs - 1]} → ${DECK_SIZES[hs]} cards.</b> <span class="muted">Fill the new slots in the Hangar before your next battle.</span></div>` : ''}<div class="m-actions"><button class="btn primary" data-a="ok">Set course</button></div>`, 'sector-modal');
-    m.onclick = e => { if (e.target.dataset.a) closeModal(); };
+    m.onclick = e => { if (e.target.dataset.a) { closeModal(); setTimeout(maybeHint, 300); } };
   }
+  setTimeout(maybeHint, 700);
+}
+
+// ---------------------------------------------------------------- one-time pointers
+// Places playtesters missed. When one applies, a callout points at its button on the star
+// map: once per campaign, one at a time. Visiting the place counts as seeing it.
+const HINTS = [
+  { id: 'shop', el: '#m-shop', when: s => economyOpen(s) && unopenedPacks(s) > 0 && !s.stats.packsOpened,
+    text: s => `You have ${unopenedPacks(s)} unopened Supply Pack${unopenedPacks(s) > 1 ? 's. Open them' : '. Open it'} in the Supply Depot.` },
+  { id: 'station', el: '#m-station', when: s => economyOpen(s) && !s.station.seen && (s.station.alloy || 0) > 0,
+    text: () => 'Anchorage is your base. Spend Alloy there to repair modules for more Health, cheaper packs and enemy intel.' },
+  { id: 'hangar', el: '#m-hangar', when: s => highestSector(s) >= 1 && !s.deckEdited && Object.keys(s.coll).some(id => !s.deck.includes(id) && !D(id).reward),
+    text: () => 'New cards don\'t go into your deck by themselves. Swap them in at the Hangar, or let Assist build a deck for the next mission.' },
+  { id: 'archive', el: '#m-archive', when: s => (s.seenCine || []).includes('s1'),
+    text: () => 'Cutscenes you\'ve watched and records you\'ve recovered are kept in the Archive.' },
+];
+function hintSeen(save, id) { if (!save) return; save.hints = save.hints || {}; if (!save.hints[id]) { save.hints[id] = 1; persist(); } }
+function maybeHint() {
+  const save = App.save; $$('.hint-pop').forEach(n => n.remove());
+  if (!save || App.screen !== 'map' || !$('#modal').hidden) return;
+  save.hints = save.hints || {};
+  const h = HINTS.find(x => !save.hints[x.id] && x.when(save)), btn = h && $(h.el);
+  if (!btn || !btn.offsetParent) return;
+  const r = btn.getBoundingClientRect(), pop = document.createElement('div');
+  pop.className = 'hint-pop'; pop.setAttribute('role', 'status');
+  pop.innerHTML = `<p>${esc(h.text(save))}</p><button class="btn small" data-hint-ok>Got it</button>`;
+  document.body.appendChild(pop);
+  const w = pop.offsetWidth, x = Math.max(12, Math.min(innerWidth - w - 12, r.left + r.width / 2 - w / 2));
+  pop.style.left = x + 'px'; pop.style.top = (r.bottom + 12) + 'px';
+  pop.style.setProperty('--ax', (r.left + r.width / 2 - x) + 'px');
+  btn.classList.add('hinted');
+  const done = () => { pop.remove(); btn.classList.remove('hinted'); hintSeen(save, h.id); removeEventListener('resize', done); };
+  pop.querySelector('[data-hint-ok]').onclick = done;
+  btn.addEventListener('click', done, { once: true });
+  addEventListener('resize', done);
 }
 
 // ---------------------------------------------------------------- Proving Grounds (js/challenge.js)
@@ -1185,6 +1220,8 @@ function cmdBarClick(e, back) {
   const b = e.target.closest('[data-nav]'); if (!b) return false;
   SFX.init(); SFX.click();
   const k = b.dataset.nav;
+  $$('.hint-pop').forEach(n => n.remove());
+  if (HINTS.some(h => h.id === k)) hintSeen(App.save, k);
   if (k === 'title') openTitle();
   if (k === 'map') openMap();
   if (k === 'hangar') openHangar(back || openMap);
@@ -1348,7 +1385,7 @@ function briefDeckHTML(save, enc, size, deckOk, tunedOn) {
 const Hangar = { back: null, filter: 'all', cost: -1, q: '', mode: 'deck', strat: null };
 
 function openHangar(back) {
-  Hangar.back = back || openMap;
+  Hangar.back = back || openMap; hintSeen(App.save, 'hangar');
   closeModal(); showScreen('hangar'); renderHangar();
 }
 
@@ -1522,6 +1559,12 @@ function showCodexOld(back) {
 }
 
 const SetUI = { tab: 'audio' };
+// display settings that live on <html> as classes (css section 36)
+function applyDisplay() {
+  const r = document.documentElement, ts = Settings.get('textSize');
+  r.classList.toggle('ts-large', ts === 'large'); r.classList.toggle('ts-larger', ts === 'larger');
+  r.classList.toggle('shapes', !!Settings.get('shapes'));
+}
 function showSettings(back) {
   const save = App.save, tab = SetUI.tab;
   const sw = (k, label, hint) => `<div class="set-row"><div><b>${label}</b>${hint ? `<span>${hint}</span>` : ''}</div><button class="switch ${Settings.get(k) ? 'on' : ''}" role="switch" aria-checked="${!!Settings.get(k)}" data-sw="${k}" aria-label="${esc(label)}"><i></i></button></div>`;
@@ -1539,6 +1582,8 @@ function showSettings(back) {
   if (tab === 'display') body = sw('particles', 'Particle effects', 'Bolts, sparks and explosions.')
     + sw('shake', 'Screen shake', 'Shake on heavy hits.')
     + sw('hoverZoom', 'Enlarge cards on hover', 'Lift and zoom cards in your hand.')
+    + seg('textSize', 'Text size', [['normal', 'Normal'], ['large', 'Large'], ['larger', 'Larger']], 'Story, dialogue, tooltips, the combat feed and subtitles.')
+    + sw('shapes', 'Shape markers', 'Mark units that can attack, valid targets and playable cards with shapes as well as green and red glows.')
     + '<div class="set-row"><div><b>Fullscreen</b><span>Play without browser chrome. Esc exits.</span></div><button class="btn small" data-a="fullscreen">Toggle</button></div>'
     + (REDUCED ? '<p class="muted small">Your system asks for reduced motion, so animations are kept short.</p>' : '');
   const buildLine = typeof BUILD !== 'undefined' ? `<p class="muted small">Build ${BUILD.n} · ${BUILD.date}</p>` : '';
@@ -1554,8 +1599,8 @@ function showSettings(back) {
     SFX.init();
     const t = e.target.closest('[data-tab],[data-sw],[data-seg],[data-d],[data-a]'); if (!t) return;
     if (t.dataset.tab) { SetUI.tab = t.dataset.tab; return showSettings(back); }
-    if (t.dataset.sw) { Settings.set(t.dataset.sw, !Settings.get(t.dataset.sw)); SFX.click(); if (UI.s && App.screen === 'battle') renderBattle(); return showSettings(back); }
-    if (t.dataset.seg) { Settings.set(t.dataset.seg, t.dataset.v); SFX.click(); return showSettings(back); }
+    if (t.dataset.sw) { Settings.set(t.dataset.sw, !Settings.get(t.dataset.sw)); SFX.click(); applyDisplay(); if (UI.s && App.screen === 'battle') renderBattle(); return showSettings(back); }
+    if (t.dataset.seg) { Settings.set(t.dataset.seg, t.dataset.v); SFX.click(); applyDisplay(); return showSettings(back); }
     if (t.dataset.d) { save.diff = t.dataset.d; persist(); toast(`Difficulty: ${DIFFICULTY[save.diff].name}. Applies from your next battle.`); return showSettings(back); }
     const a = t.dataset.a;
     if (a.startsWith('pt-')) return playtestClick(a, m);
@@ -1578,6 +1623,22 @@ function showSettings(back) {
   };
 }
 
+// ---------------------------------------------------------------- credits
+// Add playtesters to TESTERS as they join; the thank-you list appears once it has names.
+const TESTERS = [];
+function showCredits() {
+  const sec = (h, rows) => `<h3>${h}</h3><dl class="cred">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>`;
+  const m = modal(`<div class="m-eyebrow">Starfall Protocol · Build ${typeof BUILD !== 'undefined' ? BUILD.n : ''}</div><h2>Credits</h2>
+    ${sec('Made by', [['Design and direction', 'blairot'], ['Code, writing and tuning', 'Claude (Anthropic), working with blairot']])}
+    ${sec('Art, video and sound', [['Painted art', 'Made with ChatGPT image generation'], ['Cutscene video', 'Made with Google Flow (Veo)'],
+      ['Voices', 'Chatterbox by Resemble AI and Kokoro, open-source text-to-speech, run locally'], ['Music and sound effects', 'Generated live in your browser']])}
+    ${sec('Type', [['Fonts', 'Michroma, Titillium Web and Saira Semi Condensed, from Google Fonts (SIL Open Font License)']])}
+    ${TESTERS.length ? `<h3>Thanks to our playtesters</h3><p class="cred-names">${TESTERS.map(esc).join(' · ')}</p>` : ''}
+    <p class="muted small">Thanks for playing.</p>
+    <div class="m-actions"><button class="btn primary" data-a="close">Close</button></div>`);
+  m.onclick = e => { if (e.target.dataset.a) closeModal(); };
+}
+
 function openTitle() {
   showScreen('title');
   const save = App.save, next = save && nextEncounter(save);
@@ -1591,6 +1652,7 @@ function openTitle() {
         ${save ? `<button class="tm primary" id="t-cont"><span class="tm-k">Continue</span><span class="tm-s">${next ? `${esc(SECTORS[next.sector].name)} · ${esc(next.name)}` : 'Campaign complete'}</span></button>` : ''}
         <button class="tm ${save ? '' : 'primary'}" id="t-new"><span class="tm-k">New campaign</span><span class="tm-s">${save ? 'Start over with a new commander' : 'Enlist and begin training'}</span></button>
         <button class="tm" id="t-set"><span class="tm-k">Settings</span><span class="tm-s">Audio, speed, display, saves</span></button>
+        <button class="tm minor" id="t-cred"><span class="tm-k">Credits</span></button>
       </nav>
     </div>
     <aside class="signal" aria-label="Signal readout">
@@ -1606,6 +1668,7 @@ function openTitle() {
     if (e.target.closest('#t-cont')) openMap();
     if (e.target.closest('#t-new')) newCampaignDialog();
     if (e.target.closest('#t-set')) showSettings();
+    if (e.target.closest('#t-cred')) showCredits();
   };
 }
 

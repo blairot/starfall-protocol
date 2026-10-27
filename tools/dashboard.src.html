@@ -222,7 +222,8 @@ function exampleData() {
 
 // ---------------------------------------------------------------- rendering
 const M = {}; let CARD = {};
-function kindOf(id) { return (M[id] || {}).kind || 'normal'; }
+// Proving Grounds battles (id 'challenge') are post-game runs: kept out of the campaign win-rate bands
+function kindOf(id) { return id === 'challenge' ? 'challenge' : (M[id] || {}).kind || 'normal'; }
 function status(v, kind, n) {
   if (v == null || n < 5) return '<span class="chip na">Not enough data</span>';
   const [lo, hi] = TARGETS[kind];

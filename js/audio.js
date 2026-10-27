@@ -12,6 +12,8 @@ const Settings = {
     speed: 'normal',        // normal | fast | instant
     particles: true, shake: true, hoverZoom: true,
     tips: true, log: true, confirmEnd: false, autoEnd: false,
+    textSize: 'normal',     // normal | large | larger: reading text (story, dialogue, tooltips, log, subtitles)
+    shapes: false,          // shape markers on ready units, targets and playable cards, not just green and red glows
   },
   v: null,
   load() { let s = null; try { s = JSON.parse(localStorage.getItem(SETTINGS_KEY)); } catch (e) { s = null; } this.v = Object.assign({}, this.defaults, s || {}); },

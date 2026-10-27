@@ -1,0 +1,121 @@
+{
+ "v": 1,
+ "name": "Maya",
+ "diff": "officer",
+ "cleared": {
+  "1-1": true,
+  "1-2": true,
+  "1-3": true,
+  "1-4": true,
+  "1-5": true,
+  "1-6": true
+ },
+ "coll": {
+  "cadet": 2,
+  "scout_drone": 2,
+  "marine": 2,
+  "ion_lancer": 2,
+  "heavy_trooper": 2,
+  "patrol_frigate": 2,
+  "star_cruiser": 1,
+  "plasma_bolt": 1,
+  "rifle_squad": 1,
+  "recon_officer": 1,
+  "medic_bot": 1,
+  "shield_trooper": 1,
+  "barricade": 1,
+  "field_engineer": 1,
+  "sapper": 1,
+  "dig_in": 1,
+  "interceptor": 1,
+  "hover_tank": 1,
+  "strike_fighter": 1,
+  "railgun": 1,
+  "supply_drop": 1,
+  "combat_stims": 1,
+  "okonkwo": 1,
+  "dreadnought": 1,
+  "fleet_captain": 1,
+  "orbital_strike": 1,
+  "salvage_crew": 1
+ },
+ "deck": [
+  "heavy_trooper",
+  "heavy_trooper",
+  "star_cruiser",
+  "marine",
+  "marine",
+  "ion_lancer",
+  "ion_lancer",
+  "patrol_frigate",
+  "patrol_frigate",
+  "scout_drone",
+  "plasma_bolt",
+  "medic_bot",
+  "interceptor",
+  "strike_fighter",
+  "railgun",
+  "okonkwo",
+  "dreadnought",
+  "fleet_captain",
+  "orbital_strike",
+  "salvage_crew"
+ ],
+ "power": "pulse",
+ "powers": [
+  "repair",
+  "pulse",
+  "drone"
+ ],
+ "codex": [
+  "basics",
+  "energy",
+  "spells",
+  "deploy",
+  "guardian",
+  "power",
+  "mulligan",
+  "warp",
+  "blitz",
+  "packs",
+  "crafting"
+ ],
+ "stats": {
+  "wins": 6,
+  "losses": 0,
+  "started": 1792503329172,
+  "playMs": 0,
+  "packsOpened": 1
+ },
+ "seenSector": {},
+ "updated": 1792503718372,
+ "credits": 100,
+ "scrap": 5,
+ "packs": {
+  "1": 0
+ },
+ "pity": {
+  "1": {
+   "epic": 0,
+   "legendary": 1
+  }
+ },
+ "contracts": [
+  {
+   "id": "face60",
+   "progress": 0
+  },
+  {
+   "id": "units25",
+   "progress": 0
+  }
+ ],
+ "station": {
+  "alloy": 60,
+  "mods": {
+   "command": 1
+  },
+  "seen": false
+ },
+ "streak": null
+}

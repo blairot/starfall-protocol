@@ -1,0 +1,165 @@
+{
+ "v": 1,
+ "name": "Sam",
+ "diff": "officer",
+ "cleared": {
+  "1-1": true,
+  "1-2": true,
+  "1-3": true,
+  "1-4": true,
+  "1-E": true,
+  "1-5": true,
+  "1-6": true,
+  "2-1": true,
+  "2-E2": true,
+  "2-2": true,
+  "2-3": true,
+  "2-E": true,
+  "2-4": true,
+  "2-5": true,
+  "2-6": true
+ },
+ "coll": {
+  "cadet": 2,
+  "scout_drone": 2,
+  "marine": 2,
+  "ion_lancer": 2,
+  "heavy_trooper": 2,
+  "patrol_frigate": 2,
+  "star_cruiser": 1,
+  "plasma_bolt": 1,
+  "rifle_squad": 1,
+  "recon_officer": 1,
+  "medic_bot": 1,
+  "shield_trooper": 1,
+  "barricade": 1,
+  "field_engineer": 1,
+  "sapper": 1,
+  "dig_in": 2,
+  "interceptor": 1,
+  "hover_tank": 1,
+  "strike_fighter": 1,
+  "dreadnought": 1,
+  "bulwark_mech": 1,
+  "railgun": 1,
+  "supply_drop": 1,
+  "combat_stims": 1,
+  "okonkwo": 1,
+  "rally_line": 1,
+  "rhino_tank": 1,
+  "aurora": 1,
+  "fleet_captain": 1,
+  "rail_rifle": 2,
+  "ghost_operative": 2,
+  "plunderer": 2,
+  "smuggler": 1,
+  "shadow_corsair": 2,
+  "harpoon_gun": 1,
+  "shipbreaker": 2,
+  "cluster_cannon": 2,
+  "shock_baton": 2,
+  "scrap_golem": 1,
+  "black_market": 2,
+  "cargo_hauler": 1,
+  "shakedown": 2,
+  "wreck_gunner": 2,
+  "quartermaster": 1,
+  "smoke_screen": 1,
+  "mine_layer": 1,
+  "broadside": 2,
+  "gunrunner": 1,
+  "det_bot": 1,
+  "vex": 1
+ },
+ "deck": [
+  "marine",
+  "rifle_squad",
+  "sapper",
+  "hover_tank",
+  "heavy_trooper",
+  "patrol_frigate",
+  "dreadnought",
+  "railgun",
+  "aurora",
+  "okonkwo",
+  "fleet_captain",
+  "ghost_operative",
+  "marine",
+  "plunderer",
+  "shipbreaker",
+  "cluster_cannon",
+  "cluster_cannon",
+  "shakedown",
+  "plunderer",
+  "broadside"
+ ],
+ "power": "pulse",
+ "powers": [
+  "repair",
+  "pulse",
+  "drone",
+  "blade"
+ ],
+ "codex": [
+  "basics",
+  "energy",
+  "spells",
+  "deploy",
+  "guardian",
+  "power",
+  "mulligan",
+  "fatigue",
+  "armor",
+  "warp",
+  "blitz",
+  "packs",
+  "crafting",
+  "anchorage",
+  "gear",
+  "salvage",
+  "cloak"
+ ],
+ "stats": {
+  "wins": 17,
+  "losses": 0,
+  "started": 1792510862720,
+  "playMs": 0,
+  "packsOpened": 7
+ },
+ "seenSector": {},
+ "updated": 1792512022479,
+ "credits": 95,
+ "scrap": 55,
+ "packs": {
+  "1": 0,
+  "2": 0
+ },
+ "pity": {
+  "1": {
+   "epic": 0,
+   "legendary": 0
+  },
+  "2": {
+   "epic": 3,
+   "legendary": 6
+  }
+ },
+ "contracts": [
+  {
+   "id": "face60",
+   "progress": 0
+  },
+  {
+   "id": "units25",
+   "progress": 0
+  }
+ ],
+ "station": {
+  "alloy": 440,
+  "mods": {
+   "command": 1
+  },
+  "seen": false
+ },
+ "streak": null
+}

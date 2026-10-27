@@ -32,7 +32,7 @@ for (const f of FILES) vm.runInContext(fs.readFileSync(path.join(ROOT, 'js', f +
 const g = name => vm.runInContext(name, G);
 const { D, CARDS, KEYWORDS, ENCOUNTERS, SECTORS, HEROPOWERS, PASSIVES, DIFFICULTY, CINEMATICS, CAST, PACK_SETS, ECON } = ['D', 'CARDS', 'KEYWORDS', 'ENCOUNTERS', 'SECTORS', 'HEROPOWERS', 'PASSIVES', 'DIFFICULTY', 'CINEMATICS', 'CAST', 'PACK_SETS', 'ECON'].reduce((o, k) => (o[k] = g(k), o), {});
 const fn = name => g(name);
-const CINE_AFTER = { '1-6': 's1', '2-6': 's2', '3-6': 's3', '4-6': 's4', '5-6': 's5', '6-5': 'finale' };   // as js/cinema.js
+const CINE_AFTER = g('CINE_AFTER');
 let CH_SAVE = null;   // the save whose Proving Grounds run a 'challenge' battle belongs to
 const ENC = id => String(id) === 'challenge' ? (CH_SAVE && fn('chEnc')(CH_SAVE)) : ENCOUNTERS.find(e => e.id.toLowerCase() === String(id).toLowerCase());
 

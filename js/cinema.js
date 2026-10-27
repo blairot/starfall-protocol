@@ -313,4 +313,3 @@ const PortraitLoop = (() => {
 })();
 
 // Which cutscene follows which boss, and the gate for the opening.
-const CINE_AFTER = { '1-6': 's1', '2-6': 's2', '3-6': 's3', '4-6': 's4', '5-6': 's5', '6-5': 'finale' };

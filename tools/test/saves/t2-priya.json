@@ -1,0 +1,160 @@
+{
+ "v": 1,
+ "name": "Priya",
+ "diff": "officer",
+ "cleared": {
+  "1-1": true,
+  "1-2": true,
+  "1-3": true,
+  "1-4": true,
+  "1-5": true,
+  "1-6": true,
+  "2-1": true,
+  "2-2": true,
+  "2-3": true,
+  "2-E2": true,
+  "2-4": true,
+  "2-5": true,
+  "2-E": true,
+  "2-6": true
+ },
+ "coll": {
+  "cadet": 2,
+  "scout_drone": 2,
+  "marine": 2,
+  "ion_lancer": 2,
+  "heavy_trooper": 2,
+  "patrol_frigate": 2,
+  "star_cruiser": 1,
+  "plasma_bolt": 1,
+  "rifle_squad": 1,
+  "recon_officer": 1,
+  "medic_bot": 1,
+  "shield_trooper": 1,
+  "barricade": 1,
+  "field_engineer": 1,
+  "sapper": 2,
+  "dig_in": 1,
+  "interceptor": 1,
+  "hover_tank": 1,
+  "strike_fighter": 1,
+  "railgun": 1,
+  "supply_drop": 1,
+  "combat_stims": 1,
+  "okonkwo": 1,
+  "fleet_captain": 1,
+  "dreadnought": 1,
+  "rhino_tank": 1,
+  "harpoon_gun": 2,
+  "cargo_hauler": 2,
+  "smuggler": 2,
+  "shipbreaker": 1,
+  "cluster_cannon": 1,
+  "rail_rifle": 2,
+  "shakedown": 1,
+  "shock_baton": 1,
+  "echo_protocol": 1,
+  "twin_pistols": 1,
+  "broadside": 2,
+  "plasma_cutlass": 1,
+  "det_bot": 1,
+  "black_market": 2,
+  "vex": 1,
+  "plunderer": 1,
+  "gunrunner": 1
+ },
+ "deck": [
+  "heavy_trooper",
+  "star_cruiser",
+  "ion_lancer",
+  "patrol_frigate",
+  "rifle_squad",
+  "recon_officer",
+  "field_engineer",
+  "sapper",
+  "dig_in",
+  "interceptor",
+  "hover_tank",
+  "strike_fighter",
+  "railgun",
+  "combat_stims",
+  "okonkwo",
+  "fleet_captain",
+  "plasma_bolt",
+  "shield_trooper",
+  "sapper",
+  "shipbreaker",
+  "vex",
+  "supply_drop",
+  "harpoon_gun",
+  "rail_rifle",
+  "rail_rifle"
+ ],
+ "power": "pulse",
+ "powers": [
+  "repair",
+  "pulse",
+  "drone",
+  "blade"
+ ],
+ "codex": [
+  "basics",
+  "energy",
+  "spells",
+  "deploy",
+  "guardian",
+  "power",
+  "mulligan",
+  "warp",
+  "blitz",
+  "packs",
+  "crafting",
+  "anchorage",
+  "gear",
+  "salvage",
+  "cloak"
+ ],
+ "stats": {
+  "wins": 15,
+  "losses": 0,
+  "started": 1792504997537,
+  "playMs": 0,
+  "packsOpened": 4
+ },
+ "seenSector": {},
+ "updated": 1792506143923,
+ "credits": 305,
+ "scrap": 20,
+ "packs": {
+  "1": 0,
+  "2": 0
+ },
+ "pity": {
+  "1": {
+   "epic": 1,
+   "legendary": 1
+  },
+  "2": {
+   "epic": 3,
+   "legendary": 3
+  }
+ },
+ "contracts": [
+  {
+   "id": "face60",
+   "progress": 0
+  },
+  {
+   "id": "units25",
+   "progress": 0
+  }
+ ],
+ "station": {
+  "alloy": 420,
+  "mods": {
+   "command": 1
+  },
+  "seen": false
+ },
+ "streak": null
+}

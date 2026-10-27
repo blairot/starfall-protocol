@@ -1668,3 +1668,36 @@ body.touch .inspect-hint { color: var(--t-3); }
 .cin-shot.lost .cc-h { color: var(--muted, #8a93a3); }
 @keyframes ccLost { 0% { filter: none; } 20% { filter: saturate(.4) brightness(1.4); transform: translateX(3px); } 24% { transform: none; } 100% { filter: grayscale(1) brightness(.15) blur(2px); } }
 @media (prefers-reduced-motion: reduce) { .cin-shot.lost .cc-portrait { animation-duration: .01s; } }
+
+/* ----- 35. One-time pointers on the star map (HINTS in js/ui.js) ----- */
+.hint-pop { position: fixed; z-index: 60; width: min(320px, calc(100vw - 24px)); padding: 14px 16px 12px; display: grid; gap: 10px; justify-items: start;
+  background: #0d1622; color: var(--t-1, #e6edf5); box-shadow: 0 0 0 1px var(--amber, #f2a93b), 0 10px 30px rgba(0, 0, 0, .55); font-size: 15px; line-height: 1.4;
+  animation: hintIn .3s ease-out both; }
+.hint-pop::before { content: ""; position: absolute; top: -7px; left: calc(var(--ax, 50%) - 7px); width: 14px; height: 14px; background: #0d1622;
+  box-shadow: -1px -1px 0 var(--amber, #f2a93b); transform: rotate(45deg); }
+.hint-pop p { margin: 0; }
+.cn.hinted { color: var(--amber, #f2a93b); text-shadow: 0 0 12px rgba(242, 169, 59, .6); }
+@keyframes hintIn { from { opacity: 0; transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { .hint-pop { animation: none; } }
+
+/* ----- 36. Accessibility settings: text size and shape markers (applyDisplay in js/ui.js) ----- */
+/* Text size scales reading text only (cards keep their fitted layout; inspect enlarges them). Leaf elements only, so zoom never compounds. */
+:root.ts-large { --rz: 1.15; } :root.ts-larger { --rz: 1.3; }
+:root.ts-large :is(.m-in p, .m-in li, .comm-line q, .cx span, .tip-side, .toast, .cin-sub span, .b-log ol, .hint-pop p, .arch-page p, .ins-rules, .newmech),
+:root.ts-larger :is(.m-in p, .m-in li, .comm-line q, .cx span, .tip-side, .toast, .cin-sub span, .b-log ol, .hint-pop p, .arch-page p, .ins-rules, .newmech) { zoom: var(--rz); }
+/* Shape markers: a white chevron on what can attack, a ring and dot on valid targets, a white frame on playable cards */
+.st-mark { display: none; }
+:root.shapes .st-mark { display: block; position: absolute; left: 50%; top: -14px; z-index: 6; width: 24px; height: 24px; transform: translateX(-50%); border-radius: 50%;
+  background: #05080c; box-shadow: 0 0 0 2px #fff, 0 2px 6px #000; pointer-events: none; }
+:root.shapes .st-mark.r::after { content: ""; position: absolute; left: 6px; top: 8px; border: 6px solid transparent; border-bottom: 8px solid #fff; border-top: 0; }
+:root.shapes .st-mark.t { background: radial-gradient(circle, #fff 0 3px, transparent 3.5px), #05080c; box-shadow: 0 0 0 2px #fff, 0 0 0 5px #05080c, 0 0 0 6px #fff, 0 2px 6px #000; }
+:root.shapes .hand-slot .card.playable { outline: 2px solid #fff; outline-offset: 3px; }
+
+/* ----- 37. Credits (showCredits in js/ui.js) ----- */
+.tm.minor { padding-block: 8px; opacity: .75; }
+.tm.minor .tm-k { font-size: .8em; }
+.cred { display: grid; grid-template-columns: minmax(0, 200px) minmax(0, 1fr); gap: 6px 18px; margin: 8px 0 18px; font-size: 15.5px; }
+.cred dt { color: var(--t-3, #8b98a8); font: 600 12px var(--f-label); letter-spacing: .12em; text-transform: uppercase; padding-top: 3px; }
+.cred dd { margin: 0; }
+.cred-names { line-height: 1.8; }
+@media (max-width: 560px) { .cred { grid-template-columns: minmax(0, 1fr); gap: 2px; } .cred dd { margin-bottom: 8px; } }

@@ -280,6 +280,7 @@ function cardList(cards, save) {
 
 function openArchive(sec, back) {
   const save = App.save;
+  if (typeof hintSeen === 'function') hintSeen(save, 'archive');
   Arch.sec = sec || Arch.sec; if (back !== undefined) Arch.back = back;
   const nav = archiveSections(save).map(([k, l, meta]) => k === 'h' ? `<div class="an-h">${esc(l)}</div>` : `<button class="${k === Arch.sec ? 'on' : ''}" data-sec="${k}">${esc(l)}${meta ? `<span>${meta}</span>` : ''}</button>`).join('');
   const m = modal(`<button class="m-x" type="button" data-a="close" aria-label="Close the Archive">&times;</button><div class="arch"><nav class="arch-nav">${nav}<div class="an-h"></div><button data-a="close">Close</button></nav><section class="arch-page">${archivePage(Arch.sec, save)}</section></div>`, 'xl archive');

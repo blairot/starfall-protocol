@@ -18,7 +18,7 @@ function packHTML(tier, cls) {
 const Shop = { back: null };
 
 function openShop(back, autoOpen) {
-  Shop.back = back || openMap;
+  Shop.back = back || openMap; hintSeen(App.save, 'shop');
   closeModal(); showScreen('shop'); renderShop();
   if (autoOpen) { const t = PACK_SETS.find(p => (App.save.packs[p.tier] || 0) > 0); if (t) openPackFlow(t.tier); }
 }

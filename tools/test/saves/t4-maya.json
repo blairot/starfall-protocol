@@ -1,0 +1,140 @@
+{
+ "v": 1,
+ "name": "Maya",
+ "diff": "officer",
+ "cleared": {
+  "1-1": true,
+  "1-2": true,
+  "1-3": true,
+  "1-4": true,
+  "1-5": true,
+  "1-6": true,
+  "2-1": true,
+  "2-2": true,
+  "2-3": true
+ },
+ "coll": {
+  "cadet": 2,
+  "scout_drone": 2,
+  "marine": 2,
+  "ion_lancer": 2,
+  "heavy_trooper": 2,
+  "patrol_frigate": 2,
+  "star_cruiser": 1,
+  "plasma_bolt": 1,
+  "rifle_squad": 1,
+  "recon_officer": 1,
+  "medic_bot": 1,
+  "shield_trooper": 1,
+  "barricade": 1,
+  "field_engineer": 1,
+  "sapper": 1,
+  "dig_in": 1,
+  "interceptor": 2,
+  "hover_tank": 1,
+  "strike_fighter": 1,
+  "railgun": 2,
+  "supply_drop": 1,
+  "combat_stims": 1,
+  "okonkwo": 1,
+  "line_sergeant": 1,
+  "deck_chief": 1,
+  "smuggler": 1,
+  "echo_protocol": 1,
+  "ghost_operative": 1,
+  "plunderer": 1,
+  "scrap_rat": 1,
+  "plasma_cutlass": 1,
+  "det_bot": 1,
+  "shadow_corsair": 1
+ },
+ "deck": [
+  "heavy_trooper",
+  "star_cruiser",
+  "ion_lancer",
+  "patrol_frigate",
+  "rifle_squad",
+  "recon_officer",
+  "field_engineer",
+  "sapper",
+  "dig_in",
+  "interceptor",
+  "hover_tank",
+  "strike_fighter",
+  "railgun",
+  "supply_drop",
+  "combat_stims",
+  "okonkwo",
+  "plasma_bolt",
+  "ghost_operative",
+  "shield_trooper",
+  "plasma_cutlass"
+ ],
+ "power": "pulse",
+ "powers": [
+  "repair",
+  "pulse",
+  "drone"
+ ],
+ "codex": [
+  "basics",
+  "energy",
+  "spells",
+  "deploy",
+  "guardian",
+  "fatigue",
+  "power",
+  "mulligan",
+  "warp",
+  "blitz",
+  "packs",
+  "crafting",
+  "anchorage",
+  "gear",
+  "salvage",
+  "cloak"
+ ],
+ "stats": {
+  "wins": 9,
+  "losses": 1,
+  "started": 1792542199537,
+  "playMs": 0,
+  "packsOpened": 2
+ },
+ "seenSector": {},
+ "updated": 1792542832224,
+ "credits": 75,
+ "scrap": 5,
+ "packs": {
+  "1": 0,
+  "2": 0
+ },
+ "pity": {
+  "1": {
+   "epic": 1,
+   "legendary": 1
+  },
+  "2": {
+   "epic": 1,
+   "legendary": 1
+  }
+ },
+ "contracts": [
+  {
+   "id": "face60",
+   "progress": 0
+  },
+  {
+   "id": "units25",
+   "progress": 0
+  }
+ ],
+ "station": {
+  "alloy": 150,
+  "mods": {
+   "command": 1
+  },
+  "seen": false
+ },
+ "streak": null
+}

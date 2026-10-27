@@ -24,6 +24,9 @@ const CAST = {
   choir:     { name: 'The Choir',              voice: 'male-uk',        fx: 'choir', portrait: { enemy: 'The Choir Awakened' } },
 };
 
+// which cutscene plays after the first clear of a mission
+const CINE_AFTER = { '1-6': 's1', '2-6': 's2', '3-6': 's3', '4-6': 's4', '5-6': 's5', '6-5': 'finale' };
+
 const CINEMATICS = {
   // ------------------------------------------------------------------ opening
   opening: {

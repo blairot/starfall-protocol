@@ -591,6 +591,27 @@ function newSave(name, diff) {
   return save;
 }
 
+// Upgrade a save from any earlier build: fill in fields added since, drop cards that no
+// longer exist. Runs on every load and every restored backup (tools/test/saves.js covers it).
+function migrate(save) {
+  if (!save || !save.coll) return null;
+  save.codex = save.codex || []; save.powers = save.powers || []; save.seenSector = save.seenSector || {};
+  save.stats = save.stats || { wins: 0, losses: 0, playMs: 0 };
+  if (save.credits == null) save.credits = 0;
+  if (save.scrap == null) save.scrap = 0;
+  save.packs = save.packs || {}; save.pity = save.pity || {}; save.contracts = (save.contracts || []).filter(c => CONTRACTS[c.id]);
+  ensureStation(save);
+  ensureDecks(save);
+  // campaigns from before cutscenes existed: unlock the ones already earned for replay in the Archive
+  save.seenCine = save.seenCine || [];
+  if (Object.keys(save.cleared).length && !save.seenCine.includes('opening')) save.seenCine.push('opening');
+  Object.entries(CINE_AFTER).forEach(([enc, cid]) => { if (save.cleared[enc] && !save.seenCine.includes(cid)) save.seenCine.push(cid); });
+  refillContracts(save);
+  save.deck = (save.deck || []).filter(id => CARDS[id]);
+  Object.keys(save.coll).forEach(id => { if (!CARDS[id]) delete save.coll[id]; });
+  return save;
+}
+
 function buildBattle(save, enc) {
   const diff = DIFFICULTY[save.diff] || DIFFICULTY.officer;
   const e = enc.enemy;
